@@ -20,10 +20,10 @@
 3. 사진을 찍어서 자리에 있는지 확인
 
 ## 기술 스택
-- Spring
+- Spring (기존 장고에서 수정)
 - Kotlin - Android
 - Swift - IOS
-- MySQL
+- MySQL (DB 활용에 따라 SQLite로 변경 예정)
 - AWS
 - CI/CD
 
