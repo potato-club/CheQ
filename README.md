@@ -56,7 +56,8 @@
 - CI/CD (Jenkins)
 
 ## 프로젝트 구조
-![졸프그림](https://github.com/Teddysir/CheQ/assets/97444407/4d37042f-aafc-404d-ac70-504f1d61890d)
+![image](https://github.com/potato-club/CheQ/assets/97444407/03eeb5ae-7b21-40af-b6cb-dd8f604f0349)
+
 
 
 
