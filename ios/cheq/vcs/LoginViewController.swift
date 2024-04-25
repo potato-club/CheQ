@@ -27,11 +27,11 @@ class LoginViewController : JVC {
         v.isEnabled = true
     }
     
-    private let pwField = UITextField().then { v in
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .lightGray
-        v.isEnabled = true
-    }
+//    private let pwField = UITextField().then { v in
+//        v.translatesAutoresizingMaskIntoConstraints = false
+//        v.backgroundColor = .lightGray
+//        v.isEnabled = true
+//    }
     
     private let authVerifyView = UIView().then { v in
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -71,7 +71,7 @@ class LoginViewController : JVC {
         view.addSubview(loginView)
         
         loginView.addSubview(idField)
-        loginView.addSubview(pwField)
+//        loginView.addSubview(pwField)
         loginView.addSubview(loginBtn)
         
         view.addSubview(authVerifyView)
@@ -90,14 +90,14 @@ class LoginViewController : JVC {
             idField.topAnchor.constraint(equalTo: loginView.topAnchor, constant: 10),
             idField.heightAnchor.constraint(equalToConstant: 50),
             
-            pwField.leftAnchor.constraint(equalTo: loginView.leftAnchor, constant: 10),
-            pwField.rightAnchor.constraint(equalTo: loginView.rightAnchor, constant: -10),
-            pwField.topAnchor.constraint(equalTo: loginView.topAnchor, constant: 10),
-            pwField.heightAnchor.constraint(equalToConstant: 50),
+//            pwField.leftAnchor.constraint(equalTo: loginView.leftAnchor, constant: 10),
+//            pwField.rightAnchor.constraint(equalTo: loginView.rightAnchor, constant: -10),
+//            pwField.topAnchor.constraint(equalTo: loginView.topAnchor, constant: 10),
+//            pwField.heightAnchor.constraint(equalToConstant: 50),
             
             loginBtn.leftAnchor.constraint(equalTo: idField.leftAnchor),
             loginBtn.rightAnchor.constraint(equalTo: idField.rightAnchor),
-            loginBtn.topAnchor.constraint(equalTo: pwField.bottomAnchor, constant: 10),
+            loginBtn.topAnchor.constraint(equalTo: idField.bottomAnchor, constant: 10),
             loginBtn.bottomAnchor.constraint(equalTo: loginView.bottomAnchor, constant: -10),
             loginBtn.heightAnchor.constraint(equalToConstant: 50),
             
@@ -134,14 +134,16 @@ class LoginViewController : JVC {
         setLoginBtnEnable(false)
         guard let id = idField.text, id.count > 1 else {
             //return Alert
+            DLog.p("id error : \(idField.text?.count)")
             setLoginBtnEnable(true)
             return
         }
-        guard let pw = pwField.text, pw.count > 1 else {
-            //return Alert
-            setLoginBtnEnable(true)
-            return
-        }
+//        guard let pw = pwField.text, pw.count > 1 else {
+//            //return Alert
+//            DLog.p("pw error")
+//            setLoginBtnEnable(true)
+//            return
+//        }
         
         setIdFieldEnable(false)
         
@@ -235,11 +237,6 @@ class LoginViewController : JVC {
             let loginResult = try await reqManager.requestLogin(id: id)
             if !loginResult.success {
                 print("loginResult is Not Y : \(loginResult.message)")
-                return
-            }
-            
-            guard let cookie = loginResult.result else {
-                print("cookie is nil")
                 return
             }
             

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Alamofire
 
 class Constant {
     static let baseUrl = "https://m.hansei.ac.kr"
@@ -39,4 +38,17 @@ enum RequestURLType {
          SEARCH,
          MENU_INFO
     
+}
+
+
+enum HTTPMethod : String {
+    case CONNECT
+    case DELETE
+    case GET
+    case HEAD
+    case OPTIONS
+    case PATCH
+    case POST
+    case PUT
+    case TRACE
 }

@@ -6,13 +6,12 @@
 //
 
 import Foundation
-import Alamofire
 
 class RequestConstant {
     
     public static let shared = RequestConstant()
     
-    private let headers: HTTPHeaders = [
+    private let headers: [String:String] = [
         "Accept": "*/*",
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "Sec-Fetch-Dest": "empty",
@@ -44,7 +43,7 @@ class RequestConstant {
         }
     }
     
-    func requestIdCheck(id: String) async -> DataResponse<ResponseCheckID, AFError> {
+    func requestIdCheck(id: String) async -> RequestResult<ResponseCheckID> {
         var headers = headers
         
         let parameters = getParamBody(.CHECK_ID, cParam: ["id":id])
@@ -54,7 +53,7 @@ class RequestConstant {
                              of: ResponseCheckID.self)
     }
     
-    func requestUserStatus(id: String) async -> DataResponse<ResponseUserStatus, AFError> {
+    func requestUserStatus(id: String) async -> RequestResult<ResponseUserStatus> {
         var headers = headers
         
         let parameters = getParamBody(.USER_STATUS, cParam: ["id":id])
@@ -64,7 +63,7 @@ class RequestConstant {
                              of: ResponseUserStatus.self)
     }
     
-    func requestPushNoti(id: String) async -> DataResponse<ResponsePushNoti, AFError> {
+    func requestPushNoti(id: String) async -> RequestResult<ResponsePushNoti> {
         var headers = headers
         
         let parameters = getParamBody(.PUSH_NOTI, cParam: ["id":id])
@@ -75,7 +74,7 @@ class RequestConstant {
     }
     
     
-    func requestChkAuthResult(id: String, tid: String) async -> DataResponse<ResponseChkAuthResult, AFError> {
+    func requestChkAuthResult(id: String, tid: String) async -> RequestResult<ResponseChkAuthResult> {
         var headers = headers
         
         let parameters = getParamBody(.CHK_AUTH_RESULT, cParam: ["id":id, "tid":tid])
@@ -85,7 +84,7 @@ class RequestConstant {
                              of: ResponseChkAuthResult.self)
     }
     
-    func requestLoginDo(id: String, verified: Bool) async -> DataResponse<ResponseLogin, AFError> {
+    func requestLoginDo(id: String, verified: Bool) async -> RequestResult<ResponseLogin> {
         let headers = headers
         
         let parameters = getParamBody(.LOGIN_DO, cParam: ["id":id, "directLoginYn": verified ? "Y" : "N"])
@@ -95,9 +94,10 @@ class RequestConstant {
                              of: ResponseLogin.self)
     }
     
-    func requestLoad(id: String, cookie: String) async -> DataResponse<ResponseLoad, AFError> {
+    func requestLoad(id: String, cookie: String) async -> RequestResult<ResponseLoad> {
         var headers = headers
-        headers.add(name: "Cookie", value: cookie)
+//        headers.add(name: "Cookie", value: cookie)
+        headers["Cookie"] = cookie
         
         let parameters = getParamBody(.ON_LOAD, cParam: ["id":id])
         return await request(headers: headers,
@@ -106,9 +106,10 @@ class RequestConstant {
                              of: ResponseLoad.self)
     }
     
-    func requestSearch(userInfo: DmUserInfo, cookie: String) async -> DataResponse<ResponseSearch, AFError> {
+    func requestSearch(userInfo: DmUserInfo, cookie: String) async -> RequestResult<ResponseSearch> {
         var headers = headers
-        headers.add(name: "Cookie", value: cookie)
+//        headers.add(name: "Cookie", value: cookie)
+        headers["Cookie"] = cookie
         
         let cParam = ["name":userInfo.gUserNo ?? "", "stno":userInfo.gUserNo ?? "", "unvGrscDv":userInfo.gUnvGrscDv ?? ""]
         let parameters = getParamBody(.SEARCH, cParam: cParam)
@@ -118,9 +119,10 @@ class RequestConstant {
                              of: ResponseSearch.self)
     }
     
-    func requestMenuInfo(cookie: String, authMenuKey: String = "") async -> DataResponse<ResponseMenuInfo, AFError> {
+    func requestMenuInfo(cookie: String, authMenuKey: String = "") async -> RequestResult<ResponseMenuInfo> {
         var headers = headers
-        headers.add(name: "Cookie", value: cookie)
+//        headers.add(name: "Cookie", value: cookie)
+        headers["Cookie"] = cookie
         
         let parameters = getParamBody(.MENU_INFO, cParam: ["authMenuKey": authMenuKey])
         return await request(headers: headers,
@@ -130,27 +132,63 @@ class RequestConstant {
     }
     
     func request<T: Decodable>(
-        headers: HTTPHeaders,
+        headers: [String:String],
         url: String,
         parameters: String,
+        method: HTTPMethod = .POST,
         of type: T.Type = T.self
-    ) async -> DataResponse<T, AFError> {
-        //        DLog.p("request : \(url)")
-        let result = await AF.request(url) { urlRequest in
-            urlRequest.method = .post
-            urlRequest.headers = headers
-            
-            urlRequest.timeoutInterval = 5
-            urlRequest.allowsConstrainedNetworkAccess = false
-            urlRequest.httpBody = parameters.data(using: .utf8)
-        }
-            .serializingDecodable(type)
-            .response
-        //        DLog.p("result : \(result)")
+    ) async -> RequestResult<T> {
         
-        if let cookie = result.response?.headers["Set-Cookie"] {
-            DataSession.shared.lastCookie = cookie
+        let postData =  parameters.data(using: .utf8)
+        var request = URLRequest(url: URL(string: url)!)
+        
+        for key in headers.keys {
+            request.addValue(headers[key]!, forHTTPHeaderField: key)
         }
-        return result
+        
+        request.httpMethod = method.rawValue
+        request.httpBody = postData
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return RequestResult(success: false, message: "response Error")
+            }
+            
+            if let cookie = httpResponse.allHeaderFields["Set-Cookie"] as? String {
+                DataSession.shared.lastCookie = cookie
+            }
+            
+            let result = try JSONDecoder().decode(type, from: data)
+            return RequestResult(success: true, message: "success", result: result)
+
+        } catch {
+            //handle error
+            DLog.p(error)
+            return RequestResult(success: false, message: "catch Error", error: error)
+        }
+        
+//        let result = await AF.request(url) { urlRequest in
+//            urlRequest.method = .post
+//            urlRequest.headers = headers
+//            
+//            urlRequest.timeoutInterval = 5
+//            urlRequest.allowsConstrainedNetworkAccess = false
+//            urlRequest.httpBody = parameters.data(using: .utf8)
+//        }
+//            .serializingDecodable(type)
+//            .response
+//        
+//        if let cookie = result.response?.headers["Set-Cookie"] {
+//            DataSession.shared.lastCookie = cookie
+//        }
+//        return result
     }
+}
+
+struct RequestConstantResult<T : Codable> {
+    var result : T? = nil
+    var errorInfo : Errmsginfo? = nil
+    var error : Error? = nil
 }

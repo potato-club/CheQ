@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Alamofire
 import UIKit
 
 class RequestManager {
@@ -18,11 +17,11 @@ class RequestManager {
         let response = await reqHelper.requestIdCheck(id: id)
 
         if let error = response.error {
-            DLog.p(response.debugDescription)
+            DLog.p(error.localizedDescription)
             return RequestResult(success: false, message: error.localizedDescription)
         }
 
-        guard let result = response.value else {
+        guard let result = response.result else {
             return RequestResult(success: false, message: "response value is nil")
         }
         
@@ -47,11 +46,11 @@ class RequestManager {
         let response = await reqHelper.requestUserStatus(id: id)
 
         if let error = response.error {
-            DLog.p(response.debugDescription)
+            DLog.p(error.localizedDescription)
             return RequestResult(success: false, message: error.localizedDescription)
         }
 
-        guard let result = response.value else {
+        guard let result = response.result else {
             return RequestResult(success: false, message: "response value is nil")
         }
         
@@ -66,11 +65,11 @@ class RequestManager {
         let response = await reqHelper.requestPushNoti(id: id)
         
         if let error = response.error {
-            DLog.p(response.debugDescription)
+            DLog.p(error.localizedDescription)
             return RequestResult(success: false, message: error.localizedDescription)
         }
 
-        guard let result = response.value?.dmPushNoti else {
+        guard let result = response.result?.dmPushNoti else {
             return RequestResult(success: false, message: "response value is nil")
         }
         
@@ -83,10 +82,11 @@ class RequestManager {
         
         
         if let error = response.error {
+            DLog.p(error.localizedDescription)
             return RequestResult(success: false, message: error.localizedDescription)
         }
 
-        guard let result = response.value?.dmChkAuthResult else {
+        guard let result = response.result?.dmChkAuthResult else {
             return RequestResult(success: false, message: "response value is nil")
             
         }
@@ -97,23 +97,19 @@ class RequestManager {
         let response = await reqHelper.requestLoginDo(id: id, verified: verified)
         
         if let error = response.error {
-            DLog.p(response.debugDescription)
+            DLog.p(error.localizedDescription)
             return RequestResult(success: false, message: error.localizedDescription)
         }
 
-        guard let result = response.value else {
+        guard let result = response.result else {
             return RequestResult(success: false, message: "response value is nil")
         }
         
-        if response.value?.metadata.success != true {
+        if response.result?.metadata.success != true {
             return RequestResult(success: false, message: "success value not true")
         }
         
-        guard let cookie = response.response?.headers.dictionary["Set-Cookie"] else {
-            return RequestResult(success: false, message: "cookie parsing failed")
-        }
-        
-        return RequestResult(success: true, message: "success", result: cookie)
+        return RequestResult(success: true, message: "success")
     }
     
     func requestLoad(id: String) async throws -> RequestResult<DmUserInfo> {
@@ -124,12 +120,11 @@ class RequestManager {
         let response = await reqHelper.requestLoad(id: id, cookie: DataSession.shared.lastCookie)
         
         if let error = response.error {
-            DLog.p(response.debugDescription)
+            DLog.p(error.localizedDescription)
             return RequestResult(success: false, message: error.localizedDescription)
         }
 
-        guard let result = response.value?.dmUserInfo else {
-            DLog.p(response.debugDescription)
+        guard let result = response.result?.dmUserInfo else {
             return RequestResult(success: false, message: "response value is nil")
         }
         
@@ -146,11 +141,11 @@ class RequestManager {
         let response = await reqHelper.requestSearch(userInfo: userInfo, cookie:  DataSession.shared.lastCookie)
         
         if let error = response.error {
-            DLog.p(response.debugDescription)
+            DLog.p(error.localizedDescription)
             return RequestResult(success: false, message: error.localizedDescription)
         }
 
-        guard let result = response.value?.dsSreg else {
+        guard let result = response.result?.dsSreg else {
             return RequestResult(success: false, message: "response value is nil")
         }
         
@@ -165,17 +160,15 @@ class RequestManager {
         let response = await reqHelper.requestMenuInfo(cookie: DataSession.shared.lastCookie)
         
         if let error = response.error {
-            DLog.p(response.debugDescription)
+            DLog.p(error.localizedDescription)
             return RequestResult(success: false, message: error.localizedDescription)
         }
 
+        if let error = response.result?.errmsginfo {
+            return RequestResult(success: false, message: error.errmsg)
+        }
         
-        guard let result = response.value else {
-            DLog.p(response.debugDescription)
-            if let error = response.value?.errmsginfo {
-                DLog.p(response.debugDescription)
-                return RequestResult(success: false, message: error.errmsg)
-            }
+        guard let result = response.result else {
             return RequestResult(success: false, message: "response value is nil")
         }
         
@@ -226,4 +219,5 @@ struct RequestResult<T : Codable> {
     let message : String
     var result : T? = nil
     var errorInfo : Errmsginfo? = nil
+    var error : Error? = nil
 }

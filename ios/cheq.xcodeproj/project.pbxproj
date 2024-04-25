@@ -43,9 +43,6 @@
 		16DBE9762BC504EE00AA0EE9 /* NFCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DBE9752BC504EE00AA0EE9 /* NFCManager.swift */; };
 		16DBE9782BC5050800AA0EE9 /* NFCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DBE9772BC5050800AA0EE9 /* NFCError.swift */; };
 		16DBE97C2BC5071300AA0EE9 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 16DBE97B2BC5071300AA0EE9 /* Then */; };
-		16EE68C32BD20F730092D098 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 16EE68C22BD20F730092D098 /* Alamofire */; };
-		16EE68C52BD20F730092D098 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 16EE68C42BD20F730092D098 /* AlamofireDynamic */; };
-		16EE68C72BD2104D0092D098 /* JISNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EE68C62BD2104D0092D098 /* JISNet.swift */; };
 		16EE68C92BD218990092D098 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EE68C82BD218990092D098 /* Constant.swift */; };
 /* End PBXBuildFile section */
 
@@ -100,9 +97,7 @@
 		16DBE9752BC504EE00AA0EE9 /* NFCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCManager.swift; sourceTree = "<group>"; };
 		16DBE9772BC5050800AA0EE9 /* NFCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCError.swift; sourceTree = "<group>"; };
 		16DBE97D2BC50AF000AA0EE9 /* cheq.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cheq.entitlements; sourceTree = "<group>"; };
-		16EE68C62BD2104D0092D098 /* JISNet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JISNet.swift; sourceTree = "<group>"; };
 		16EE68C82BD218990092D098 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
-		734BAD7AB7DF09E8BCD63843 /* Pods_cheq.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_cheq.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,8 +105,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16EE68C32BD20F730092D098 /* Alamofire in Frameworks */,
-				16EE68C52BD20F730092D098 /* AlamofireDynamic in Frameworks */,
 				16DBE97C2BC5071300AA0EE9 /* Then in Frameworks */,
 				16D092952BCE45DB00E941C9 /* Lottie in Frameworks */,
 			);
@@ -153,7 +146,6 @@
 				16736E022BCCFD680052A782 /* RequestConstant.swift */,
 				16736E142BCD58950052A782 /* DataSession.swift */,
 				16736E1A2BCE344A0052A782 /* RequestManager.swift */,
-				16EE68C62BD2104D0092D098 /* JISNet.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -188,7 +180,6 @@
 			children = (
 				16DBE95D2BC5037D00AA0EE9 /* cheq */,
 				16DBE95C2BC5037D00AA0EE9 /* Products */,
-				80C0BCA6550ED8F33CE247A4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -230,14 +221,6 @@
 			path = NFC;
 			sourceTree = "<group>";
 		};
-		80C0BCA6550ED8F33CE247A4 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				734BAD7AB7DF09E8BCD63843 /* Pods_cheq.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -258,8 +241,6 @@
 			packageProductDependencies = (
 				16DBE97B2BC5071300AA0EE9 /* Then */,
 				16D092942BCE45DB00E941C9 /* Lottie */,
-				16EE68C22BD20F730092D098 /* Alamofire */,
-				16EE68C42BD20F730092D098 /* AlamofireDynamic */,
 			);
 			productName = cheq;
 			productReference = 16DBE95B2BC5037D00AA0EE9 /* cheq.app */;
@@ -292,7 +273,6 @@
 			packageReferences = (
 				16DBE97A2BC5071300AA0EE9 /* XCRemoteSwiftPackageReference "Then" */,
 				16D092932BCE45DB00E941C9 /* XCRemoteSwiftPackageReference "lottie-spm" */,
-				16EE68C12BD20F730092D098 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 16DBE95C2BC5037D00AA0EE9 /* Products */;
 			projectDirPath = "";
@@ -342,7 +322,6 @@
 				16DBE9782BC5050800AA0EE9 /* NFCError.swift in Sources */,
 				16736E092BCD13AA0052A782 /* ResponsePushNoti.swift in Sources */,
 				16EE68C92BD218990092D098 /* Constant.swift in Sources */,
-				16EE68C72BD2104D0092D098 /* JISNet.swift in Sources */,
 				16DBE95F2BC5037D00AA0EE9 /* AppDelegate.swift in Sources */,
 				161EA0162BC79C240071CA9A /* Extensions.swift in Sources */,
 				16586C2F2BC51DC1001B7EA0 /* ReadViewController.swift in Sources */,
@@ -600,14 +579,6 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		16EE68C12BD20F730092D098 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.9.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -620,16 +591,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 16DBE97A2BC5071300AA0EE9 /* XCRemoteSwiftPackageReference "Then" */;
 			productName = Then;
-		};
-		16EE68C22BD20F730092D098 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16EE68C12BD20F730092D098 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		16EE68C42BD20F730092D098 /* AlamofireDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16EE68C12BD20F730092D098 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
 		};
 /* End XCSwiftPackageProductDependency section */
 
