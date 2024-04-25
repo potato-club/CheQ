@@ -11,7 +11,40 @@ import Foundation
 class DataSession {
     public static let shared = DataSession()
 
-    var userInfo: DmUserInfo? = nil
-    var lastCookie : String? = nil
+    private var _userInfo: DmUserInfo? = nil
+    var userInfo: DmUserInfo? {
+        get {
+            if _userInfo == nil &&
+                !Preference.shared.isEmpty(key: Preference.KEY_USER_INFO) {
+                self._userInfo = Preference.shared.getLastUserInfo()
+            }
+            return self._userInfo
+        }
+        set(newVal) {
+            Preference.shared.saveLastUserInfo(m: newVal)
+            self._userInfo = newVal
+        }
+    }
+    
+    private var _lastCookie : String = Preference.NIL
+    var lastCookie : String  {
+        get {
+            if _lastCookie == Preference.NIL &&
+                !Preference.shared.isEmpty(key: Preference.KEY_LAST_COOKIE) {
+                self._lastCookie = Preference.shared.get(key: Preference.KEY_LAST_COOKIE)
+            }
+            return self._lastCookie
+        }
+        set(newVal) {
+            Preference.shared.save(value: newVal, key: Preference.KEY_LAST_COOKIE)
+            self._lastCookie = newVal
+        }
+    }
+    
+    func isValidCookie() -> Bool {
+        return lastCookie != Preference.NIL
+    }
+    
+    
 
 }

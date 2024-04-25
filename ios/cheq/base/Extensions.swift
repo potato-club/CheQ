@@ -190,6 +190,13 @@ extension String {
 
         return results.map { String($0) }
     }
+    
+    func toUIImage() -> UIImage? {
+        if let stringData = Data(base64Encoded: self) {
+            return UIImage(data: stringData)
+        }
+        return nil
+    }
 }
 
 extension UIImage {
@@ -357,4 +364,122 @@ public extension UIDevice {
         return mapToDevice(identifier: identifier)
     }()
 
+}
+
+extension UIView {
+
+    @IBInspectable
+    public var cornerRadius: CGFloat {
+        get {
+            return layer.cornerRadius
+        }
+        set {
+            if !halfRound {
+                layer.cornerRadius = newValue
+                layer.masksToBounds = newValue > 0
+            }
+        }
+    }
+
+    @IBInspectable
+    public var borderWidth: CGFloat {
+        get {
+            return layer.borderWidth
+        }
+        set {
+            layer.borderWidth = newValue
+        }
+    }
+
+    @IBInspectable
+    public var borderColor: UIColor? {
+        get {
+            return UIColor(cgColor: layer.borderColor!)
+        }
+        set {
+            layer.borderColor = newValue?.cgColor
+        }
+    }
+    
+    @IBInspectable
+    public var halfRound: Bool {
+        set {
+            if (!newValue) {
+                return
+            }
+            layer.cornerRadius = layer.frame.height / 2
+        }
+        get {
+            return false
+        }
+    }
+    
+    @IBInspectable
+    public var setShadow: Bool {
+        set {
+            if (!newValue) {
+                return
+            }
+            self.clipsToBounds = false
+            self.layer.masksToBounds = false
+            self.layer.shadowOpacity = 0.8
+            self.layer.shadowRadius = 6.33
+            self.layer.shadowColor = UIColor.rgbToUIColor(r: 130, g: 130, b: 130).cgColor
+            self.layer.shadowOffset = CGSize(width: 0, height: 0)
+        }
+        get {
+            return false
+        }
+    }
+}
+
+
+
+
+extension CALayer {
+  public func applySketchShadow(
+    color: UIColor = .black,
+    alpha: Float = 0.5,
+    x: CGFloat = 0,
+    y: CGFloat = 2,
+    blur: CGFloat = 4,
+    spread: CGFloat = 0)
+  {
+    masksToBounds = false
+    shadowColor = color.cgColor
+    shadowOpacity = alpha
+    shadowOffset = CGSize(width: x, height: y)
+    shadowRadius = blur / 2.0
+    if spread == 0 {
+      shadowPath = nil
+    } else {
+      let dx = -spread
+      let rect = bounds.insetBy(dx: dx, dy: dx)
+      shadowPath = UIBezierPath(rect: rect).cgPath
+    }
+  }
+}
+
+
+extension Dictionary {
+    func percentEncoded() -> Data? {
+        return map { key, value in
+            let escapedKey = "\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            let escapedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            return escapedKey + "=" + escapedValue
+        }
+                .joined(separator: "&")
+                .data(using: .utf8)
+    }
+}
+
+extension CharacterSet {
+    static let urlQueryValueAllowed: CharacterSet = {
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+        return allowed
+    }()
 }

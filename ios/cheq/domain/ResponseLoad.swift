@@ -10,9 +10,18 @@ import Foundation
 
 // MARK: - ResponseLoad
 struct ResponseLoad: Codable {
+    let errmsginfo: Errmsginfo?
     let dmGlobalConfig: DmGlobalConfig?
     let dmUserInfo: DmUserInfo?
     let dsAllMenu, dsFirstLoadYn: [Ds]?
+    
+    enum CodingKeys: String, CodingKey {
+        case errmsginfo = "ERRMSGINFO"
+        case dmGlobalConfig = "dmGlobalConfig"
+        case dmUserInfo = "dmUserInfo"
+        case dsAllMenu = "dsAllMenu"
+        case dsFirstLoadYn = "dsFirstLoadYn"
+    }
 }
 
 // MARK: - DmGlobalConfig

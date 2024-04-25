@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-//import Alamofire
 
 class JVC : UIViewController {
     public var screenWidth : CGFloat = UIScreen.main.bounds.size.width
@@ -18,6 +17,8 @@ class JVC : UIViewController {
 
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
+    let reqManager = RequestManager.shared
+    let session = DataSession.shared
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

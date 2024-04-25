@@ -3,7 +3,7 @@
 //  cheq
 //
 //  Created by Isaac Jang on 4/11/24.
-//
+//  try to git init
 
 import Foundation
 import UIKit
@@ -81,7 +81,7 @@ class WebController: JVC {
     }()
     
 
-    var defUrl = DEFINE.getDreamsUrl()
+//    var defUrl = DEFINE.getDreamsUrl()
 
     lazy var imagePicker : UIImagePickerController = {
         let v = UIImagePickerController()
@@ -146,14 +146,14 @@ class WebController: JVC {
 //            }
 //        }
         // session 초기화 ( 새로할당 )
-        let newProcessPool = WKProcessPool()
-        curWebView.configuration.processPool = newProcessPool
-
-        let url = URL(string: defUrl)!
-        
-        DispatchQueue.main.async {
-            self.curWebView.load(URLRequest(url: url))
-        }
+//        let newProcessPool = WKProcessPool()
+//        curWebView.configuration.processPool = newProcessPool
+//
+//        let url = URL(string: defUrl)!
+//        
+//        DispatchQueue.main.async {
+//            self.curWebView.load(URLRequest(url: url))
+//        }
     }
 
     @objc func reloadWebView(_ sender: UIRefreshControl) {
@@ -205,25 +205,25 @@ class WebController: JVC {
         })
     }
     
-    func runBridgeCode(_ funcNm: String?,_ codable : Codable) {
-        DispatchQueue.main.async {
-            do {
-                let codable = try JSONEncoder().encode(codable)
-                let codableStr = String(data: codable, encoding: .utf8) ?? "{\"result\":{\"resultBoolean\": false,\"resultMessage\": \"json To String error\"}}}"
-                let callbackFunc = "window.\(DEFINE.VUE_BRIDGE).\(funcNm ?? "")('\(codableStr)')"
-//                let callbackFunc = "window.\(DEFINE.VUE_BRIDGE).\(funcNm ?? "")(\(codableStr))"
-
-                DLog.p("Call JS : \(callbackFunc.split(by: 500)[0])")
-                self.printConsole(msg: "\(String(describing: funcNm)) [\(codableStr)]")
-                self.curWebView.evaluateJavaScript(callbackFunc , completionHandler: { result, error in
-                    DLog.p("evaluateJavaScript :: \(callbackFunc.split(by: 500)[0])\n result :: \(String(describing: result))\n error :: \(String(describing: error?.localizedDescription)) ")
-                })
-            } catch {
-                print(error)
-            }
-        }
-
-    }
+//    func runBridgeCode(_ funcNm: String?,_ codable : Codable) {
+//        DispatchQueue.main.async {
+//            do {
+//                let codable = try JSONEncoder().encode(codable)
+//                let codableStr = String(data: codable, encoding: .utf8) ?? "{\"result\":{\"resultBoolean\": false,\"resultMessage\": \"json To String error\"}}}"
+//                let callbackFunc = "window.\(DEFINE.VUE_BRIDGE).\(funcNm ?? "")('\(codableStr)')"
+////                let callbackFunc = "window.\(DEFINE.VUE_BRIDGE).\(funcNm ?? "")(\(codableStr))"
+//
+//                DLog.p("Call JS : \(callbackFunc.split(by: 500)[0])")
+//                self.printConsole(msg: "\(String(describing: funcNm)) [\(codableStr)]")
+//                self.curWebView.evaluateJavaScript(callbackFunc , completionHandler: { result, error in
+//                    DLog.p("evaluateJavaScript :: \(callbackFunc.split(by: 500)[0])\n result :: \(String(describing: result))\n error :: \(String(describing: error?.localizedDescription)) ")
+//                })
+//            } catch {
+//                print(error)
+//            }
+//        }
+//
+//    }
     
     func printConsole(msg: String) {
         DLog.p("printConsole :: [\(msg)]")

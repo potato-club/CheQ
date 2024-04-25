@@ -15,6 +15,8 @@ class Preference {
 //    public static let USER_UUID = "USER_UUID"
     public static let KEY_USER_ID = "KEY_USER_ID"
     public static let KEY_LAST_COOKIE = "KEY_LAST_COOKIE"
+    public static let KEY_USER_INFO = "KEY_USER_INFO"
+    public static let KEY_USER_PHOTO = "KEY_USER_PHOTO"
 
 
     public static let KEY_USER_UUID = "KEY_USER_UUID"
@@ -79,6 +81,43 @@ class Preference {
             initKEY()
         }
         defUserKEY!.removeObject(forKey: key)
+    }
+    
+
+    @discardableResult
+    func saveLastUserInfo(m: DmUserInfo?) -> Bool {
+        guard let json = try? JSONEncoder().encode(m) else {
+            DLog.p("fail Json")
+            save(value: Preference.NIL, key: Preference.KEY_USER_INFO)
+            return false
+        }
+        guard let result = String(data: json, encoding: .utf8) else {
+            DLog.p("fail Result")
+            save(value: Preference.NIL, key: Preference.KEY_USER_INFO)
+            return false
+        }
+        save(value: result, key: Preference.KEY_USER_INFO)
+        return true
+    }
+    
+    func getLastUserInfo() -> DmUserInfo? {
+        let json = get(key: Preference.KEY_USER_INFO)
+        if let data = json.data(using: .utf8) {
+            if let result = try? JSONDecoder().decode(DmUserInfo.self, from: data) as DmUserInfo {
+                return result
+            }
+            else {
+                DLog.p(json)
+//                do {
+//                    try! JSONDecoder().decode(DmUserInfo.self, from: data)
+//                } catch {
+//                    
+//                    DLog.p(error)
+//                }
+                DLog.p("fail load 1")
+            }
+        }
+        return nil
     }
     
 //    public func insertLogRow(str: String) {

@@ -3,14 +3,13 @@
 //  cheq
 //
 //  Created by Isaac Jang on 4/11/24.
-//
+//  try to git init
 
 import Foundation
 import UIKit
 import WebKit
-import Alamofire
 
-class LoginViewController : UIViewController {
+class LoginViewController : JVC {
     private let loginView = UIView().then { v in
         v.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -21,16 +20,14 @@ class LoginViewController : UIViewController {
         v.textAlignment = .center
         v.text = "로그인"
     }
-    private let lastLoginBtn = UILabel().then { v in
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .blue
-        v.textAlignment = .center
-        v.text = "마지막 로그인 테스트"
-        v.isUserInteractionEnabled = false
-        v.isHidden = true
-    }
     
     private let idField = UITextField().then { v in
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = .lightGray
+        v.isEnabled = true
+    }
+    
+    private let pwField = UITextField().then { v in
         v.translatesAutoresizingMaskIntoConstraints = false
         v.backgroundColor = .lightGray
         v.isEnabled = true
@@ -55,11 +52,11 @@ class LoginViewController : UIViewController {
         v.text = "다시 보내기"
     }
     
-    var lastLoginId = ""
+//    var lastLoginId = ""
     var lastPushModel : DMResultModel? = nil
     var dmUserInfo : DmUserInfo? = nil
     
-    let helper = RequestHelper()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,8 +71,8 @@ class LoginViewController : UIViewController {
         view.addSubview(loginView)
         
         loginView.addSubview(idField)
+        loginView.addSubview(pwField)
         loginView.addSubview(loginBtn)
-        loginView.addSubview(lastLoginBtn)
         
         view.addSubview(authVerifyView)
         
@@ -93,16 +90,16 @@ class LoginViewController : UIViewController {
             idField.topAnchor.constraint(equalTo: loginView.topAnchor, constant: 10),
             idField.heightAnchor.constraint(equalToConstant: 50),
             
+            pwField.leftAnchor.constraint(equalTo: loginView.leftAnchor, constant: 10),
+            pwField.rightAnchor.constraint(equalTo: loginView.rightAnchor, constant: -10),
+            pwField.topAnchor.constraint(equalTo: loginView.topAnchor, constant: 10),
+            pwField.heightAnchor.constraint(equalToConstant: 50),
+            
             loginBtn.leftAnchor.constraint(equalTo: idField.leftAnchor),
             loginBtn.rightAnchor.constraint(equalTo: idField.rightAnchor),
-            loginBtn.topAnchor.constraint(equalTo: idField.bottomAnchor, constant: 10),
+            loginBtn.topAnchor.constraint(equalTo: pwField.bottomAnchor, constant: 10),
             loginBtn.bottomAnchor.constraint(equalTo: loginView.bottomAnchor, constant: -10),
             loginBtn.heightAnchor.constraint(equalToConstant: 50),
-            
-            lastLoginBtn.topAnchor.constraint(equalTo: loginBtn.topAnchor),
-            lastLoginBtn.leftAnchor.constraint(equalTo: loginBtn.leftAnchor),
-            lastLoginBtn.rightAnchor.constraint(equalTo: loginBtn.rightAnchor),
-            lastLoginBtn.bottomAnchor.constraint(equalTo: loginBtn.bottomAnchor),
             
             authVerifyView.topAnchor.constraint(equalTo: loginView.bottomAnchor, constant: 10),
             authVerifyView.leftAnchor.constraint(equalTo: loginView.leftAnchor),
@@ -121,28 +118,17 @@ class LoginViewController : UIViewController {
         ])
         
         loginBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickLogin)))
-        lastLoginBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickLastLogin)))
         requestAgainBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickRequestAgain)))
         verifyBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickVerify)))
         
         setIdFieldEnable(true)
         setLoginBtnEnable(true)
         
-        if !Preference.shared.isEmpty(key: Preference.KEY_USER_ID) {
-            idField.text = Preference.shared.get(key: Preference.KEY_USER_ID)
-        }
-        
-        if !Preference.shared.isEmpty(key: Preference.KEY_LAST_COOKIE) {
-            //need to check cookie expired
-            DataSession.shared.lastCookie = Preference.shared.get(key: Preference.KEY_LAST_COOKIE)
-            lastLoginBtn.isUserInteractionEnabled = true
-            lastLoginBtn.isHidden = false
+        if !pref.isEmpty(key: Preference.KEY_USER_ID) {
+            idField.text = pref.get(key: Preference.KEY_USER_ID)
         }
     }
     
-    @objc func onClickLastLogin() {
-        loadUserAndPhoto()
-    }
     @objc func onClickLogin() {
         print("onClickLogin")
         setLoginBtnEnable(false)
@@ -151,12 +137,16 @@ class LoginViewController : UIViewController {
             setLoginBtnEnable(true)
             return
         }
-        lastLoginId = id
+        guard let pw = pwField.text, pw.count > 1 else {
+            //return Alert
+            setLoginBtnEnable(true)
+            return
+        }
         
         setIdFieldEnable(false)
         
         Task {
-            let chkIdResult = try await self.requestCheckId(id: lastLoginId)
+            let chkIdResult = try await reqManager.requestCheckId(id: id)
             if !chkIdResult.success {
                 //show alert
                 print("chkIdResult is Not Y : \(chkIdResult)")
@@ -166,7 +156,7 @@ class LoginViewController : UIViewController {
             }
             print("success chkIdResult")
             
-            let userStatusResult = try await self.requestUserStatus(id: lastLoginId)
+            let userStatusResult = try await reqManager.requestUserStatus(id: id)
             if !userStatusResult.success {
                 //show alert
                 print("chkIdResult is Not Y : \(chkIdResult)")
@@ -175,7 +165,7 @@ class LoginViewController : UIViewController {
                 return
             }
             print("success userStatusResult")
-            let pushNotiResult = try await self.requestPushNoti(id: lastLoginId)
+            let pushNotiResult = try await reqManager.requestPushNoti(id: id)
             if !pushNotiResult.success {
                 print(pushNotiResult.message)
                 setIdFieldEnable(true)
@@ -197,17 +187,25 @@ class LoginViewController : UIViewController {
     }
     
     @objc func onClickRequestAgain() {
+        
+        setAgainAuthBtnEnable(false)
+        guard let id = idField.text, id.count > 1 else {
+            //return Alert
+            setAgainAuthBtnEnable(true)
+            return
+        }
+        
         Task {
-            let pushNotiResult = try await self.requestPushNoti(id: lastLoginId)
+            let pushNotiResult = try await reqManager.requestPushNoti(id: id)
             if !pushNotiResult.success {
                 print(pushNotiResult.message)
                 setIdFieldEnable(true)
-                setLoginBtnEnable(true)
+                setAgainAuthBtnEnable(true)
             }
             guard let reesult = pushNotiResult.result, let tidExpired = reesult.tidExpired else {
                 print("pushNotiResult is Not Y : \(pushNotiResult.message)")
                 setIdFieldEnable(true)
-                setLoginBtnEnable(true)
+                setAgainAuthBtnEnable(true)
                 return
             }
             lastPushModel = reesult
@@ -215,19 +213,26 @@ class LoginViewController : UIViewController {
     }
     
     @objc func onClickVerify() {
+        
+        guard let id = idField.text, id.count > 1 else {
+            //return Alert
+            return
+        }
+        
         guard let tid = lastPushModel?.tid else {
             //error
             print("tid is nil")
             return
         }
+        
         Task {
-            let authResult = try await self.requestAuthResult(id: lastLoginId, tid: tid)
+            let authResult = try await reqManager.requestAuthResult(id: id, tid: tid)
             if !authResult.success {
-                print("pushNotiResult is Not Y : \(authResult.message)")
+                print("authResult is Not Y : \(authResult.message)")
                 return
             }
             
-            let loginResult = try await self.requestLogin(id: lastLoginId)
+            let loginResult = try await reqManager.requestLogin(id: id)
             if !loginResult.success {
                 print("loginResult is Not Y : \(loginResult.message)")
                 return
@@ -238,14 +243,9 @@ class LoginViewController : UIViewController {
                 return
             }
             
-            saveUserId(id: lastLoginId)
-            loadUserAndPhoto()
-        }
-    }
-    
-    @objc func loadUserAndPhoto() {
-        Task {
-            let responseLoad = try await self.requestLoad()
+            saveUserId(id: id)
+            
+            let responseLoad = try await reqManager.requestLoad(id: id)
             guard let loadResult = responseLoad.result,
                   responseLoad.success
             else {
@@ -253,34 +253,28 @@ class LoginViewController : UIViewController {
                 return
             }
             
-            print("responseLoad done")
+            pref.saveLastUserInfo(m: loadResult)
             
-            DataSession.shared.userInfo = loadResult
-            
-            
-            let responseSearch = try await self.requestSearch(userInfo: loadResult)
-            
+            let responseSearch = try await reqManager.requestSearch(userInfo: loadResult)
             guard let searchResult = responseSearch.result,
                   responseSearch.success
             else {
-                print("responseSearch is Not Y : \(responseSearch.success) \(responseSearch.message)")
+                print("responseSearch is Not Y : \(responseSearch.success) \(responseSearch.message) \(responseSearch.result == nil)")
                 return
             }
-            print("searchResult done")
             
-            if let photo = searchResult.photo {
-                let imageURL = URL(string: photo)! // 이미지 URL 입력
-                let base64Data = try await getBase64DataFromImageURL(imageURL: imageURL)
-                print(base64Data) // Base64 데이터 출력
+            let photoResult = try await reqManager.requestUserPhoto()
+            if let base64 = photoResult.result {
+                pref.save(value: base64, key: Preference.KEY_USER_PHOTO)
+            }
+            else {
+                print("photo is nil")
             }
             
-            print("user id : \(DataSession.shared.userInfo?.gUserNo)")
+            if let nav = self.navigationController as? MainNavVC {
+                nav.clearPush(vc: MainViewController())
+            }
         }
-    }
-    
-    func getBase64DataFromImageURL(imageURL: URL) async throws -> String {
-        let (data, _) = try await URLSession.shared.data(from: imageURL)
-        return data.base64EncodedString()
     }
     
     @MainActor
@@ -302,6 +296,13 @@ class LoginViewController : UIViewController {
     }
     
     @MainActor
+    func setAgainAuthBtnEnable(_ val : Bool) {
+        requestAgainBtn.isUserInteractionEnabled = val
+        requestAgainBtn.textColor = val ? .white : .black
+        requestAgainBtn.backgroundColor = val ? "#2e2e2e".toUIColor : "#e2e2e2".toUIColor
+    }
+    
+    @MainActor
     func setVerifyBtnEnable(_ val : Bool) {
         verifyBtn.isUserInteractionEnabled = val
         verifyBtn.textColor = val ? .white : .black
@@ -319,149 +320,11 @@ class LoginViewController : UIViewController {
     }
     
     func saveUserId(id: String) {
-        Preference.shared.save(value: id, key: Preference.KEY_USER_ID)
+        pref.save(value: id, key: Preference.KEY_USER_ID)
     }
 }
-// MARK: - Network Functions
+// MARK: - Utils
 extension LoginViewController {
-    func requestCheckId(id: String) async throws -> requestResult<String> {
-        let response = await helper.requestIdCheck(id: id)
-        print("response : \(response)")
-        if let error = response.error {
-            return requestResult(success: false, message: error.localizedDescription, result: nil)
-        }
-
-        guard let result = response.value else {
-            return requestResult(success: false, message: "response value is nil", result: nil)
-        }
-        
-        guard let strIDYn = result.dmCheckID?.strIDYn else {
-            return requestResult(success: false, message: "response value is nil (2)", result: nil)
-        }
-        
-        if let errmsginfo = result.errmsginfo?.errmsg {
-            return requestResult(success: false, message: errmsginfo, result: nil)
-        }
-        
-        
-        if strIDYn != "Y" {
-            return requestResult(success: false, message: "N_Custom", result: nil)
-            
-        }
-        
-        return requestResult(success: true, message: "success", result: nil)
-    }
     
-    func requestUserStatus(id: String) async throws -> requestResult<String> {
-        let response = await helper.requestUserStatus(id: id)
-        print("response : \(response)")
-        if let error = response.error {
-            return requestResult(success: false, message: error.localizedDescription, result: nil)
-        }
-
-        guard let result = response.value else {
-            return requestResult(success: false, message: "response value is nil", result: nil)
-        }
-        
-        if result.dmUserStatus.returnCode != "0000" {
-            return requestResult(success: false, message: result.dmUserStatus.returnMessage, result: nil)
-        }
-        
-        return requestResult(success: true, message: result.dmUserStatus.returnMessage, result: nil)
-    }
     
-    func requestPushNoti(id: String) async throws -> requestResult<DMResultModel> {
-        let response = await helper.requestPushNoti(id: id)
-        print("response : \(response)")
-        
-        if let error = response.error {
-            return requestResult(success: false, message: error.localizedDescription, result: nil)
-        }
-
-        guard let result = response.value?.dmPushNoti else {
-            return requestResult(success: false, message: "response value is nil", result: nil)
-        }
-        
-        return requestResult(success: true, message: "success", result: result)
-    }
-    
-    func requestAuthResult(id: String, tid: String) async throws -> requestResult<DMResultModel> {
-        let response = await helper.requestChkAuthResult(id: id, tid: tid)
-        print("response : \(response)")
-        
-        
-        if let error = response.error {
-            return requestResult(success: false, message: error.localizedDescription, result: nil)
-        }
-
-        guard let result = response.value?.dmChkAuthResult else {
-            return requestResult(success: false, message: "response value is nil", result: nil)
-            
-        }
-        return requestResult(success: true, message: "success", result: result)
-    }
-    
-    func requestLogin(id: String) async throws -> requestResult<String> {
-        let response = await helper.requestLoginDo(id: id)
-        
-        if let error = response.error {
-            return requestResult(success: false, message: error.localizedDescription, result: nil)
-        }
-
-        guard let result = response.value else {
-            return requestResult(success: false, message: "response value is nil", result: nil)
-        }
-        
-        if response.value?.metadata.success != true {
-            return requestResult(success: false, message: "success value not true", result: nil)
-        }
-        
-        guard let cookie = response.response?.headers.dictionary["Set-Cookie"] else {
-            return requestResult(success: false, message: "cookie parsing failed", result: nil)
-        }
-        
-        return requestResult(success: true, message: "success", result: cookie)
-    }
-    
-    func requestLoad() async throws -> requestResult<DmUserInfo> {
-        let response = await helper.requestLoad(id: lastLoginId, cookie: DataSession.shared.lastCookie ?? "")
-        
-        if let error = response.error {
-            print("----s---")
-            print(response.debugDescription)
-            print("-----e--")
-            return requestResult(success: false, message: error.localizedDescription, result: nil)
-        }
-
-        guard let result = response.value?.dmUserInfo else {
-            return requestResult(success: false, message: "response value is nil", result: nil)
-        }
-        
-        print("result : \(result)")
-        
-        return requestResult(success: true, message: "success", result: result)
-    }
-    
-    func requestSearch(userInfo: DmUserInfo) async throws -> requestResult<SearchResultModel> {
-        let response = await helper.requestSearch(userInfo: userInfo, cookie:  DataSession.shared.lastCookie ?? "")
-        
-        if let error = response.error {
-            print("----s---")
-            print(response.debugDescription)
-            print("-----e--")
-            return requestResult(success: false, message: error.localizedDescription, result: nil)
-        }
-
-        guard let result = response.value?.dsSreg else {
-            return requestResult(success: false, message: "response value is nil", result: nil)
-        }
-        
-        return requestResult(success: true, message: "success", result: result.first)
-    }
-}
-
-struct requestResult<T> {
-    let success : Bool
-    let message : String
-    let result : T?
 }
