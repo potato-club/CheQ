@@ -11,7 +11,7 @@ const BigBox = styled.div`
 
 const Square = styled.div`
   width: 100%;
-  height: 35%; 
+  height: 40%; 
   background-color: #5959eb;
   display: flex;
 `;
