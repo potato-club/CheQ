@@ -44,7 +44,7 @@ class RequestConstant {
     }
     
     func requestIdCheck(id: String) async -> RequestResult<ResponseCheckID> {
-        var headers = headers
+//        var headers = headers
         
         let parameters = getParamBody(.CHECK_ID, cParam: ["id":id])
         return await request(headers: headers,
@@ -54,7 +54,7 @@ class RequestConstant {
     }
     
     func requestUserStatus(id: String) async -> RequestResult<ResponseUserStatus> {
-        var headers = headers
+//        var headers = headers
         
         let parameters = getParamBody(.USER_STATUS, cParam: ["id":id])
         return await request(headers: headers,
@@ -64,7 +64,7 @@ class RequestConstant {
     }
     
     func requestPushNoti(id: String) async -> RequestResult<ResponsePushNoti> {
-        var headers = headers
+//        var headers = headers
         
         let parameters = getParamBody(.PUSH_NOTI, cParam: ["id":id])
         return await request(headers: headers,
@@ -75,7 +75,7 @@ class RequestConstant {
     
     
     func requestChkAuthResult(id: String, tid: String) async -> RequestResult<ResponseChkAuthResult> {
-        var headers = headers
+//        var headers = headers
         
         let parameters = getParamBody(.CHK_AUTH_RESULT, cParam: ["id":id, "tid":tid])
         return await request(headers: headers,
@@ -85,7 +85,7 @@ class RequestConstant {
     }
     
     func requestLoginDo(id: String, verified: Bool) async -> RequestResult<ResponseLogin> {
-        let headers = headers
+//        let headers = headers
         
         let parameters = getParamBody(.LOGIN_DO, cParam: ["id":id, "directLoginYn": verified ? "Y" : "N"])
         return await request(headers: headers,

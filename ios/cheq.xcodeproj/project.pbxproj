@@ -29,6 +29,8 @@
 		16736E172BCE2CCB0052A782 /* MainNavVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16736E162BCE2CCB0052A782 /* MainNavVC.swift */; };
 		16736E192BCE2D030052A782 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16736E182BCE2D030052A782 /* MainViewController.swift */; };
 		16736E1B2BCE344A0052A782 /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16736E1A2BCE344A0052A782 /* RequestManager.swift */; };
+		167F901D2BE0C06B00FCCE89 /* BridgeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167F901C2BE0C06B00FCCE89 /* BridgeList.swift */; };
+		167F90202BE0C56100FCCE89 /* WebBridgeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167F901F2BE0C56100FCCE89 /* WebBridgeExtension.swift */; };
 		16978A992BDA4EF5007F8B61 /* menu.json in Resources */ = {isa = PBXBuildFile; fileRef = 16978A982BDA4EF5007F8B61 /* menu.json */; };
 		16D092922BCE3E5600E941C9 /* ResponseMenuInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D092912BCE3E5600E941C9 /* ResponseMenuInfo.swift */; };
 		16D092952BCE45DB00E941C9 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 16D092942BCE45DB00E941C9 /* Lottie */; };
@@ -82,6 +84,8 @@
 		16736E162BCE2CCB0052A782 /* MainNavVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavVC.swift; sourceTree = "<group>"; };
 		16736E182BCE2D030052A782 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		16736E1A2BCE344A0052A782 /* RequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
+		167F901C2BE0C06B00FCCE89 /* BridgeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeList.swift; sourceTree = "<group>"; };
+		167F901F2BE0C56100FCCE89 /* WebBridgeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBridgeExtension.swift; sourceTree = "<group>"; };
 		16978A982BDA4EF5007F8B61 /* menu.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = menu.json; sourceTree = "<group>"; };
 		16D092912BCE3E5600E941C9 /* ResponseMenuInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseMenuInfo.swift; sourceTree = "<group>"; };
 		16D092992BCE5E6400E941C9 /* QRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +150,7 @@
 				16736E022BCCFD680052A782 /* RequestConstant.swift */,
 				16736E142BCD58950052A782 /* DataSession.swift */,
 				16736E1A2BCE344A0052A782 /* RequestManager.swift */,
+				167F901C2BE0C06B00FCCE89 /* BridgeList.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -165,6 +170,21 @@
 				16D092912BCE3E5600E941C9 /* ResponseMenuInfo.swift */,
 			);
 			path = domain;
+			sourceTree = "<group>";
+		};
+		167F901E2BE0C54900FCCE89 /* wUtils */ = {
+			isa = PBXGroup;
+			children = (
+				167F901F2BE0C56100FCCE89 /* WebBridgeExtension.swift */,
+			);
+			path = wUtils;
+			sourceTree = "<group>";
+		};
+		167F90212BE0C5B000FCCE89 /* bridgeDomains */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = bridgeDomains;
 			sourceTree = "<group>";
 		};
 		16978A952BDA4ED8007F8B61 /* lottie */ = {
@@ -194,6 +214,8 @@
 		16DBE95D2BC5037D00AA0EE9 /* cheq */ = {
 			isa = PBXGroup;
 			children = (
+				167F90212BE0C5B000FCCE89 /* bridgeDomains */,
+				167F901E2BE0C54900FCCE89 /* wUtils */,
 				16978A952BDA4ED8007F8B61 /* lottie */,
 				16581A5F2BC924A500F96F97 /* domain */,
 				161EA0122BC79BEB0071CA9A /* utils */,
@@ -306,6 +328,7 @@
 				16DBE9632BC5037D00AA0EE9 /* InitialViewController.swift in Sources */,
 				16736E0D2BCD1E610052A782 /* DMResultModel.swift in Sources */,
 				16736E132BCD4E9C0052A782 /* ResponseSearch.swift in Sources */,
+				167F90202BE0C56100FCCE89 /* WebBridgeExtension.swift in Sources */,
 				161EA00C2BC79B420071CA9A /* WebController.swift in Sources */,
 				16736E0B2BCD1E140052A782 /* ResponseChkAuthResult.swift in Sources */,
 				16736E112BCD48190052A782 /* ResponseLoad.swift in Sources */,
@@ -322,6 +345,7 @@
 				16DBE9782BC5050800AA0EE9 /* NFCError.swift in Sources */,
 				16736E092BCD13AA0052A782 /* ResponsePushNoti.swift in Sources */,
 				16EE68C92BD218990092D098 /* Constant.swift in Sources */,
+				167F901D2BE0C06B00FCCE89 /* BridgeList.swift in Sources */,
 				16DBE95F2BC5037D00AA0EE9 /* AppDelegate.swift in Sources */,
 				161EA0162BC79C240071CA9A /* Extensions.swift in Sources */,
 				16586C2F2BC51DC1001B7EA0 /* ReadViewController.swift in Sources */,

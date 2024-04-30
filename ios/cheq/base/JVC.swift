@@ -20,9 +20,16 @@ class JVC : UIViewController {
     let reqManager = RequestManager.shared
     let session = DataSession.shared
     
+    
+    func baseUserAgent() -> String {
+        return "##CheQApp/\(Bundle.main.versionName)"
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
 //        appDelegate.changeOrientation = true
     }
+    
+    
 }

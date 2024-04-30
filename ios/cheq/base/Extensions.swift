@@ -483,3 +483,20 @@ extension CharacterSet {
         return allowed
     }()
 }
+
+
+
+extension Bundle {
+    var versionName: String {
+        guard let versionName = infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return "1.0.00"
+        }
+        return versionName
+    }
+    var versionNumber: String {
+        guard let versionNumber = infoDictionary?["CFBundleVersion"] as? String else {
+            return "-1"
+        }
+        return versionNumber
+    }
+}

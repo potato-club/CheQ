@@ -25,6 +25,10 @@ class Constant {
     static let URL_SEARCH = baseUrl + URL_MD_CMBS + "/search.do"
     static let URL_MENU_INFO = baseUrl + URL_MD_CMBS + "/search.do" // todo
 
+    public static let VUE_BRIDGE = "app"
+
+    public static let MENU_CLOSE_BTN_CLASS = "gnb_close"
+    public static let ROUTER_BACK_BTN_CLASS = "btn_back"
     
 }
 
