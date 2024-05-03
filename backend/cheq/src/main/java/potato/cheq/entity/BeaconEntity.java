@@ -18,16 +18,11 @@ public class BeaconEntity {
     @Column(name = "beacon_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
-
     @Column(nullable = false)
     private String mac_address;
 
     @Column(nullable = false)
-    private boolean attendance_info;
-
-    @Column(nullable = false)
     private LocalDateTime attendance_time;
+
+    private String beacon_position;
 }
