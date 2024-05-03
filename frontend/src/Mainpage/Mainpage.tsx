@@ -9,15 +9,19 @@ const BigBox = styled.div`
   flex-direction: column;
   width: 390px;
   height: 100vh;
-  border: 2px solid grey;
   margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+  border-radius: 5px;
 `;
 
 const SmallBox = styled.div`
   width: 100px;
   height: 100px;
-  background-color: gray;
+  background-color: white;
   border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
   &:hover {
     cursor: pointer;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
@@ -27,24 +31,26 @@ const SmallBox = styled.div`
 
 const SquareA = styled.div`
   width: 100%;
-  background-color: #3e3eed;
+  background-color: #375cde;
   display: flex;
   flex-direction: column;
   justify-content: center; 
   padding-bottom: 50px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
 const SquareB = styled.div`
   width: 100%;
-  height: 100px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 2px solid gray;
   border-radius: 2px;
   position: relative; /* 부모 요소에 position: relative 추가 */
-  //box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), -2px -2px 5px rgba(0, 0, 0, 0.3); /* 상하좌우 그림자 설정 */
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
   &:hover {
     cursor: pointer;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
@@ -66,7 +72,6 @@ const AdvertisementBox = styled(Slider)`
   left: 50%;
   transform: translate(-50%, -50%);
   overflow: hidden;
-  display: flex;
 `;
 
 const TextA = styled.div`
@@ -81,7 +86,7 @@ const TextB = styled.div`
   font-size: 10px;
   font-weight: bold;
   position: absolute;
-  top: 5px;
+  top: 15px;
   left: 25px;
 `;
 const Image = styled.img`
@@ -96,19 +101,48 @@ const CirclesContainer = styled.div`
   height: 0px;
 `;
 
-const Circle = styled.div`
+const CircleA = styled.div`
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+`;
+
+const CircleB = styled.div`
   background-color: green;
   width: 10px;
   height: 10px;
   border-radius: 50%;
 `;
 
+const NavBar = styled.div`
+  display: flex;
+  justify-content: space-around;
+  background-color: #375cde;
+  height: 80px;
+  border-radius: 14px;
+  width: 390px;
+  margin: auto;
+`;
+const NavBtn = styled.button`
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  font-size: 16px;
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    transform: scale(1);
+  }
+`;
+
 
 const images = [
-  'https://flexible.img.hani.co.kr/flexible/normal/970/777/imgdb/resize/2019/0926/00501881_20190926.JPG',
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTN55lIKqWaNpSb2A66vQf9u9mY2t9n8P_YYJnPDRykMA&s',
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/300px-Cat_November_2010-1a.jpg',
-];
+  'https://pimg.hackers.com/land/main/land_default.jpg',
+  'https://img.seoul.co.kr/img/upload/2023/06/27/SSC_20230627135839_O2.jpg',
+
+]
 
 function Mainpage() {
   const settings = {
@@ -119,10 +153,10 @@ function Mainpage() {
     slidesToScroll: 1,
     arrows: true,
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 3000,
   };
 
-  settings.dots = images.length <= settings.slidesToShow;
+  //settings.dots = images.length <= settings.slidesToShow;
 
   return (
     <BigBox>
@@ -137,11 +171,11 @@ function Mainpage() {
     <SquareB>
       <TextB>현재 출결 현황</TextB>
       <CirclesContainer>
-        <Circle />
-        <Circle />
-        <Circle />
-        <Circle />
-        <Circle />
+        <CircleA />
+        <CircleB />
+        <CircleB />
+        <CircleB />
+        <CircleB />
       </CirclesContainer>
     </SquareB>
     <SquareC>
@@ -149,7 +183,15 @@ function Mainpage() {
       <SmallBox />
       <SmallBox />
     </SquareC>
+      <NavBar>
+        <NavBtn>HOME</NavBtn>
+        <NavBtn>내 출결</NavBtn>
+        <NavBtn>MY</NavBtn>
+      </NavBar>
+ 
   </BigBox>
+  
+
   );
 }
 
