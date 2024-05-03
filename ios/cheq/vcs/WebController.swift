@@ -8,11 +8,6 @@
 import Foundation
 import UIKit
 import WebKit
-import MessageUI
-
-import AVFoundation
-import Photos
-import PhotosUI
 
 
 class WebController: JVC {
@@ -90,22 +85,27 @@ class WebController: JVC {
         return v
     }()
     
-    let progressView : UIProgressView = {
-        let v = UIProgressView()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        v.progressViewStyle = .bar
-        return v
-    }()
+//    let progressView : UIProgressView = {
+//        let v = UIProgressView()
+//        v.translatesAutoresizingMaskIntoConstraints = false
+//        v.progressViewStyle = .bar
+//        return v
+//    }()
+    lazy var floatingBtn = FloatingBtn(jvc: self)
 
-    var defUrl = "https://www.naver.com"
-
-    lazy var imagePicker : UIImagePickerController = {
-        let v = UIImagePickerController()
-        v.delegate = self
-        return v
-    }()
+//    var defUrl = "https://www.naver.com"
+    var defUrl = ""
     
     var swipeAble = true
+    
+    var observationMap : [String:NSKeyValueObservation?] = {
+        var map : [String:NSKeyValueObservation?] = [:]
+        for obKey in Observers.allCases {
+            map[obKey.name] = nil
+        }
+
+        return map
+    }()
 
 
     override func viewDidLoad() {
@@ -119,7 +119,22 @@ class WebController: JVC {
 //            addProgressBar()
 //        }
         addGesture()
+        
+        floatingBtn.addChild(item: FloatingBtn.FloatingChildModel(indexId: 1, iconName: "id_card", clickEvent: {
+            self.floatingBtn.floatingActive(setActive: false)
+            DLog.p("onClick Id Card 1")
+            self.present(QRViewController(), animated: true)
+//            if let navi = self.navigationController {
+//                navi.pushViewController(QRViewController(), animated: true)
+//            }
+        }))
+//        floatingBtn.addChild(item: FloatingBtn.FloatingChildModel(indexId: 1, iconName: "id_card", clickEvent: {
+//            self.floatingBtn.floatingActive(setActive: false)
+//            DLog.p("onClick Id Card 2")
+//        }))
+        floatingBtn.build()
     }
+    
     
     //MARK: - Draw View
     func addWebView() {
@@ -160,10 +175,13 @@ class WebController: JVC {
 //            }
 //        }
         // session 초기화 ( 새로할당 )
-        let newProcessPool = WKProcessPool()
-        curWebView.configuration.processPool = newProcessPool
-
-        let url = URL(string: defUrl)!
+//        let newProcessPool = WKProcessPool()
+//        curWebView.configuration.processPool = newProcessPool
+//
+        guard let url = URL(string: defUrl) else {
+            DLog.p("url is error")
+            return
+        }
         
         DispatchQueue.main.async {
             self.curWebView.load(URLRequest(url: url))
@@ -287,10 +305,7 @@ class WebController: JVC {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-//        openCamera(type: "ocr")
         
-//        var systemVersion = UIDevice.current.systemVersion
-//        DLog.p("systemVersion :: \(systemVersion)")
     }
 }
 
@@ -346,14 +361,12 @@ class WebController: JVC {
 //    }
 //}
 
-//MARK: Message Handler
-
 
 //MARK: webview delegate, file Download
 extension WebController : WKUIDelegate, WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        progressView.isHidden = true
+//        progressView.isHidden = true
     }
 
     @available(iOS 15.0, *)
@@ -498,44 +511,8 @@ extension WebController : WKUIDelegate, WKNavigationDelegate {
 }
 
 //MARK: Message Call Functions
-extension WebController : MFMessageComposeViewControllerDelegate {
-    //let smsbody4 = `{"recipients":["01058620091", "01065390091"], "desc":"testMessage"}`
-    //webkit.messageHandlers.sendSms.postMessage(smsbody4);
-    //send sms
-    func sendMessage(message: String, recipients: [String]) {
-        
-        if (MFMessageComposeViewController.canSendText()) {
-            runBridgeCode("sendSmsResult", BaseResultDomain(resultMessage: "success", resultBoolean: true))
-            
-            let controller = MFMessageComposeViewController()
-            controller.body = message
-            controller.recipients = recipients
-            controller.messageComposeDelegate = self
-            self.present(controller, animated: true, completion: nil)
-            return
-        }
-        
-        runBridgeCode("sendSmsResult", BaseResultDomain(resultMessage: "message can not send", resultBoolean: false))
-        
-    }
-    //result - send message
-    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
-        DLog.p(result)
-        switch (result) {
-            case .cancelled:
-                print("Message was cancelled")
-            case .failed:
-                print("Message failed")
-            case .sent:
-                print("Message was sent")
-            default:
-                return
-        }
-        dismiss(animated: true, completion: nil)
-    }
+extension WebController {
     
-//    let bgbody = `{"color":"232323", "isLight":true}`
-//    webkit.messageHandlers.setBackgroundColor.postMessage(bgbody);
     func setBackgroundColor(color:String, isLight: Bool) {
         DLog.p("setBackgroundColor :: \(color) / \(isLight)")
         if #available(iOS 13.0, *) {
@@ -580,218 +557,6 @@ extension WebController : MFMessageComposeViewControllerDelegate {
             runBridgeCode("setBottomAreaColorResult", BaseResultDomain(resultMessage: "iOS version is under 13", resultBoolean: false))
         }
     }
-    
-    func sendKakao(type: String, templatable: Templatable) {
-        if !ShareApi.isKakaoTalkSharingAvailable() {
-            //미설치
-            runBridgeCode("sendKakaoResult", BaseResultDomain(resultMessage: "kakao not installed", resultBoolean: false))
-
-            openStoreForKakao()
-            return
-        }
-        
-        ShareApi.shared.shareDefault(templatable: templatable) {(sharingResult, error) in
-            if let error = error {
-                DLog.p(error)
-                self.runBridgeCode("sendKakaoResult", BaseResultDomain(resultMessage: "can not share : \(error)", resultBoolean: false))
-                return
-            }
-
-            self.runBridgeCode("sendKakaoResult", BaseResultDomain(resultMessage: "sendKakao success", resultBoolean: true))
-            
-            if let sharingResult = sharingResult {
-                UIApplication.shared.open(sharingResult.url, options: [:], completionHandler: nil)
-            }
-        }
-    }
-
-    func sendKakaoCustom(templateId: Int64, templateArgs : [String:String]) {
-        if !ShareApi.isKakaoTalkSharingAvailable() {
-            //미설치
-            runBridgeCode("sendKakaoCustomResult", BaseResultDomain(resultMessage: "kakao not installed", resultBoolean: false))
-
-            //open store
-            openStoreForKakao()
-            return
-        }
-        ShareApi.shared.shareCustom(templateId: templateId, templateArgs: templateArgs) { result, error in
-            if let error = error {
-                DLog.p(error)
-                self.runBridgeCode("sendKakaoCustomResult", BaseResultDomain(resultMessage: "can not share : \(error)", resultBoolean: false))
-                return
-            }
-
-            self.runBridgeCode("sendKakaoCustomResult", BaseResultDomain(resultMessage: "sendKakaoCustom success", resultBoolean: true))
-
-            if let result = result {
-                UIApplication.shared.open(result.url, options: [:], completionHandler: nil)
-            }
-        }
-    }
-
-    private func openStoreForKakao() {
-        let appId = "362057947"
-        if let url = URL(string: "itms-apps://itunes.apple.com/app/id\(appId)"), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        }
-    }
-    
-    func openCamera() {
-        DispatchQueue.main.async {
-            switch self.openCameraType {
-            case CameraTypes.ocr.name:
-                let cameraVc = CameraVC()
-                cameraVc.delegate = self
-                self.navigationController?.pushViewController(cameraVc, animated: true)
-                break
-            case CameraTypes.default500.name:
-                self.imagePicker.sourceType = .camera
-                self.present(self.imagePicker, animated: true, completion: nil)
-                break
-            default:
-                self.runBridgeCode("openCameraResult", BaseResultDomain(resultMessage: "type is not match", resultBoolean: false))
-                break
-            }
-        }
-    }
-
-    func openGallery() {
-        DispatchQueue.main.async {
-            switch self.openGalleryType {
-            case GalleryTypes.default500.name:
-                self.imagePicker.sourceType = .photoLibrary
-                self.present(self.imagePicker, animated: true, completion: nil)
-                break
-            default:
-                self.runBridgeCode("openGalleryResult", BaseResultDomain(resultMessage: "type is not match", resultBoolean: false))
-                break
-            }
-        }
-    }
-
-    func permissionCheckForGallery(_ result: @escaping (Bool)->Void) {
-        switch (PHPhotoLibrary.authorizationStatus()) {
-        case .authorized:
-            result(true)
-            break
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization({ (status) in
-                switch status {
-                case .authorized:
-                    result(true)
-                    break
-                default :
-                    result(false)
-                    break
-                }
-            })
-            break
-        default:
-            result(false)
-            self.permissionDenied(type: PermissionTypes.gallery.name)
-            break
-        }
-    }
-
-    func permissionCheckForCamera(_ result: @escaping (Bool)->Void) {
-        let status = AVCaptureDevice.authorizationStatus(for: .video)
-        switch (status) {
-        case .authorized:
-            result(true)
-            break
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { (granted) in
-                if (granted) {
-                    result(true)
-                    return
-                }
-
-                result(false)
-            }
-            break
-        default:
-            result(false)
-            permissionDenied(type: PermissionTypes.camera.name)
-            break
-        }
-    }
-    
-    func permissionDenied(type: String) {
-        DispatchQueue.main.async {
-            var typeText = ""
-            var resultMethodName = "openCameraResult"
-            if type.lowercased() == PermissionTypes.camera.name {
-                typeText = "카메라"
-                resultMethodName = "openCameraResult"
-            }
-            else if type.lowercased() == PermissionTypes.microphone.name {
-                typeText = "마이크"
-                resultMethodName = "recMicResult"
-            }
-
-            var alertText = "개인 정보 설정으로 인해 \(typeText)에 액세스할 수 없는 것 같습니다. 다음을 수행하여 이 문제를 해결할 수 있습니다.\n\n1. 이 앱을 닫습니다.\n\n2. 설정 앱을 엽니다.\n\n3. 아래로 스크롤하여 목록에서 이 앱을 선택합니다.\n\n4. \(typeText) 권한을 켭니다.\n\n5. 이 앱을 열고 다시 시도하십시오."
-            var alertButton = "확인"
-            var goAction = UIAlertAction(title: alertButton, style: .default, handler: nil)
-            var actionArray : [UIAlertAction] = [goAction]
-
-            if let settingUrl = URL(string: UIApplication.openSettingsURLString),
-               UIApplication.shared.canOpenURL(settingUrl) {
-                alertText = "개인 정보 설정으로 인해 \(typeText)에 액세스할 수 없는 것 같습니다. 다음을 수행하여 이 문제를 해결할 수 있습니다.\n\n1. 아래의 설정 버튼을 눌러 설정 앱을 엽니다.\n\n2. \(typeText) 권한을 켭니다.\n\n3. 이 앱을 열고 다시 시도하십시오."
-                alertButton = "설정"
-                goAction = UIAlertAction(title: alertButton, style: .default, handler: { (alert: UIAlertAction!) -> Void in
-                    UIApplication.shared.open(settingUrl, options: [:], completionHandler: nil)
-                })
-                let cancelAction = UIAlertAction(title: "닫기", style: .cancel)
-                actionArray = [goAction, cancelAction]
-            }
-
-            let alert = UIAlertController(title: "오류", message: alertText, preferredStyle: .alert)
-            for action in actionArray {
-                alert.addAction(action)
-            }
-            self.present(alert, animated: true, completion: nil)
-
-            self.runBridgeCode(resultMethodName, BaseResultDomain(resultMessage: "permission denied", resultBoolean: false))
-        }
-    }
-
-    func permissionCheckForMic(completion : @escaping (Bool)->Void) {
-        let audioStatus = AVCaptureDevice.authorizationStatus(for: .audio)
-        let recordStatus = AVAudioSession.sharedInstance().recordPermission
-
-        if audioStatus == .authorized &&
-                   recordStatus == .granted {
-            completion(true)
-            return
-        }
-
-        if audioStatus == .denied  {
-            permissionDenied(type: PermissionTypes.microphone.name)
-            return
-        }
-
-        if recordStatus == .denied {
-            permissionDenied(type: PermissionTypes.microphone.name)
-            return
-        }
-
-        if recordStatus != .granted {
-            AVAudioSession.sharedInstance().requestRecordPermission({ granted in
-                if granted {
-                    self.permissionCheckForMic(completion: completion)
-                    return
-                }
-                completion(false)
-            })
-            return
-        }
-
-        if audioStatus != .authorized {
-            AVCaptureDevice.requestAccess(for: .audio) { (granted) in
-                completion(granted)
-            }
-        }
-    }
 
     func uploadData(type: String) {
         let result = getDataForUpload(type: type)
@@ -834,24 +599,9 @@ extension WebController : MFMessageComposeViewControllerDelegate {
             let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
             let dataResult = DMDataResult(result: resultDm, data: token)
             return dataResult
-        case UploadDataTypes.deviceName.name :
+        case UploadDataTypes.deviceId.name :
             let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-            var dataResult : DMDataResult
-            if #available(iOS 16.0, *) {
-                dataResult = DMDataResult(result: resultDm, data: UIDevice.modelName)
-            } else {
-                dataResult = DMDataResult(result: resultDm, data: UIDevice.current.name)
-            }
-            return dataResult
-        case UploadDataTypes.osVersion.name :
-            let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-            let dataResult = DMDataResult(result: resultDm, data: "\(UIDevice.current.systemVersion)")
-            return dataResult
-        case UploadDataTypes.resolution.name :
-            let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-            let width : Int = Int(screenWidth * screenScale)
-            let heigth : Int = Int(screenHeight * screenScale)
-            let dataResult = DMDataResult(result: resultDm, data: "\(width)*\(heigth)")
+            var dataResult = DMDataResult(result: resultDm, data: S_Keychain().getDeviceID())
             return dataResult
         case "log".lowercased() : // only for test
             //print log
@@ -867,136 +617,14 @@ extension WebController : MFMessageComposeViewControllerDelegate {
             return DMDataResult(result: resultDm, data: nil)
         }
     }
-    
-    func copyToClipBoard(copyData: String) {
-        UIPasteboard.general.string = copyData
-        let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-        runBridgeCode("copyToClipBoardResult", resultDm)
-    }
-
-    func requestPermission(_ permissionType: String) {
-        DispatchQueue.main.async {
-            switch (permissionType) {
-            case PermissionTypes.camera.name :
-                self.permissionCheckForCamera { b in
-                    let resultDm = BaseResultDomain(resultMessage: b ? "success" : "failed", resultBoolean: b)
-                    self.runBridgeCode("reqPermissionResult", resultDm)
-                }
-                break
-            case PermissionTypes.microphone.name :
-                self.permissionCheckForMic { b in
-                    let resultDm = BaseResultDomain(resultMessage: b ? "success" : "failed", resultBoolean: b)
-                    self.runBridgeCode("reqPermissionResult", resultDm)
-                }
-                break
-            default:
-                let resultDm = BaseResultDomain(resultMessage: "not matching type", resultBoolean: false)
-                self.runBridgeCode("reqPermissionResult", resultDm)
-                break
-            }
-        }
-    }
-}
-
-//MARK: Camera/Gallery Delegate for Image Picker
-extension WebController : UIImagePickerControllerDelegate & UINavigationControllerDelegate  {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]){
-        imagePicker.dismiss(animated: true, completion: nil)
-
-        let resultName = openType == OpenMediaTypes.camera ? "openCameraResult" : "openGalleryResult"
-
-        guard let selectedImage = info[.originalImage] as? UIImage else {
-            DLog.p("Image not found!")
-            self.runBridgeCode(resultName, BaseResultDomain(resultMessage: "Image not found", resultBoolean: false))
-            return
-        }
-
-        if openType == OpenMediaTypes.gallery {
-            switch openGalleryType {
-            case GalleryTypes.default500.name :
-                let resizedImage = selectedImage.resize(size: CGSize(width: 500, height: 500))
-                let base64Str = resizedImage.jpegData(compressionQuality: 80)?.base64EncodedString()
-                let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-                let cameraResult = DMDataResult(result: resultDm, data: base64Str ?? "error")
-                self.runBridgeCode(resultName, cameraResult)
-                break
-            default :
-                self.runBridgeCode(resultName, BaseResultDomain(resultMessage: "type not match", resultBoolean: false))
-                break
-            }
-            return
-        }
-        
-        switch openCameraType.lowercased() {
-        case CameraTypes.ocr.name :
-            let base64Str = selectedImage.jpegData(compressionQuality: 80)?.base64EncodedString()
-            let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-            let cameraResult = DMDataResult(result: resultDm, data: base64Str ?? "error")
-            self.runBridgeCode(resultName, cameraResult)
-            break
-        case CameraTypes.default500.name :
-            let resizedImage = selectedImage.resize(size: CGSize(width: 500, height: 500))
-            let base64Str = resizedImage.jpegData(compressionQuality: 80)?.base64EncodedString()
-            let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-            let cameraResult = DMDataResult(result: resultDm, data: base64Str ?? "error")
-            self.runBridgeCode(resultName, cameraResult)
-            break
-        default:
-            self.runBridgeCode(resultName, BaseResultDomain(resultMessage: "type not match", resultBoolean: false))
-            break
-        }
-    }
-
-
-}
-
-//MARK: Camera Delegate
-extension WebController : CameraViewDelegate {
-    func takePhoto(_ img: UIImage) {
-        switch openCameraType.lowercased() {
-        case CameraTypes.ocr.name :
-            guard let base64Image = img.jpegData(compressionQuality: 0.8)?.base64EncodedString() else {
-                let resultDm = BaseResultDomain(resultMessage: "base64 converting error", resultBoolean: false)
-                self.runBridgeCode("openCameraResult", resultDm)
-                return
-            }
-            
-            let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-            let dataResult = DMDataResult(result: resultDm, data: base64Image)
-            runBridgeCode("openCameraResult", dataResult)
-            break
-        default:
-            let resultDm = BaseResultDomain(resultMessage: "openCameraType is not allowed", resultBoolean: false)
-            let cameraResult = DMDataResult(result: resultDm, data: nil)
-            self.runBridgeCode("openCameraResult", cameraResult)
-            DLog.p("openCameraType is not allowed")
-            break
-        }
-        
-        self.navigationController?.popViewController(animated: true)
-    }
-
-    func cancel(_ msg: String) {
-        let resultDm = BaseResultDomain(resultMessage: "cancel : \(msg)", resultBoolean: false)
-        self.runBridgeCode("openCameraResult", resultDm)
-        DLog.p("cancel :: \(msg)")
-        self.navigationController?.popViewController(animated: true)
-    }
-
-    func failed(_ msg: String) {
-        let resultDm = BaseResultDomain(resultMessage: "failed : \(msg)", resultBoolean: false)
-        self.runBridgeCode("openCameraResult", resultDm)
-        DLog.p("failed :: \(msg)")
-        self.navigationController?.popViewController(animated: true)
-    }
 }
 
 //MARK: Webview Wrapper Delegate
 extension WebController : UIScrollViewDelegate {
     //block bottom bounce
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.bounds.height {
-            scrollView.contentOffset.y = scrollView.contentSize.height - scrollView.bounds.height
-        }
-    }
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        if scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.bounds.height {
+//            scrollView.contentOffset.y = scrollView.contentSize.height - scrollView.bounds.height
+//        }
+//    }
 }

@@ -23,6 +23,11 @@ class InitialViewController: JVC {
         v.image = UIImage(named: "hsu")
     }
     
+    
+    let account = UIDevice.current.identifierForVendor?.uuidString ?? "" // 기기의 UUID
+    let service = Bundle.main.bundleIdentifier ?? "" // 앱의 번들아이덴티파이어
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         drawView()
@@ -36,12 +41,12 @@ class InitialViewController: JVC {
         let main = MainNavVC()
         main.modalPresentationStyle = .fullScreen
         
-        if session.userInfo == nil {
-            main.defView = LoginViewController()
-        }
-        else {
-            main.defView = MainViewController()
-        }
+//        if session.userInfo == nil {
+//            main.defView = LoginViewController()
+//        }
+//        else {
+            main.defView = WebController()
+//        }
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController = main
     }

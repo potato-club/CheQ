@@ -45,6 +45,17 @@
 		16DBE9762BC504EE00AA0EE9 /* NFCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DBE9752BC504EE00AA0EE9 /* NFCManager.swift */; };
 		16DBE9782BC5050800AA0EE9 /* NFCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DBE9772BC5050800AA0EE9 /* NFCError.swift */; };
 		16DBE97C2BC5071300AA0EE9 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 16DBE97B2BC5071300AA0EE9 /* Then */; };
+		16EC83B92BE4D927006C620D /* DMSetBgColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83B82BE4D927006C620D /* DMSetBgColor.swift */; };
+		16EC83BC2BE4D9A2006C620D /* DMEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83BB2BE4D9A2006C620D /* DMEnums.swift */; };
+		16EC83BE2BE4DA07006C620D /* BaseResultDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83BD2BE4DA07006C620D /* BaseResultDomain.swift */; };
+		16EC83C02BE4DA1B006C620D /* DMDataResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83BF2BE4DA1B006C620D /* DMDataResult.swift */; };
+		16EC83C22BE4DA6B006C620D /* DMTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83C12BE4DA6B006C620D /* DMTypeModel.swift */; };
+		16EC83C42BE4DA80006C620D /* DMTypeListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83C32BE4DA80006C620D /* DMTypeListModel.swift */; };
+		16EC83C62BE4DAAD006C620D /* DMUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83C52BE4DAAD006C620D /* DMUrl.swift */; };
+		16EC83C82BE4DB1D006C620D /* DMDataMapResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83C72BE4DB1D006C620D /* DMDataMapResult.swift */; };
+		16EC83CA2BE4DC54006C620D /* S_Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83C92BE4DC54006C620D /* S_Keychain.swift */; };
+		16EC83CC2BE4DE07006C620D /* DMUserId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83CB2BE4DE07006C620D /* DMUserId.swift */; };
+		16EC83CF2BE4DF2D006C620D /* FloatingBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83CE2BE4DF2D006C620D /* FloatingBtn.swift */; };
 		16EE68C92BD218990092D098 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EE68C82BD218990092D098 /* Constant.swift */; };
 /* End PBXBuildFile section */
 
@@ -101,6 +112,17 @@
 		16DBE9752BC504EE00AA0EE9 /* NFCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCManager.swift; sourceTree = "<group>"; };
 		16DBE9772BC5050800AA0EE9 /* NFCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCError.swift; sourceTree = "<group>"; };
 		16DBE97D2BC50AF000AA0EE9 /* cheq.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cheq.entitlements; sourceTree = "<group>"; };
+		16EC83B82BE4D927006C620D /* DMSetBgColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMSetBgColor.swift; sourceTree = "<group>"; };
+		16EC83BB2BE4D9A2006C620D /* DMEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMEnums.swift; sourceTree = "<group>"; };
+		16EC83BD2BE4DA07006C620D /* BaseResultDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseResultDomain.swift; sourceTree = "<group>"; };
+		16EC83BF2BE4DA1B006C620D /* DMDataResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMDataResult.swift; sourceTree = "<group>"; };
+		16EC83C12BE4DA6B006C620D /* DMTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMTypeModel.swift; sourceTree = "<group>"; };
+		16EC83C32BE4DA80006C620D /* DMTypeListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMTypeListModel.swift; sourceTree = "<group>"; };
+		16EC83C52BE4DAAD006C620D /* DMUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMUrl.swift; sourceTree = "<group>"; };
+		16EC83C72BE4DB1D006C620D /* DMDataMapResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMDataMapResult.swift; sourceTree = "<group>"; };
+		16EC83C92BE4DC54006C620D /* S_Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S_Keychain.swift; sourceTree = "<group>"; };
+		16EC83CB2BE4DE07006C620D /* DMUserId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMUserId.swift; sourceTree = "<group>"; };
+		16EC83CE2BE4DF2D006C620D /* FloatingBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingBtn.swift; sourceTree = "<group>"; };
 		16EE68C82BD218990092D098 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +173,7 @@
 				16736E142BCD58950052A782 /* DataSession.swift */,
 				16736E1A2BCE344A0052A782 /* RequestManager.swift */,
 				167F901C2BE0C06B00FCCE89 /* BridgeList.swift */,
+				16EC83C92BE4DC54006C620D /* S_Keychain.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -183,6 +206,15 @@
 		167F90212BE0C5B000FCCE89 /* bridgeDomains */ = {
 			isa = PBXGroup;
 			children = (
+				16EC83B82BE4D927006C620D /* DMSetBgColor.swift */,
+				16EC83BB2BE4D9A2006C620D /* DMEnums.swift */,
+				16EC83BD2BE4DA07006C620D /* BaseResultDomain.swift */,
+				16EC83BF2BE4DA1B006C620D /* DMDataResult.swift */,
+				16EC83C12BE4DA6B006C620D /* DMTypeModel.swift */,
+				16EC83C32BE4DA80006C620D /* DMTypeListModel.swift */,
+				16EC83C52BE4DAAD006C620D /* DMUrl.swift */,
+				16EC83C72BE4DB1D006C620D /* DMDataMapResult.swift */,
+				16EC83CB2BE4DE07006C620D /* DMUserId.swift */,
 			);
 			path = bridgeDomains;
 			sourceTree = "<group>";
@@ -214,6 +246,7 @@
 		16DBE95D2BC5037D00AA0EE9 /* cheq */ = {
 			isa = PBXGroup;
 			children = (
+				16EC83CD2BE4DF19006C620D /* components */,
 				167F90212BE0C5B000FCCE89 /* bridgeDomains */,
 				167F901E2BE0C54900FCCE89 /* wUtils */,
 				16978A952BDA4ED8007F8B61 /* lottie */,
@@ -241,6 +274,14 @@
 				16586C2E2BC51DC1001B7EA0 /* ReadViewController.swift */,
 			);
 			path = NFC;
+			sourceTree = "<group>";
+		};
+		16EC83CD2BE4DF19006C620D /* components */ = {
+			isa = PBXGroup;
+			children = (
+				16EC83CE2BE4DF2D006C620D /* FloatingBtn.swift */,
+			);
+			path = components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,8 +369,11 @@
 				16DBE9632BC5037D00AA0EE9 /* InitialViewController.swift in Sources */,
 				16736E0D2BCD1E610052A782 /* DMResultModel.swift in Sources */,
 				16736E132BCD4E9C0052A782 /* ResponseSearch.swift in Sources */,
+				16EC83B92BE4D927006C620D /* DMSetBgColor.swift in Sources */,
 				167F90202BE0C56100FCCE89 /* WebBridgeExtension.swift in Sources */,
 				161EA00C2BC79B420071CA9A /* WebController.swift in Sources */,
+				16EC83BC2BE4D9A2006C620D /* DMEnums.swift in Sources */,
+				16EC83C82BE4DB1D006C620D /* DMDataMapResult.swift in Sources */,
 				16736E0B2BCD1E140052A782 /* ResponseChkAuthResult.swift in Sources */,
 				16736E112BCD48190052A782 /* ResponseLoad.swift in Sources */,
 				16736E052BCD09DF0052A782 /* ResponseCheckID.swift in Sources */,
@@ -341,17 +385,25 @@
 				16736E172BCE2CCB0052A782 /* MainNavVC.swift in Sources */,
 				16D092922BCE3E5600E941C9 /* ResponseMenuInfo.swift in Sources */,
 				16DBE9762BC504EE00AA0EE9 /* NFCManager.swift in Sources */,
+				16EC83BE2BE4DA07006C620D /* BaseResultDomain.swift in Sources */,
 				16736E032BCCFD680052A782 /* RequestConstant.swift in Sources */,
 				16DBE9782BC5050800AA0EE9 /* NFCError.swift in Sources */,
+				16EC83C02BE4DA1B006C620D /* DMDataResult.swift in Sources */,
 				16736E092BCD13AA0052A782 /* ResponsePushNoti.swift in Sources */,
+				16EC83CA2BE4DC54006C620D /* S_Keychain.swift in Sources */,
 				16EE68C92BD218990092D098 /* Constant.swift in Sources */,
 				167F901D2BE0C06B00FCCE89 /* BridgeList.swift in Sources */,
+				16EC83C62BE4DAAD006C620D /* DMUrl.swift in Sources */,
 				16DBE95F2BC5037D00AA0EE9 /* AppDelegate.swift in Sources */,
 				161EA0162BC79C240071CA9A /* Extensions.swift in Sources */,
 				16586C2F2BC51DC1001B7EA0 /* ReadViewController.swift in Sources */,
+				16EC83CF2BE4DF2D006C620D /* FloatingBtn.swift in Sources */,
 				16736E152BCD58950052A782 /* DataSession.swift in Sources */,
 				16736E0F2BCD41960052A782 /* ResponseLogin.swift in Sources */,
+				16EC83C42BE4DA80006C620D /* DMTypeListModel.swift in Sources */,
 				16DBE9692BC5037D00AA0EE9 /* cheq.xcdatamodeld in Sources */,
+				16EC83CC2BE4DE07006C620D /* DMUserId.swift in Sources */,
+				16EC83C22BE4DA6B006C620D /* DMTypeModel.swift in Sources */,
 				161EA0092BC79AFD0071CA9A /* Preference.swift in Sources */,
 				16581A5E2BC924A100F96F97 /* ResponsePreLogin.swift in Sources */,
 				16736E192BCE2D030052A782 /* MainViewController.swift in Sources */,
