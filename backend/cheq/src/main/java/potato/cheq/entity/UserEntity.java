@@ -34,17 +34,4 @@ public class UserEntity {
     @Column(nullable = false)
     private ChapelKind chapelKind;
 
-    @Column(nullable = false)
-    private boolean attendance;
-
-    @Column(nullable = false)
-    private String qrNum;
-
-    @OneToOne
-    @JoinColumn(name = "nfc_id")
-    private NFCEntity nfc_attendance;
-
-    @OneToOne
-    @JoinColumn(name = "beacon_id")
-    private BeaconEntity beacon_attendance;
 }

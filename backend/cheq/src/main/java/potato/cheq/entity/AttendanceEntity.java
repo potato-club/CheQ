@@ -2,29 +2,35 @@ package potato.cheq.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class NFCEntity {
+@Builder
+public class AttendanceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "nfc_id")
+    @Column(name = "attendance_id")
     private Long id;
 
     @Column(nullable = false)
-    private String mac_address;
+    private Long NFC_id;
 
     @Column(nullable = false)
-    private LocalDateTime attendance_time;
+    private Long beacon_id;
 
-    private boolean NFC_type; // 1 = major, 0 = minor
-    private String NFC_position;
+    @Column(nullable = false)
+    private Long user_id;
 
+    @Column(nullable = false)
+    private LocalDateTime create_date;
+
+    private boolean check; // checkIn = 1, checkOut = 0
 }
