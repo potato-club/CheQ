@@ -25,8 +25,8 @@ public class UserEntity {
     @Column(nullable = false)
     private String student_id;
 
-    @Column(nullable = false)
-    private String password;
+//    @Column(nullable = false)
+    private String password; // 우선 사용하지않는 필드
 
     @Column(nullable = false)
     private String seat;
