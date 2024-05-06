@@ -4,8 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import potato.cheq.entity.UserEntity;
 
-import java.util.Optional;
-
 @Repository
-public interface UserRepository extends JpaRepository<Long, UserEntity> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    boolean existsByStudentId(String studentId);
 }
