@@ -23,15 +23,15 @@ public class UserEntity {
     private String email;
 
     @Column(nullable = false)
-    private String student_id;
+    private String studentId;
 
-    @Column(nullable = false)
-    private String password;
+//    @Column(nullable = false)
+    private String password; // 우선 사용하지않는 필드
 
     @Column(nullable = false)
     private String seat;
 
-    @Column(nullable = false)
-    private ChapelKind chapelKind;
+//    @Column(nullable = false)
+//    private ChapelKind chapelKind;
 
 }
