@@ -31,7 +31,9 @@ public class UserService {
         return user.getId();
     }
 
-
+//    public Long checkedNFC(RequestUserDto dto) {
+//        String student_mac =
+//    }
 
 
 
