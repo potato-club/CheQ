@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import potato.cheq.enums.ChapelKind;
 
 @Entity
 @Getter
@@ -30,6 +29,8 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String seat;
+
+    private String st_mac_address; // 회원 기기 mac_address
 
 //    @Column(nullable = false)
 //    private ChapelKind chapelKind;
