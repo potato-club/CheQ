@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import potato.cheq.dto.NFCRequestDto;
 import potato.cheq.dto.RequestUserDevice;
 import potato.cheq.dto.RequestUserDto;
 import potato.cheq.entity.UserEntity;
@@ -42,42 +43,12 @@ public class UserService {
         return user.getId();
     }
 
-//    public Long checkedNFC(RequestUserDto dto) {
-//        String student_mac =
+//    public Long checkedNFC(NFCRequestDto dto) throws Exception {
+//
+//        // 유저의 토큰으로 유저의 id값 or uuid 값을 찾아야함 그럼 토큰 로직이 있어야겠다.
+//        // 유저의 토큰으로 찾은 uuid값 = 입력받은 mac_address값 일치해야함
+//        // findByToken 에다가 dto.getMac_address() 같은지 비교 아래 로직은 기기 여러개 등록해놓으면 모름
 //    }
-
-
-
-
-
-
-
-//    public void fetchDataFromApi(String cookieValue) {
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Cookie", cookieValue);
-//        HttpEntity<String> entity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<ApiRes> response = restTemplate.exchange(
-//                BASE_URL,
-//                HttpMethod.GET,
-//                entity,
-//                ApiResponse.class
-//        );
-//    }
-//
-//    ApiRes apiResponse = response.getBody();
-//        if (apiResponse != null) {
-//        DmUserInfo userInfo = apiResponse.getDmUserInfo();
-//
-//        // 이제 userInfo 객체에 있는 데이터를 서비스 로직에서 활용할 수 있습니다.
-//        String email = userInfo.getEMAIL();
-//        String userNo = userInfo.getG_USER_NO();
-//
-//        // 여기서부터는 이 데이터를 활용하는 나머지 서비스 로직을 작성합니다.
-//    }
-
 
 
 }

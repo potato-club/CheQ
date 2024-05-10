@@ -21,11 +21,15 @@ public class UserController {
         return userService.setUserData(dto);
     }
 
+//    @GetMapping("/manager")
+//    public ResponseEntity<String> enterManagerPage(@RequestBody )
+
+    // 로그인은 login.do api 써도되나? 이거에따라 nfc, 비콘 로직 설계가 바뀔듯
+
     @PostMapping("/device") // 기기 등록 api 추후 다른 값들 추가
     public Long saveUserDevice(@RequestBody RequestUserDevice dto) throws Exception {
-        return userService.setUserDevice(dto)
+        return userService.setUserDevice(dto);
     }
-
 
 //    @PostMapping("/nfc")
 //    @ResponseStatus(HttpStatus.OK)
@@ -33,7 +37,5 @@ public class UserController {
 //        userService.
 //    }
 
-//    @GetMapping("/get")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void getUserData()
+
 }
