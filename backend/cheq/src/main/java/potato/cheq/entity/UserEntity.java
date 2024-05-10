@@ -32,6 +32,9 @@ public class UserEntity {
 
     private String st_mac_address; // 회원 기기 mac_address
 
+    @Column()
+    private String uuid;
+
 //    @Column(nullable = false)
 //    private ChapelKind chapelKind;
 

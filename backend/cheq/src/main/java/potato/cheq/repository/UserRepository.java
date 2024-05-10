@@ -7,4 +7,5 @@ import potato.cheq.entity.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     boolean existsByStudentId(String studentId);
+    boolean existsByUuid(String uuid);
 }
