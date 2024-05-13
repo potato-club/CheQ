@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Slider from 'react-slick';
+import Nav from '../UnderNavBar/NaverBar';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -115,29 +116,6 @@ const CircleB = styled.div`
   border-radius: 50%;
 `;
 
-const NavBar = styled.div`
-  display: flex;
-  justify-content: space-around;
-  background-color: #375cde;
-  height: 80px;
-  border-radius: 14px;
-  width: 390px;
-  margin: auto;
-`;
-const NavBtn = styled.button`
-  border: none;
-  outline: none;
-  background-color: transparent;
-  color: white;
-  font-size: 16px;
-  &:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1);
-  }
-`;
-
-
 const images = [
   'https://pimg.hackers.com/land/main/land_default.jpg',
   'https://img.seoul.co.kr/img/upload/2023/06/27/SSC_20230627135839_O2.jpg',
@@ -183,11 +161,7 @@ function Mainpage() {
       <SmallBox />
       <SmallBox />
     </SquareC>
-      <NavBar>
-        <NavBtn>HOME</NavBtn>
-        <NavBtn>내 출결</NavBtn>
-        <NavBtn>MY</NavBtn>
-      </NavBar>
+     <Nav /> {/* NaverBar 컴포넌트 사용 */}
  
   </BigBox>
   
