@@ -1,7 +1,7 @@
 import React from "react";
 import AttendancePage from "./AttendancePage/AttendancePage";
 
-function App() {
+function Attendance() {
   return (
     <div>
       <AttendancePage />
@@ -9,4 +9,4 @@ function App() {
   );
 }
 
-export default App;
+export default Attendance;

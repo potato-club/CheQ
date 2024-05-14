@@ -111,7 +111,87 @@ const AttendancePage = () => {
             <InfoBox>
               <IconColorGray />
               <HowWeekGray>8주차</HowWeekGray>
-              <CurrentDateGray>( 03월 05일 )</CurrentDateGray>
+              <CurrentDateGray>( 04월 23일 )</CurrentDateGray>
+            </InfoBox>
+            <InfoBox>
+              <CurrentInfoGray>미출결</CurrentInfoGray>
+            </InfoBox>
+          </WeekInfo>
+          <WeekInfo>
+            <InfoBox>
+              <IconColorGray />
+              <HowWeekGray>9주차</HowWeekGray>
+              <CurrentDateGray>( 04월 30일 )</CurrentDateGray>
+            </InfoBox>
+            <InfoBox>
+              <CurrentInfoGray>미출결</CurrentInfoGray>
+            </InfoBox>
+          </WeekInfo>
+          <WeekInfo>
+            <InfoBox>
+              <IconColorGray />
+              <HowWeekGray>10주차</HowWeekGray>
+              <CurrentDateGray>( 05월 07일 )</CurrentDateGray>
+            </InfoBox>
+            <InfoBox>
+              <CurrentInfoGray>미출결</CurrentInfoGray>
+            </InfoBox>
+          </WeekInfo>
+          <WeekInfo>
+            <InfoBox>
+              <IconColorGray />
+              <HowWeekGray>11주차</HowWeekGray>
+              <CurrentDateGray>( 05월 14일 )</CurrentDateGray>
+            </InfoBox>
+            <InfoBox>
+              <CurrentInfoGray>미출결</CurrentInfoGray>
+            </InfoBox>
+          </WeekInfo>
+          <WeekInfo>
+            <InfoBox>
+              <IconColorGray />
+              <HowWeekGray>12주차</HowWeekGray>
+              <CurrentDateGray>( 05월 21일 )</CurrentDateGray>
+            </InfoBox>
+            <InfoBox>
+              <CurrentInfoGray>미출결</CurrentInfoGray>
+            </InfoBox>
+          </WeekInfo>
+          <WeekInfo>
+            <InfoBox>
+              <IconColorGray />
+              <HowWeekGray>13주차</HowWeekGray>
+              <CurrentDateGray>( 05월 28일 )</CurrentDateGray>
+            </InfoBox>
+            <InfoBox>
+              <CurrentInfoGray>미출결</CurrentInfoGray>
+            </InfoBox>
+          </WeekInfo>
+          <WeekInfo>
+            <InfoBox>
+              <IconColorGray />
+              <HowWeekGray>14주차</HowWeekGray>
+              <CurrentDateGray>( 06월 04일 )</CurrentDateGray>
+            </InfoBox>
+            <InfoBox>
+              <CurrentInfoGray>미출결</CurrentInfoGray>
+            </InfoBox>
+          </WeekInfo>
+          <WeekInfo>
+            <InfoBox>
+              <IconColorGray />
+              <HowWeekGray>15주차</HowWeekGray>
+              <CurrentDateGray>( 06월 11일 )</CurrentDateGray>
+            </InfoBox>
+            <InfoBox>
+              <CurrentInfoGray>미출결</CurrentInfoGray>
+            </InfoBox>
+          </WeekInfo>
+          <WeekInfo>
+            <InfoBox>
+              <IconColorGray />
+              <HowWeekGray>16주차</HowWeekGray>
+              <CurrentDateGray>( 06월 18일 )</CurrentDateGray>
             </InfoBox>
             <InfoBox>
               <CurrentInfoGray>미출결</CurrentInfoGray>
@@ -129,13 +209,20 @@ const AttendancePage = () => {
 };
 
 export default AttendancePage;
+// const Wrapper = styled.div`
+//   margin: auto;
+//   min-width: 200px;
+//   max-width: 600px;
+// `;
 
 const StyleAttendancePage = styled.div`
   display: flex;
   flex-direction: column;
   margin: auto;
+  /* min-width: 200px;
+  max-width: 600px; */
   width: 580px;
-  padding: 0px 20px 0px 20px;
+  padding: 0px 20px 73px 20px;
 `;
 
 const AttendanceTitle = styled.div`
@@ -299,6 +386,10 @@ const NavBar = styled.div`
   border-radius: 14px;
   width: 620px;
   margin: auto;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 const NavBtn = styled.button`
   border: none;
