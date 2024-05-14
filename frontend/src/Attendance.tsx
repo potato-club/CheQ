@@ -1,10 +1,10 @@
 import React from "react";
-import AttendancePage from "./AttendancePage/AttendancePage";
+import AttenDancePage from "./AttendancePage/AttendancePage";
 
 function Attendance() {
   return (
     <div>
-      <AttendancePage />
+      <AttenDancePage />
     </div>
   );
 }

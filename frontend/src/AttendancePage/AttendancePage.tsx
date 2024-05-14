@@ -84,7 +84,7 @@ const AttendancePage = () => {
               <CurrentDateGray>( 04월 02일 )</CurrentDateGray>
             </InfoBox>
             <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
+              <CurrentInfoGray>출결</CurrentInfoGray>
             </InfoBox>
           </WeekInfo>
           <WeekInfo>
