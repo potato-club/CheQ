@@ -217,7 +217,7 @@ class MainViewController : JVC {
             return
         }
         
-        label.text = session.userInfo?.gUserNo
+        label.text = session.userInfo?.userNo
         
         
         if !pref.isEmpty(key: Preference.KEY_USER_PHOTO) {

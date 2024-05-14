@@ -150,6 +150,24 @@ extension WebController : WKScriptMessageHandler {
             runBridgeCode("swipeAbleResult", BaseResultDomain(resultMessage: "success", resultBoolean: true))
             return
         }
+        
+        if message.name == BridgeList.saveUser.rawValue {
+            guard let domain = try? JSONDecoder().decode(DMUserId.self, from: bodyData) as DMUserId else {
+                do {
+                    let _ = try JSONDecoder().decode(DMUserId.self, from: bodyData) as DMUserId
+                } catch {
+                    DLog.p("error")
+                    runBridgeCode("saveUserResult", BaseResultDomain(resultMessage: "decode error", resultBoolean: false))
+                }
+                DLog.p("\(message.name) error parsing ::")
+                return
+            }
+            
+            pref.saveLastUserInfo(m: domain)
+
+            runBridgeCode("saveUserResult", BaseResultDomain(resultMessage: "success", resultBoolean: true))
+            return
+        }
 
         if message.name == BridgeList.devTest.rawValue {
             #if DEBUG

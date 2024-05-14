@@ -11,8 +11,8 @@ import Foundation
 class DataSession {
     public static let shared = DataSession()
 
-    private var _userInfo: DmUserInfo? = nil
-    var userInfo: DmUserInfo? {
+    private var _userInfo: DMUserId? = nil
+    var userInfo: DMUserId? {
         get {
             if _userInfo == nil &&
                 !Preference.shared.isEmpty(key: Preference.KEY_USER_INFO) {

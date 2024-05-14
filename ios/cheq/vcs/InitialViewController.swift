@@ -7,6 +7,7 @@
 
 import UIKit
 import Then
+import JDID
 
 
 class InitialViewController: JVC {
@@ -30,13 +31,17 @@ class InitialViewController: JVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let jdid = UdidLoader(Bundle.main.bundleIdentifier ?? "")
+        
+        let juid = jdid.getDeviceID()
+        print("jdid : \(juid)")
+        
         drawView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        
         
         let main = MainNavVC()
         main.modalPresentationStyle = .fullScreen

@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>위치정보 1</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>위치정보 2</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>블루투스 1</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>블루투스 2</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>fetch</string>
+		<string>location</string>
+		<string>processing</string>
+	</array>
+</dict>
 </plist>

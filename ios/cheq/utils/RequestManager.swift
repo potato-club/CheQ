@@ -180,36 +180,36 @@ class RequestManager {
     
     
     
-    func requestUserPhoto() async throws -> RequestResult<String> {
-        
-        guard let userInfo = DataSession.shared.userInfo else {
-            return RequestResult(success: false, message: "user is nil")
-        }
-        
-        let responseSearch = try await requestSearch(userInfo: userInfo)
-        
-        guard let searchResult = responseSearch.result,
-              responseSearch.success
-        else {
-            print("responseSearch is Not Y : \(responseSearch.success) \(responseSearch.message)")
-            return RequestResult(success: false, message: responseSearch.message)
-        }
-        
-        guard let photo = searchResult.photo else {
-            return RequestResult(success: false, message: "등록된 사진이 없는 것 같습니다.")
-        }
-        
-        let imageURL = URL(string: photo)! // 이미지 URL 입력
-        let base64Data = try await getBase64DataFromImageURL(imageURL: imageURL)
-        Preference.shared.save(value: base64Data, key: Preference.KEY_USER_PHOTO)
-        
-        return RequestResult(success: true, message: "success", result: base64Data)
-    }
-    
-    func getBase64DataFromImageURL(imageURL: URL) async throws -> String {
-        let (data, _) = try await URLSession.shared.data(from: imageURL)
-        return data.base64EncodedString()
-    }
+//    func requestUserPhoto() async throws -> RequestResult<String> {
+//        
+//        guard let userInfo = DataSession.shared.userInfo else {
+//            return RequestResult(success: false, message: "user is nil")
+//        }
+//        
+//        let responseSearch = try await requestSearch(userInfo: userInfo)
+//        
+//        guard let searchResult = responseSearch.result,
+//              responseSearch.success
+//        else {
+//            print("responseSearch is Not Y : \(responseSearch.success) \(responseSearch.message)")
+//            return RequestResult(success: false, message: responseSearch.message)
+//        }
+//        
+//        guard let photo = searchResult.photo else {
+//            return RequestResult(success: false, message: "등록된 사진이 없는 것 같습니다.")
+//        }
+//        
+//        let imageURL = URL(string: photo)! // 이미지 URL 입력
+//        let base64Data = try await getBase64DataFromImageURL(imageURL: imageURL)
+//        Preference.shared.save(value: base64Data, key: Preference.KEY_USER_PHOTO)
+//        
+//        return RequestResult(success: true, message: "success", result: base64Data)
+//    }
+//    
+//    func getBase64DataFromImageURL(imageURL: URL) async throws -> String {
+//        let (data, _) = try await URLSession.shared.data(from: imageURL)
+//        return data.base64EncodedString()
+//    }
 
 }
 

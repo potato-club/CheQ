@@ -216,62 +216,62 @@ class LoginViewController : JVC {
     
     @objc func onClickVerify() {
         
-        guard let id = idField.text, id.count > 1 else {
-            //return Alert
-            return
-        }
-        
-        guard let tid = lastPushModel?.tid else {
-            //error
-            print("tid is nil")
-            return
-        }
-        
-        Task {
-            let authResult = try await reqManager.requestAuthResult(id: id, tid: tid)
-            if !authResult.success {
-                print("authResult is Not Y : \(authResult.message)")
-                return
-            }
-            
-            let loginResult = try await reqManager.requestLogin(id: id)
-            if !loginResult.success {
-                print("loginResult is Not Y : \(loginResult.message)")
-                return
-            }
-            
-            saveUserId(id: id)
-            
-            let responseLoad = try await reqManager.requestLoad(id: id)
-            guard let loadResult = responseLoad.result,
-                  responseLoad.success
-            else {
-                print("loadResult is Not Y : \(responseLoad.success) \(responseLoad.message) \(responseLoad.result == nil)")
-                return
-            }
-            
-            pref.saveLastUserInfo(m: loadResult)
-            
-            let responseSearch = try await reqManager.requestSearch(userInfo: loadResult)
-            guard let searchResult = responseSearch.result,
-                  responseSearch.success
-            else {
-                print("responseSearch is Not Y : \(responseSearch.success) \(responseSearch.message) \(responseSearch.result == nil)")
-                return
-            }
-            
-            let photoResult = try await reqManager.requestUserPhoto()
-            if let base64 = photoResult.result {
-                pref.save(value: base64, key: Preference.KEY_USER_PHOTO)
-            }
-            else {
-                print("photo is nil")
-            }
-            
-            if let nav = self.navigationController as? MainNavVC {
-                nav.clearPush(vc: MainViewController())
-            }
-        }
+//        guard let id = idField.text, id.count > 1 else {
+//            //return Alert
+//            return
+//        }
+//        
+//        guard let tid = lastPushModel?.tid else {
+//            //error
+//            print("tid is nil")
+//            return
+//        }
+//        
+//        Task {
+//            let authResult = try await reqManager.requestAuthResult(id: id, tid: tid)
+//            if !authResult.success {
+//                print("authResult is Not Y : \(authResult.message)")
+//                return
+//            }
+//            
+//            let loginResult = try await reqManager.requestLogin(id: id)
+//            if !loginResult.success {
+//                print("loginResult is Not Y : \(loginResult.message)")
+//                return
+//            }
+//            
+//            saveUserId(id: id)
+//            
+//            let responseLoad = try await reqManager.requestLoad(id: id)
+//            guard let loadResult = responseLoad.result,
+//                  responseLoad.success
+//            else {
+//                print("loadResult is Not Y : \(responseLoad.success) \(responseLoad.message) \(responseLoad.result == nil)")
+//                return
+//            }
+//            
+//            pref.saveLastUserInfo(m: loadResult)
+//            
+//            let responseSearch = try await reqManager.requestSearch(userInfo: loadResult)
+//            guard let searchResult = responseSearch.result,
+//                  responseSearch.success
+//            else {
+//                print("responseSearch is Not Y : \(responseSearch.success) \(responseSearch.message) \(responseSearch.result == nil)")
+//                return
+//            }
+//            
+//            let photoResult = try await reqManager.requestUserPhoto()
+//            if let base64 = photoResult.result {
+//                pref.save(value: base64, key: Preference.KEY_USER_PHOTO)
+//            }
+//            else {
+//                print("photo is nil")
+//            }
+//            
+//            if let nav = self.navigationController as? MainNavVC {
+//                nav.clearPush(vc: MainViewController())
+//            }
+//        }
     }
     
     @MainActor

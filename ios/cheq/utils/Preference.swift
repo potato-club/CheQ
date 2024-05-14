@@ -85,7 +85,7 @@ class Preference {
     
 
     @discardableResult
-    func saveLastUserInfo(m: DmUserInfo?) -> Bool {
+    func saveLastUserInfo(m: DMUserId?) -> Bool {
         guard let json = try? JSONEncoder().encode(m) else {
             DLog.p("fail Json")
             save(value: Preference.NIL, key: Preference.KEY_USER_INFO)
@@ -100,10 +100,10 @@ class Preference {
         return true
     }
     
-    func getLastUserInfo() -> DmUserInfo? {
+    func getLastUserInfo() -> DMUserId? {
         let json = get(key: Preference.KEY_USER_INFO)
         if let data = json.data(using: .utf8) {
-            if let result = try? JSONDecoder().decode(DmUserInfo.self, from: data) as DmUserInfo {
+            if let result = try? JSONDecoder().decode(DMUserId.self, from: data) as DMUserId {
                 return result
             }
             else {

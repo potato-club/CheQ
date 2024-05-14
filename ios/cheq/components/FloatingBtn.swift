@@ -164,7 +164,7 @@ class FloatingBtn {
         isAddedViews = true
         
         childList = childList.sorted { prev, next in
-            prev.indexId < next.indexId
+            prev.indexId > next.indexId
         }
         for i in 0 ..< childList.count {
             let v = getFloatingButtonView(named: childList[i].iconName)

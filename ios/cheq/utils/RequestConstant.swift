@@ -160,6 +160,7 @@ class RequestConstant {
                 DataSession.shared.lastCookie = cookie
             }
             
+            
             let result = try JSONDecoder().decode(type, from: data)
             return RequestResult(success: true, message: "success", result: result)
 

@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 import WebKit
+import ActivityKit
+
+
+import JDID
 
 
 class WebController: JVC {
@@ -93,8 +97,8 @@ class WebController: JVC {
 //    }()
     lazy var floatingBtn = FloatingBtn(jvc: self)
 
-//    var defUrl = "https://www.naver.com"
-    var defUrl = ""
+    var defUrl = "https://www.naver.com"
+//    var defUrl = ""
     
     var swipeAble = true
     
@@ -108,8 +112,12 @@ class WebController: JVC {
     }()
 
 
+    lazy var jdid = UdidLoader(Bundle.main.bundleIdentifier ?? "")
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let juid = jdid.getDeviceID()
+        print("jdid : \(juid)")
 
         view.backgroundColor = .white
         
@@ -120,19 +128,63 @@ class WebController: JVC {
 //        }
         addGesture()
         
-        floatingBtn.addChild(item: FloatingBtn.FloatingChildModel(indexId: 1, iconName: "id_card", clickEvent: {
+        floatingBtn.addChild(item: FloatingBtn.FloatingChildModel(indexId: 1, iconName: "qr_code", clickEvent: {
             self.floatingBtn.floatingActive(setActive: false)
-            DLog.p("onClick Id Card 1")
-            self.present(QRViewController(), animated: true)
+            DLog.p("onClick qr 1")
+//            self.present(QRViewController(), animated: true)
 //            if let navi = self.navigationController {
 //                navi.pushViewController(QRViewController(), animated: true)
 //            }
+//            self.centralManager.scanForPeripherals(withServices: nil) // 스캔 시작
+            self.startLocaion() //beacon
+            self.startTimer()
         }))
-//        floatingBtn.addChild(item: FloatingBtn.FloatingChildModel(indexId: 1, iconName: "id_card", clickEvent: {
-//            self.floatingBtn.floatingActive(setActive: false)
-//            DLog.p("onClick Id Card 2")
-//        }))
+        floatingBtn.addChild(item: FloatingBtn.FloatingChildModel(indexId: 2, iconName: "id_card", clickEvent: {
+            self.floatingBtn.floatingActive(setActive: false)
+            DLog.p("onClick Id Card 2")
+//            self.present(IdCardViewController(), animated: true)
+//            self.centralManager.stopScan()
+        }))
         floatingBtn.build()
+    }
+    
+    var timer : Timer? = nil
+    
+    
+    func startTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(looperBody), userInfo: nil, repeats: true)
+    }
+    
+    @objc func looperBody() {
+        Task {
+            let reqHelper = RequestConstant.shared
+            let parameters = ""
+            await reqHelper.request(headers: [:],
+                                 url: "http://date.jsontest.com/",
+                                 parameters: parameters,
+                                 of: ResponseJSONTest.self)
+            
+            DLog.p("request done // \(lastBeacon)")
+        }
+    }
+    
+    func islandLanding() {
+        if #available(iOS 16.2, *) {
+//            if ActivityAuthorizationInfo().areActivitiesEnabled {
+//                let future = Calendar.current.date(byAdding: .second, value: self.times.timer, to: Date())!
+//                let date = Date.now...future
+//                let initialContentState = IslandwidgetAttributes.ContentState(taskName: IslandwidgetAttributes.ContentState.connected, timer: date)
+//                let activityAttributes = IslandwidgetAttributes.ContentState(isTimer: true)
+//                let activityContent = ActivityContent(state: initialContentState, staleDate: Calendar.current.date(byAdding: .minute, value: 30, to: Date())!)
+//
+//                do {
+//                    let activity = try Activity.request(attributes: activityAttributes, content: activityContent)
+//                    print("Requested Lockscreen Live Activity(Timer) \(String(describing: activity.id)).")
+//                } catch (let error) {
+//                    print("Error requesting Lockscreen Live Activity(Timer) \(error.localizedDescription).")
+//                }
+//            }
+        }
     }
     
     
@@ -601,7 +653,7 @@ extension WebController {
             return dataResult
         case UploadDataTypes.deviceId.name :
             let resultDm = BaseResultDomain(resultMessage: "success", resultBoolean: true)
-            var dataResult = DMDataResult(result: resultDm, data: S_Keychain().getDeviceID())
+            var dataResult = DMDataResult(result: resultDm, data: jdid.getDeviceID())
             return dataResult
         case "log".lowercased() : // only for test
             //print log

@@ -48,7 +48,7 @@ class QRViewController : JVC {
         
         
         
-        let image = generateQRCode(from: session.userInfo?.gUserNo ?? "")
+        let image = generateQRCode(from: session.userInfo?.userNo ?? "")
         iv.image = image
     }
     
