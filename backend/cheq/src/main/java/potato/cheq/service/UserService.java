@@ -23,7 +23,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-
     public Long setUserData(RequestUserDto dto) throws Exception {
         if (userRepository.existsByStudentId(dto.getStudentId())) {
             throw new Exception("이미 존재하는 사용자 정보입니다.");
@@ -46,12 +45,15 @@ public class UserService {
         return user.getId();
     }
 
-//    public Long checkedNFC(NFCRequestDto dto) throws Exception {
-//
-//        // 유저의 토큰으로 유저의 id값 or uuid 값을 찾아야함 그럼 토큰 로직이 있어야겠다.
-//        // 유저의 토큰으로 찾은 uuid값 = 입력받은 mac_address값 일치해야함
-//        // findByToken 에다가 dto.getMac_address() 같은지 비교 아래 로직은 기기 여러개 등록해놓으면 모름
-//    }
+    public String getMacAddress(String studentID) throws Exception {
+        String userUUID = userRepository.findUuidByStudentId(studentID);
+
+        if (userUUID == null) {
+            throw new Exception("사용자의 UUID 값을 찾을 수 없습니다.");
+        }
+        return userUUID;
+    }
+
 
 
 }
