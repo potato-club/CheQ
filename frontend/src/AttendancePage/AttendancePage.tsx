@@ -385,6 +385,8 @@ const NavBar = styled.div`
   height: 80px;
   border-radius: 14px;
   width: 620px;
+  /* min-width: 200px;
+  max-width: 600px; */
   margin: auto;
   position: fixed;
   bottom: 0;
