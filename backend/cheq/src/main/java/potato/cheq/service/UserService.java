@@ -21,13 +21,16 @@ import potato.cheq.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final String BASE_URL = "https://m.hansei.ac.kr/Main/onLoad.do";
     private final UserRepository userRepository;
 
 
-    public Long setUserData(RequestUserDto dto) throws Exception { // 임시 오류 처리
-        if(userRepository.existsByStudentId(dto.getStudentId())){
+    public Long setUserData(RequestUserDto dto) throws Exception {
+        if (userRepository.existsByStudentId(dto.getStudentId())) {
             throw new Exception("이미 존재하는 사용자 정보입니다.");
+        }
+
+        if (userRepository.existsByUuid(dto.getUuid())) {
+            throw new Exception("이미 존재하는 기기정보값입니다.");
         }
 
         UserEntity user = userRepository.save(dto.toEntity());
@@ -35,7 +38,7 @@ public class UserService {
     }
 
     public Long setUserDevice(RequestUserDevice dto) throws Exception {
-        if(userRepository.existsByUuid(dto.getUuid())){
+        if (userRepository.existsByUuid(dto.getUuid())) {
             throw new Exception("이미 존재하는 기기입니다.");
         }
 

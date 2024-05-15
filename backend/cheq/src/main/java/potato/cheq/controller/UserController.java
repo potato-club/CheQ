@@ -21,7 +21,7 @@ public class UserController {
         return userService.setUserData(dto);
     }
 
-//    @GetMapping("/manager")
+//    @PostMapping("/manager")
 //    public ResponseEntity<String> enterManagerPage(@RequestBody )
 
     // 로그인은 login.do api 써도되나? 이거에따라 nfc, 비콘 로직 설계가 바뀔듯
