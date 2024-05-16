@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import potato.cheq.enums.ChapelKind;
 
 @Entity
 @Getter
@@ -35,7 +36,8 @@ public class UserEntity {
     @Column()
     private String uuid;
 
-//    @Column(nullable = false)
-//    private ChapelKind chapelKind;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ChapelKind chapelKind;
 
 }

@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,6 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final UserRepository userRepository;
-    private final UserService userService;
 
     @Value("${jwt.secretKey}")
     private String secretKey;
@@ -41,11 +41,11 @@ public class JwtTokenProvider {
     }
 
     public String createAccessToken(String memberId) throws Exception {
-        return this.createToken(memberId, userService.getMacAddress(memberId), accessTokenValidTime, "access");
+        return this.createToken(memberId, getMacAddress(memberId), accessTokenValidTime, "access");
     }
 
     public String createRefreshToken(String memberId) throws Exception {
-        return this.createToken(memberId, userService.getMacAddress(memberId), refreshTokenValidTime, "refresh");
+        return this.createToken(memberId, getMacAddress(memberId), refreshTokenValidTime, "refresh");
     }
 
     public String createToken(String memberId, String macAddress, long tokenValid, String tokenType) {
@@ -63,6 +63,24 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
+
+    public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
+        response.setHeader("authorization", "Bearer " + accessToken);
+    }
+
+    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
+        response.setHeader("refreshToken", "Bearer " + refreshToken);
+    }
+
+    private String getMacAddress(String studentID) throws Exception {
+        String userUUID = userRepository.findUuidByStudentId(studentID);
+
+        if (userUUID == null) {
+            throw new Exception("사용자의 UUID 값을 찾을 수 없습니다.");
+        }
+        return userUUID;
+    }
+
 
 
 

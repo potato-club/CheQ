@@ -1,5 +1,6 @@
 package potato.cheq.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,26 +22,14 @@ public class UserController {
         return userService.setUserData(dto);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody RequestUserDto dto) throws Exception {
-//        return userService
-//    }
-
-//    @PostMapping("/manager")
-//    public ResponseEntity<String> enterManagerPage(@RequestBody )
-
-    // 로그인은 login.do api 써도되나? 이거에따라 nfc, 비콘 로직 설계가 바뀔듯
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody RequestUserDto dto, HttpServletResponse response) throws Exception {
+        return userService.login(dto, response);
+    }
 
     @PostMapping("/device") // 기기 등록 api 추후 다른 값들 추가
     public Long saveUserDevice(@RequestBody RequestUserDevice dto) throws Exception {
         return userService.setUserDevice(dto);
     }
-
-//    @PostMapping("/nfc")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void checkNFC(@RequestBody NFCRequestDto){
-//        userService.
-//    }
-
 
 }
