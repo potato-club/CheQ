@@ -12,7 +12,8 @@ public class RequestUserDto {
     private String email; // 이메일
     private String studentId; // 학번
     private String seat;
-//    private ChapelKind chapelKind;
+    private String uuid;
+    private ChapelKind chapelKind;
 
     @Builder
     public UserEntity toEntity() {
@@ -20,7 +21,8 @@ public class RequestUserDto {
                 .email(email)
                 .studentId(studentId)
                 .seat(seat)
-//                .chapelKind(chapelKind)
+                .uuid(uuid)
+                .chapelKind(chapelKind)
                 .build();
     }
 
