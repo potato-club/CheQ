@@ -10,10 +10,23 @@ const BigBox = styled.div`
   flex-direction: column;
   width: 390px;
   height: 100vh;
+  min-width: 200px;
+  max-width: 600px;
   margin: 0 auto;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
   border-radius: 5px;
+`;
+const AttendanceTitle = styled.div`
+    display: flex;
+    align-items: center;
+    width: 200px;
+    margin-left: 20px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+`;
+const MainTitle = styled.h1`
+    color: white;
 `;
 
 const SmallBox = styled.div`
@@ -32,15 +45,15 @@ const SmallBox = styled.div`
 
 const SquareA = styled.div`
   width: 100%;
+  height: 500px;
   background-color: #375cde;
   display: flex;
   flex-direction: column;
   justify-content: center; 
-  padding-bottom: 50px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
-
+//SquareB 부분 column 써서 현재 출결현황 박스와 점 찍힐 박스 2개를 만든다.
 const SquareB = styled.div`
   width: 100%;
   height: 200px;
@@ -59,6 +72,7 @@ const SquareB = styled.div`
   }
 `;
 
+//SquareC 부분도 위쪽 라인에 박스 3개 넣을 박스와 밑에 라인에 박스 3개 넣을 박스 이렇게 총 2개로 나눠야해
 const SquareC = styled.div`
   display: flex;
   justify-content: space-around;
@@ -69,19 +83,13 @@ const SquareC = styled.div`
 
 const AdvertisementBox = styled(Slider)`
   height: 200px;
-  top: 50%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   overflow: hidden;
+  margin-bottom: 20px;
 `;
 
-const TextA = styled.div`
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 20px;
-  margin-top: 20px;
-`;
 const TextB = styled.div`
   color: black;
   font-size: 10px;
@@ -139,7 +147,9 @@ function Mainpage() {
   return (
     <BigBox>
     <SquareA>
-      <TextA>CheQ</TextA>
+      <AttendanceTitle>
+        <MainTitle>CheQ</MainTitle>
+      </AttendanceTitle>
       <AdvertisementBox {...settings}>
         {images.map((image, index) => (
           <Image key={index} src={image} alt={`AdvertisementBox ${index}`} />
