@@ -67,5 +67,13 @@ public class UserService {
 
     }
 
+    public void reissueToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+
+        jwtTokenProvider.validateRefreshToken(refreshToken);
+
+//        String newAccessToken = jwtTokenProvider.rei
+    }
+
 
 }
