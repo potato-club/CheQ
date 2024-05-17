@@ -600,8 +600,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = cheq/Info.plist;
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC Permission For Scan";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "사용자 위치 추적을 위해 블루투스 권한이 필요합니다.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자 위치 추적을 위해 위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "블루투스 1";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "블루투스 2";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치정보 1";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치정보 2";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -633,8 +636,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = cheq/Info.plist;
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC Permission For Scan";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "사용자 위치 추적을 위해 블루투스 권한이 필요합니다.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자 위치 추적을 위해 위치 권한이 필요합니다.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "블루투스 1";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "블루투스 2";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치정보 1";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치정보 2";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
