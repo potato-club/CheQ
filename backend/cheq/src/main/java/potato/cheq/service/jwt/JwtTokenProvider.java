@@ -1,22 +1,27 @@
 package potato.cheq.service.jwt;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.binary.Hex;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import potato.cheq.repository.UserRepository;
-import potato.cheq.service.UserService;
 
-import java.security.Key;
-import java.util.Base64;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
@@ -35,9 +40,12 @@ public class JwtTokenProvider {
     @Value("${jwt.refreshExpiration}")
     private long refreshTokenValidTime;
 
-    @PostConstruct
-    public void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    @Value("${jwt.aesKey}")
+    private String aesKey;
+
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String createAccessToken(String memberId) throws Exception {
@@ -48,19 +56,19 @@ public class JwtTokenProvider {
         return this.createToken(memberId, getMacAddress(memberId), refreshTokenValidTime, "refresh");
     }
 
-    public String createToken(String memberId, String macAddress, long tokenValid, String tokenType) {
-        Claims claims = Jwts.claims().setSubject(memberId);
-        claims.put("macAddress", macAddress);
-        claims.put("type", tokenType);
+    public String createToken(String memberId, String macAddress, long tokenValid, String tokenType) throws Exception {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("memberId", memberId);
+        jsonObject.addProperty("macAddress",macAddress);
 
-        Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        Claims claims = Jwts.claims().subject(encrypt(jsonObject.toString())).build();
         Date date = new Date();
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(date)
-                .setExpiration(new Date(date.getTime() + tokenValid))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .claims(claims)
+                .issuedAt(date)
+                .expiration(new Date(date.getTime() + tokenValid))
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -81,8 +89,63 @@ public class JwtTokenProvider {
         return userUUID;
     }
 
+    private String encrypt(String plainToken) throws Exception {
+        SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getBytes(StandardCharsets.UTF_8), "AES");
+        IvParameterSpec IV = new IvParameterSpec(aesKey.substring(0, 16).getBytes());
 
+        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        c.init(Cipher.ENCRYPT_MODE, secretKeySpec, IV);
 
+        byte[] encryptionByte = c.doFinal(plainToken.getBytes(StandardCharsets.UTF_8));
+
+        return Hex.encodeHexString(encryptionByte);
+    }
+
+    private String decrypt(String encodeText) throws Exception {
+        SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getBytes(StandardCharsets.UTF_8), "AES");
+        IvParameterSpec IV = new IvParameterSpec(aesKey.substring(0, 16).getBytes());
+
+        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        c.init(Cipher.ENCRYPT_MODE, secretKeySpec, IV);
+
+        byte[] decodeByte = Hex.decodeHex(encodeText);
+
+        return new String(c.doFinal(decodeByte), StandardCharsets.UTF_8);
+
+    }
+
+    public Long getUserId(String token) {
+        JsonElement memberId = extraValue(token).get("memberId");
+        if(memberId.isJsonNull()) {
+            return null;
+        }
+        return memberId.getAsLong();
+    }
+
+    private JsonObject extraValue(String token) {
+        String subject = extraAllClaims(token).getSubject();
+        try {
+            String decrypted = decrypt(subject);
+            JsonObject jsonObject = new Gson().fromJson(decrypted, JsonObject.class);
+            return jsonObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Claims extraAllClaims(String token) {
+        return getParser()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    private JwtParser getParser() {
+        return Jwts.parser()
+                .verifyWith(this.getSigningKey())
+                .build();
+
+    }
 
 
 }
