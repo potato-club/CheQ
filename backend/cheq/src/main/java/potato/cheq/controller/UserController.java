@@ -22,7 +22,7 @@ public class UserController {
         return userService.setUserData(dto);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login") // 학번만 입력시 토큰 발급 완료
     public ResponseEntity<String> login(@RequestBody RequestUserDto dto, HttpServletResponse response) throws Exception {
         return userService.login(dto, response);
     }
