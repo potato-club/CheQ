@@ -31,7 +31,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-@Transactional
+//@Transactional
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
