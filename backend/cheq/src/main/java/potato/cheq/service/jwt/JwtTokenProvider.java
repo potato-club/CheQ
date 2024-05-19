@@ -15,10 +15,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Hex;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import potato.cheq.error.security.ErrorCode;
+import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
 import potato.cheq.repository.UserRepository;
 
 import javax.crypto.Cipher;
@@ -31,10 +34,11 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-//@Transactional
+//@Transactional -> 당근 필요없지
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
+    private final RedisService redisService;
     private final UserRepository userRepository;
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -55,18 +59,20 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-//    @PostConstruct
-//    protected void init() {
-//        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-//    }
-//
-
-    public String createAccessToken(String memberId) throws Exception {
-        return this.createToken(memberId, getMacAddress(memberId), accessTokenValidTime, "access");
+    public String createAccessToken(String memberId) {
+        try {
+            return this.createToken(memberId, getMacAddress(memberId), accessTokenValidTime, "access");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } // token 생성에서 오류처리를 Exceptions로 하면 다해줘야하네 흠
     }
 
-    public String createRefreshToken(String memberId) throws Exception {
-        return this.createToken(memberId, getMacAddress(memberId), refreshTokenValidTime, "refresh");
+    public String createRefreshToken(String memberId) {
+        try {
+            return this.createToken(memberId, getMacAddress(memberId), refreshTokenValidTime, "refresh");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String createToken(String memberId, String macAddress, long tokenValid, String tokenType) throws Exception {
@@ -93,11 +99,12 @@ public class JwtTokenProvider {
         response.setHeader("refreshToken", "Bearer " + refreshToken);
     }
 
-    private String getMacAddress(String studentID) throws Exception {
+    private String getMacAddress(String studentID) {
         String userUUID = userRepository.findUuidByStudentId(studentID);
 
         if (userUUID == null) {
-            throw new Exception("사용자의 UUID 값을 찾을 수 없습니다.");
+            throw new NullPointerException();
+//            throw new Exception("사용자의 UUID 값을 찾을 수 없습니다.");
         }
         return userUUID;
     }
@@ -146,9 +153,9 @@ public class JwtTokenProvider {
     private JsonObject extraValue(String token) throws Exception {
         String subject = extraAllClaims(token).getSubject();
 //        try {
-            String decrypted = decrypt(subject);
-            JsonObject jsonObject = new Gson().fromJson(decrypted, JsonObject.class);
-            return jsonObject;
+        String decrypted = decrypt(subject);
+        JsonObject jsonObject = new Gson().fromJson(decrypted, JsonObject.class);
+        return jsonObject;
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //            return null;
@@ -193,8 +200,7 @@ public class JwtTokenProvider {
         } catch (MalformedJwtException e) {
             throw new MalformedJwtException("Invalid JWT token");
         } catch (ExpiredJwtException e) {
-            throw new ExpiredJwtException(null, null, "AccessToken is Expired"); // 추후 변경
-//            throw new ExpiredRefreshTokenException("1006", ErrorCode.EXPIRED_REFRESH_TOKEN);
+            throw new ExpiredRefreshTokenException("1006", ErrorCode.EXPIRED_REFRESH_TOKEN);
         } catch (UnsupportedJwtException ex) {
             throw new UnsupportedJwtException("JWT token is unsupported");
         } catch (IllegalArgumentException e) {
@@ -221,10 +227,30 @@ public class JwtTokenProvider {
         }
     }
 
+    public String reissueAccessToken(String refreshToken, HttpServletResponse response) {
+        try {
+            String studentId = redisService.getValues(refreshToken);
+            return createAccessToken(studentId);
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return ErrorCode.EXPIRED_ACCESS_TOKEN.getMessage();
+        }
+    }
 
+    public String reissueRefreshToken(String refreshToken, HttpServletResponse response) {
+        try {
+            String studentId = redisService.getValues(refreshToken);
+            String newRefreshToken = createRefreshToken(studentId);
 
+            redisService.delValues(refreshToken);
+            redisService.setValues(studentId, newRefreshToken);
 
-
+            return newRefreshToken;
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return ErrorCode.EXPIRED_REFRESH_TOKEN.getMessage();
+        }
+    }
 
 
 }
