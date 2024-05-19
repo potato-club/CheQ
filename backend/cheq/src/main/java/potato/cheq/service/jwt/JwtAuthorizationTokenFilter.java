@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-//@Transactional
+//@Transactional --> 이거 쓰면 오류나니까 공부해보자
 public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;

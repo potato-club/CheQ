@@ -40,8 +40,8 @@ public class UserController {
     @GetMapping("/reissue")
     @Operation(summary = "토큰 재발급")
     public ResponseEntity<String> reissueToken(HttpServletRequest request, HttpServletResponse response) {
-//        userService.
-        return ResponseEntity.ok().body("?");
+        userService.reissueToken(request, response);
+        return ResponseEntity.ok().body("토큰 재발급 완료");
     }
 
 }

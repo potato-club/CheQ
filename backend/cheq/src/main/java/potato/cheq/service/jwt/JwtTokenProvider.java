@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,7 @@ import java.util.Date;
 @Component
 //@Transactional -> 당근 필요없지
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenProvider {
 
     private final RedisService redisService;
@@ -101,6 +103,8 @@ public class JwtTokenProvider {
 
     private String getMacAddress(String studentID) {
         String userUUID = userRepository.findUuidByStudentId(studentID);
+        log.info(userUUID);
+        System.out.println(userUUID);
 
         if (userUUID == null) {
             throw new NullPointerException();
