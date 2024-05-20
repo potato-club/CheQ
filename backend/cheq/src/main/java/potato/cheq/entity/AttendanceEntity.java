@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AttendanceEntity {
+public class AttendanceEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,6 @@ public class AttendanceEntity {
 
     @Column(nullable = false)
     private Long user_id;
-
-    @Column(nullable = false)
-    private LocalDateTime create_date;
 
     private boolean check; // checkIn = 1, checkOut = 0
 }

@@ -36,8 +36,10 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/user/join").permitAll()
                 .requestMatchers("/**").permitAll()
                 .requestMatchers("/login").permitAll()
+                .requestMatchers("/user/**").permitAll()
                 .anyRequest().permitAll()
         );
 

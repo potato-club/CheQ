@@ -8,12 +8,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.annotation.Pointcut;
 import org.json.simple.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
 import potato.cheq.error.security.ErrorJwtCode;
 import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
@@ -34,6 +32,11 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         ErrorJwtCode errorCode;
 
+        if (path.contains("/login") || path.contains("/join") || path.contains("/user")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (accessToken == null && refreshToken != null && path.contains("/reissue")) {
             try {
                 jwtTokenProvider.validateRefreshToken(refreshToken);
@@ -53,7 +56,6 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
                 }
             } else if (accessToken == null && refreshToken == null) {
                 filterChain.doFilter(request, response);
-
                 return;
             } else {
                 if (jwtTokenProvider.validateAccessToken(accessToken)) {
@@ -61,26 +63,39 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
                 }
             }
         } catch (MalformedJwtException e) {
+            System.out.println("여기서 오류뜸");
+            e.printStackTrace();
             errorCode = ErrorJwtCode.INVALID_JWT_FORMAT;
             setResponse(response, errorCode);
             return;
         } catch (ExpiredJwtException e) {
+            System.out.println("여기서 오류뜸");
+            e.printStackTrace();
             errorCode = ErrorJwtCode.EXPIRED_ACCESS_TOKEN;
             setResponse(response, errorCode);
             return;
         } catch (UnsupportedJwtException e) {
+            System.out.println("여기서 오류뜸");
+            e.printStackTrace();
             errorCode = ErrorJwtCode.UNSUPPORTED_JWT_TOKEN;
             setResponse(response, errorCode);
             return;
         } catch (IllegalArgumentException e) {
+            System.out.println("여기서 오류뜸");
+            e.printStackTrace();
             errorCode = ErrorJwtCode.INVALID_VALUE;
             setResponse(response, errorCode);
             return;
         } catch (RuntimeException e) {
+            System.out.println("여기서 오류뜸");
+            e.printStackTrace();
             errorCode = ErrorJwtCode.RUNTIME_EXCEPTION;
             setResponse(response, errorCode);
             return;
         } catch (Exception e) {
+            System.out.println("여기서 오류뜸");
+
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 

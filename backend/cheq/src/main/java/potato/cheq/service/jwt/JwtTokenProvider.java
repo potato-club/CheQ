@@ -61,26 +61,27 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createAccessToken(String memberId) {
+    public String createAccessToken(String studentId) {
         try {
-            return this.createToken(memberId, getMacAddress(memberId), accessTokenValidTime, "access");
+            return this.createToken(studentId, getMacAddress(studentId), accessTokenValidTime, "access");
         } catch (Exception e) {
             throw new RuntimeException(e);
         } // token 생성에서 오류처리를 Exceptions로 하면 다해줘야하네 흠
     }
 
-    public String createRefreshToken(String memberId) {
+    public String createRefreshToken(String studentId) {
         try {
-            return this.createToken(memberId, getMacAddress(memberId), refreshTokenValidTime, "refresh");
+            return this.createToken(studentId, getMacAddress(studentId), refreshTokenValidTime, "refresh");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String createToken(String memberId, String macAddress, long tokenValid, String tokenType) throws Exception {
+    public String createToken(String studentId, String macAddress, long tokenValid, String tokenType) throws Exception {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("memberId", memberId);
+        jsonObject.addProperty("studentId", studentId);
         jsonObject.addProperty("macAddress", macAddress);
+        jsonObject.addProperty("tokenType", tokenType);
 
         Claims claims = Jwts.claims().subject(encrypt(jsonObject.toString())).build();
         Date date = new Date();
@@ -101,14 +102,11 @@ public class JwtTokenProvider {
         response.setHeader("refreshToken", "Bearer " + refreshToken);
     }
 
-    private String getMacAddress(String studentID) {
+    public String getMacAddress(String studentID) {
         String userUUID = userRepository.findUuidByStudentId(studentID);
-        log.info(userUUID);
-        System.out.println(userUUID);
 
         if (userUUID == null) {
             throw new NullPointerException();
-//            throw new Exception("사용자의 UUID 값을 찾을 수 없습니다.");
         }
         return userUUID;
     }

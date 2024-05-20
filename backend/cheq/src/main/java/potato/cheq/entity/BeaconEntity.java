@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class BeaconEntity {
+public class BeaconEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,8 @@ public class BeaconEntity {
     @Column(nullable = false)
     private String mac_address;
 
-    @Column(nullable = false)
-    private LocalDateTime attendance_time;
+//    @Column(nullable = false)
+//    private LocalDateTime attendance_time;
 
     private String beacon_position;
 }
