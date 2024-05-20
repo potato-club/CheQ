@@ -23,16 +23,14 @@ public class AttendanceService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String checkAttendanceByNfcService(HttpServletRequest request, NFCRequestDto nfcRequestDto) {
+    public String checkAttendanceByNfcService(HttpServletRequest request, NFCRequestDto nfcRequestDto) throws Exception {
         String userToken = jwtTokenProvider.resolveAccessToken(request);
 
         if(!jwtTokenProvider.validateAccessToken(userToken)){
             throw new NullPointerException(); // AccessToken 만료
         }
 
-        String userUUID = jwtTokenProvider.getMacAddress(userToken);
-        log.info(userUUID);
-        System.out.println(userToken); // 자동으로 decrypt?
+        String userUUID = jwtTokenProvider.getMacAddress(jwtTokenProvider.extractMemberId(userToken));
 
         if(userUUID.equals(nfcRequestDto.getMac_address())) {
 

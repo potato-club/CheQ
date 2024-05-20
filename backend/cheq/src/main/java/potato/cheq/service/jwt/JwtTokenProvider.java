@@ -104,7 +104,6 @@ public class JwtTokenProvider {
 
     public String getMacAddress(String studentID) {
         String userUUID = userRepository.findUuidByStudentId(studentID);
-
         if (userUUID == null) {
             throw new NullPointerException();
         }
@@ -128,7 +127,7 @@ public class JwtTokenProvider {
         IvParameterSpec IV = new IvParameterSpec(aesKey.substring(0, 16).getBytes());
 
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        c.init(Cipher.ENCRYPT_MODE, secretKeySpec, IV);
+        c.init(Cipher.DECRYPT_MODE, secretKeySpec, IV);
 
         byte[] decodeByte = Hex.decodeHex(encodeText);
 
@@ -144,18 +143,20 @@ public class JwtTokenProvider {
         return macAddress.getAsString();
     }
 
-    public Long extractMemberId(String token) throws Exception {
-        JsonElement memberId = extraValue(token).get("memberId");
+    public String extractMemberId(String token) throws Exception {
+        JsonElement memberId = extraValue(token).get("studentId");
         if (memberId.isJsonNull()) {
             return null;
         }
-        return memberId.getAsLong();
+        return memberId.getAsString();
     }
 
     private JsonObject extraValue(String token) throws Exception {
         String subject = extraAllClaims(token).getSubject();
 //        try {
+        log.info(subject);
         String decrypted = decrypt(subject);
+        log.info(decrypted);
         JsonObject jsonObject = new Gson().fromJson(decrypted, JsonObject.class);
         return jsonObject;
 //        } catch (Exception e) {
@@ -183,7 +184,7 @@ public class JwtTokenProvider {
     }
 
     public UsernamePasswordAuthenticationToken getAuthentication(String token) throws Exception {
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(extractMacAddress(token));
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(extractMemberId(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

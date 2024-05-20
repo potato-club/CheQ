@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import potato.cheq.dto.NFCRequestDto;
@@ -20,11 +21,9 @@ public class AttendanceController {
 
     // 찍었을때 날라오는 회원의 기기값과, 토큰의 기기값이 같으면 ok
     @PostMapping("/nfc")
-    public ResponseEntity<String> checkAttendanceByNFC(HttpServletRequest request, NFCRequestDto nfcRequestDto) {
+    public ResponseEntity<String> checkAttendanceByNFC(HttpServletRequest request, @RequestBody NFCRequestDto nfcRequestDto) throws Exception {
         String macAddress = attendanceService.checkAttendanceByNfcService(request, nfcRequestDto);
         return ResponseEntity.ok().body(macAddress + "기기 NFC 태그");
     }
-
-
 
 }
