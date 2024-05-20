@@ -31,7 +31,7 @@ public class UserEntity {
     @Column(nullable = false)
     private String seat;
 
-    private String st_mac_address; // 회원 기기 mac_address
+//    private String st_mac_address; // 회원 기기 mac_address
 
     @Column()
     private String uuid;

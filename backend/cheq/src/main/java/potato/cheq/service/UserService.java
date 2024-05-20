@@ -15,12 +15,14 @@ import potato.cheq.dto.RequestUserDto;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
+import potato.cheq.service.jwt.RedisService;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
 
+    private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
@@ -64,9 +66,23 @@ public class UserService {
 
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
+        redisService.setValues(studentID, refreshToken);
+
 
     }
 
+    public void reissueToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
+
+        jwtTokenProvider.validateRefreshToken(refreshToken);
+
+        String newAccessToken = jwtTokenProvider.reissueAccessToken(refreshToken, response);
+        String newRefreshToken = jwtTokenProvider.reissueRefreshToken(refreshToken, response);
+
+        jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
+        jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
+
+    }
 
 
 }
