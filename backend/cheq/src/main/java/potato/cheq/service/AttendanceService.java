@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import potato.cheq.dto.NFCRequestDto;
+import potato.cheq.entity.NFCEntity;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.repository.NFCRepository;
 import potato.cheq.repository.UserRepository;
@@ -26,13 +27,13 @@ public class AttendanceService {
     public String checkAttendanceByNfcService(HttpServletRequest request, NFCRequestDto nfcRequestDto) throws Exception {
         String userToken = jwtTokenProvider.resolveAccessToken(request);
 
-        if(!jwtTokenProvider.validateAccessToken(userToken)){
+        if (!jwtTokenProvider.validateAccessToken(userToken)) {
             throw new NullPointerException(); // AccessToken 만료
         }
 
         String userUUID = jwtTokenProvider.getMacAddress(jwtTokenProvider.extractMemberId(userToken));
 
-        if(userUUID.equals(nfcRequestDto.getMac_address())) {
+        if (userUUID.equals(nfcRequestDto.getMac_address())) {
 
             UserEntity userId = userRepository.findByUuid(nfcRequestDto.getMac_address());
 
@@ -40,7 +41,12 @@ public class AttendanceService {
                 throw new NullPointerException();
             }
 
-            nfcRepository.save(nfcRequestDto.toEntity());
+            NFCEntity nfc = NFCEntity.builder()
+                    .mac_address(nfcRequestDto.getMac_address())
+                    .NFC_position(nfcRequestDto.getNFC_position())
+                    .build();
+
+            nfcRepository.save(nfc);
 
             return userUUID;
         }
