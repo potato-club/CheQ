@@ -9,13 +9,8 @@ import Foundation
 import CoreLocation
 
 extension JVC: CLLocationManagerDelegate {
- 
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        initLocation()
-    }
+
     func initLocation() {
         locationManager.delegate = self                         // 델리게이트 넣어줌.
         locationManager.requestAlwaysAuthorization()            // 위치 권한 받아옴.
@@ -33,6 +28,8 @@ extension JVC: CLLocationManagerDelegate {
         
 
         locationManager.startMonitoring(for: getBeaconRegion())
+        
+        
     }
     
     // 위치 서비스에 대한 권한이 받아들여지면 MonitorBeacons() 함수 호출
@@ -60,6 +57,8 @@ extension JVC: CLLocationManagerDelegate {
 //            locationManager.startMonitoring(for: getBeaconRegion())
 //            locationManager.startRangingBeacons(satisfying: nil)
 //            locationManager.startUpdatingLocation()
+            
+            
         } else {
             print("CLLocation Monitoring is unavailable")
         }
@@ -69,7 +68,9 @@ extension JVC: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
         DLog.p("location Manager : \(state) / \(region)")
         if state == .inside {        // 영역 안에 들어온 순간
-            locationManager.startRangingBeacons(in: getBeaconRegion())
+//            locationManager.startRangingBeacons(in: getBeaconRegion())
+            let beaconUUID = UUID(uuidString: "FDA50693-A4E2-4FB1-AFCF-C6EB07647825")!
+            locationManager.startRangingBeacons(satisfying: CLBeaconIdentityConstraint(uuid: beaconUUID))
         }else if state == .outside { // 영역 밖에 나간 순간
 //            locationManager.startRangingBeacons(in: getBeaconRegion())
             locationManager.stopRangingBeacons(in: getBeaconRegion())
@@ -79,7 +80,10 @@ extension JVC: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
-//        DLog.p("didRangeBeacons : \(beacons.count)")
+        DLog.p("didRangeBeacons : \(beacons.count)")
+        for item in beacons {
+            DLog.p("beacon : \(item.uuid)")
+        }
         // 연결할 수 있는 비콘이 있는 경우
         if beacons.count > 0 {
 //            for item in beacons {
@@ -112,16 +116,17 @@ extension JVC: CLLocationManagerDelegate {
         print("비콘이 범위 밖을 벗어남")
     }
     
+    func getBeaconUUID() -> UUID {
+        return UUID(uuidString: "FDA50693-A4E2-4FB1-AFCF-C6EB07647825")!
+    }
+    
+    func getBeaconConstraint() -> CLBeaconIdentityConstraint{
+        return CLBeaconIdentityConstraint(uuid: getBeaconUUID())
+    }
     
     func getBeaconRegion() -> CLBeaconRegion {
-        let beaconUUID = UUID(uuidString: "FDA50693-A4E2-4FB1-AFCF-C6EB07647825")
-//        let beaconUUID = "AC233F5C2421"
-//        let beaconRegion:CLBeaconRegion = CLBeaconRegion(proximityUUID: beaconUUID as UUID, identifier: "someIdentifier")
-//        let beaconRegion : CLBeaconRegion = CLBeaconRegion(proximityUUID: NSUUID.init(uuidString:"FDA50693-A4E2-4FB1-AFCF-C6EB07647825")! as UUID, identifier: "MBeacon")
-//        return beaconRegion
-        
-        let constraint = CLBeaconIdentityConstraint(uuid: beaconUUID!, major: 10001, minor: 19641)
-        let region = CLBeaconRegion(beaconIdentityConstraint: constraint, identifier: "beacon first")
+        let beaconRegionConstraints = CLBeaconIdentityConstraint(uuid: getBeaconUUID())
+        let region = CLBeaconRegion.init(uuid: getBeaconUUID(), identifier: getBeaconUUID().uuidString)
         return region
     }
 }

@@ -165,6 +165,7 @@ class WebController: JVC {
                                  of: ResponseJSONTest.self)
             
             DLog.p("request done // \(lastBeacon)")
+            self.sendPush()
         }
     }
     
@@ -362,7 +363,7 @@ class WebController: JVC {
 }
 
 //MARK: Push Control
-//extension WebController {
+extension WebController : UNUserNotificationCenterDelegate {
 //    public func fromPushCheck(_ msgId : String?) {
 //        guard let msgId = msgId else { return }
 //        
@@ -411,7 +412,45 @@ class WebController: JVC {
 //            DLog.p("response :: \(baseResponse.header.message)")
 //        }
 //    }
-//}
+    func sendPush() {
+        let center = UNUserNotificationCenter.current()
+            center.delegate = self
+            center.requestAuthorization(options: [.badge,.sound,.alert]) { granted, error in
+                if error == nil {
+                    print("User permission is granted : \(granted)")
+                }
+            }
+//        Step-2 Create the notification content
+        let content = UNMutableNotificationContent()
+        content.title = "Hello"
+        content.body = "Welcome"
+   
+    
+//        Step-3 Create the notification trigger
+        let date = Date().addingTimeInterval(5)
+        let dateComponent = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second], from: date)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
+    
+    
+    
+//       Step-4 Create a request
+        let uuid = UUID().uuidString
+        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
+        
+    
+//      Step-5 Register with Notification Center
+        center.add(request) { error in
+    
+    
+        }
+    }
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                    willPresent notification: UNNotification,
+                                    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+         completionHandler([.sound])
+    }
+    
+}
 
 
 //MARK: webview delegate, file Download
