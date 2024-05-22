@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import potato.cheq.dto.RequestUserDevice;
 import potato.cheq.dto.RequestUserDto;
+import potato.cheq.dto.UserMyPageDto;
 import potato.cheq.service.UserService;
 
 @RestController
@@ -42,6 +43,13 @@ public class UserController {
     public ResponseEntity<String> reissueToken(HttpServletRequest request, HttpServletResponse response) {
         userService.reissueToken(request, response);
         return ResponseEntity.ok().body("토큰 재발급 완료");
+    }
+
+    @GetMapping("/mypage")
+    @Operation(summary = "회원 마이페이지")
+    public ResponseEntity<UserMyPageDto> getUserInfo(HttpServletRequest request) {
+        UserMyPageDto userInfo = userService.viewUserInfo(request);
+        return ResponseEntity.ok(userInfo);
     }
 
 }
