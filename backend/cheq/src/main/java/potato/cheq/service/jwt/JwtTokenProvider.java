@@ -8,19 +8,16 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
 import potato.cheq.repository.UserRepository;
@@ -30,12 +27,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
-//@Transactional -> 당근 필요없지
+//@Transactional -> 당근 필요없지 당근!
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
@@ -171,6 +166,32 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
+
+    private Claims extractClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(secretKey.getBytes())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getBody();
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedJwtException("토큰 타입을 추출할 수 없습니다.");
+        }
+    }
+
+
+
+    public String extractTokenType(String token) {
+        Claims claims = extractClaims(token);
+        if(claims != null && claims.containsKey("type")) {
+            return (String) claims.get("type");
+        } else {
+            throw new UnsupportedJwtException("JWT 토큰이 타입이 없습니다.");
+        }
+    }
+
+
+
     private JwtParser getParser() {
         return Jwts.parser()
                 .verifyWith(this.getSigningKey())
@@ -254,6 +275,8 @@ public class JwtTokenProvider {
             return ErrorCode.EXPIRED_REFRESH_TOKEN.getMessage();
         }
     }
+
+
 
 
 }
