@@ -1,11 +1,17 @@
 import React from "react";
-import AttendancePage from "./AttendancePage/AttendancePage";
+import Attendance from "./page/Attendance";
+import Login from "./page/Login";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div>
-      <AttendancePage />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/attendance" element={<Attendance />} />
+      </Routes>
+    </Router>
   );
 }
 
