@@ -27,6 +27,6 @@ public class FileEntity extends BaseTime {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "banner_id")
     private BannerEntity banner;
 }
