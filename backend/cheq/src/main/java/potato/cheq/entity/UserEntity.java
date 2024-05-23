@@ -31,10 +31,9 @@ public class UserEntity {
     @Column(nullable = false)
     private String seat;
 
-//    private String st_mac_address; // 회원 기기 mac_address
-
-    @Column()
-    private String uuid;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "st_uuid", referencedColumnName = "deviceUuid")
+    private UuidEntity uuidEntity;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -35,11 +35,11 @@ public class AttendanceService {
 
         if (userUUID.equals(nfcRequestDto.getMac_address())) {
 
-            UserEntity userId = userRepository.findByUuid(nfcRequestDto.getMac_address());
-
-            if (userId == null) {
-                throw new NullPointerException();
-            }
+//            UserEntity userId = userRepository.findByUuid(nfcRequestDto.getMac_address());
+//
+//            if (userId == null) {
+//                throw new NullPointerException();
+//            }
 
             NFCEntity nfc = NFCEntity.builder()
                     .mac_address(nfcRequestDto.getMac_address())

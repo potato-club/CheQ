@@ -10,10 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import potato.cheq.dto.NFCRequestDto;
+import potato.cheq.dto.RequestLoginDto;
 import potato.cheq.dto.RequestUserDevice;
 import potato.cheq.dto.RequestUserDto;
 import potato.cheq.entity.UserEntity;
+import potato.cheq.entity.UuidEntity;
 import potato.cheq.repository.UserRepository;
+import potato.cheq.repository.UuidRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
 import potato.cheq.service.jwt.RedisService;
 
@@ -25,30 +28,31 @@ public class UserService {
     private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final UuidRepository uuidRepository;
 
     public Long setUserData(RequestUserDto dto) throws Exception {
         if (userRepository.existsByStudentId(dto.getStudentId())) {
             throw new Exception("이미 존재하는 사용자 정보입니다.");
         }
 
-        if (userRepository.existsByUuid(dto.getUuid())) {
-            throw new Exception("이미 존재하는 기기정보값입니다.");
-        }
+//        if (userRepository.existsByUuid(dto.getUuid())) {
+//            throw new Exception("이미 존재하는 기기정보값입니다.");
+//        }
 
         UserEntity user = userRepository.save(dto.toEntity());
         return user.getId();
     }
 
     public Long setUserDevice(RequestUserDevice dto) throws Exception {
-        if (userRepository.existsByUuid(dto.getUuid())) {
+        if (uuidRepository.existsByDeviceUuid(dto.getDevice_uuid())) {
             throw new Exception("이미 존재하는 기기입니다.");
         }
-
-        UserEntity user = userRepository.save(dto.toEntity());
-        return user.getId();
+        
+        UuidEntity uuid = uuidRepository.save(dto.toEntity());
+        return uuid.getId();
     }
 
-    public ResponseEntity<String> login(RequestUserDto dto, HttpServletResponse response) throws Exception {
+    public ResponseEntity<String> login(RequestLoginDto dto, HttpServletResponse response) throws Exception {
         UserEntity user = userRepository.findByStudentId(dto.getStudentId());
 
         if (user == null) {

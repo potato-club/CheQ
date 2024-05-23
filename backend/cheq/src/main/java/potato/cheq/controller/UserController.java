@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import potato.cheq.dto.RequestLoginDto;
 import potato.cheq.dto.RequestUserDevice;
 import potato.cheq.dto.RequestUserDto;
 import potato.cheq.service.UserService;
@@ -27,7 +28,7 @@ public class UserController {
 
     @PostMapping("/login") // 학번만 입력시 토큰 발급 완료
     @Operation(summary = "사용자 로그인 (학번만 입력)")
-    public ResponseEntity<String> login(@RequestBody RequestUserDto dto, HttpServletResponse response) throws Exception {
+    public ResponseEntity<String> login(@RequestBody RequestLoginDto dto, HttpServletResponse response) throws Exception {
         return userService.login(dto, response);
     }
 
