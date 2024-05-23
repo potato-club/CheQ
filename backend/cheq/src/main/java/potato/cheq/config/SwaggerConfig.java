@@ -32,4 +32,18 @@ public class SwaggerConfig {
                 .addOpenApiCustomizer(api -> api.setInfo(info))
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi attendanceApi() {
+        Info info = new Info().title("출결 관련 API").version("v0.1");
+        String[] paths = {"/attendance/**"};
+
+        return GroupedOpenApi.builder()
+                .group("attendance")
+                .pathsToMatch(paths)
+                .displayName("Attendance's API")
+                .addOpenApiCustomizer(api -> api.setInfo(info))
+                .build();
+    }
+
 }
