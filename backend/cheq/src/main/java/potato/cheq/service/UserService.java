@@ -35,9 +35,9 @@ public class UserService {
             throw new Exception("이미 존재하는 사용자 정보입니다.");
         }
 
-//        if (userRepository.existsByUuid(dto.getUuid())) {
-//            throw new Exception("이미 존재하는 기기정보값입니다.");
-//        }
+        if (userRepository.existsByStUuid(dto.getUuid())) {
+            throw new Exception("이미 존재하는 기기정보값입니다.");
+        }
 
         UserEntity user = userRepository.save(dto.toEntity());
         return user.getId();
@@ -47,7 +47,7 @@ public class UserService {
         if (uuidRepository.existsByDeviceUuid(dto.getDevice_uuid())) {
             throw new Exception("이미 존재하는 기기입니다.");
         }
-        
+
         UuidEntity uuid = uuidRepository.save(dto.toEntity());
         return uuid.getId();
     }

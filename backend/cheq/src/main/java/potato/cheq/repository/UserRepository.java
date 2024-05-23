@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     boolean existsByStudentId(String studentId);
-//    boolean existsByUuid(UuidEntity uuid);
+    boolean existsByStUuid(String uuid);
 
 //    UserEntity findByUuid(String uuid);
 
     UserEntity findByStudentId(String studentId);
-    @Query("SELECT u.uuidEntity.deviceUuid FROM UserEntity u WHERE u.studentId = :studentId")
+    @Query("SELECT u.stUuid FROM UserEntity u WHERE u.studentId = :studentId")
     String findUuidByStudentId(@Param("studentId") String studentId);
 
 

@@ -13,7 +13,7 @@ public class RequestUserDto {
     private String email; // 이메일
     private String studentId; // 학번
     private String seat;
-    private UuidEntity uuid;
+    private String uuid;
     private ChapelKind chapelKind;
 
     @Builder
@@ -22,7 +22,7 @@ public class RequestUserDto {
                 .email(email)
                 .studentId(studentId)
                 .seat(seat)
-                .uuidEntity(uuid)
+                .stUuid(uuid)
                 .chapelKind(chapelKind)
                 .build();
     }

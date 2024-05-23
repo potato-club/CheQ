@@ -31,9 +31,8 @@ public class UserEntity {
     @Column(nullable = false)
     private String seat;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "st_uuid", referencedColumnName = "deviceUuid")
-    private UuidEntity uuidEntity;
+    @Column()
+    private String stUuid;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
