@@ -1,68 +1,160 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Slider from 'react-slick';
+// import Slider from 'react-slick';
 import Nav from '../UnderNavBar/NaverBar';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+// import 'slick-carousel/slick/slick.css';
+// import 'slick-carousel/slick/slick-theme.css';
 
 const BigBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 390px;
+  width: 100vw;
   height: 100vh;
   min-width: 200px;
   max-width: 600px;
   margin: 0 auto;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-  border-radius: 5px;
-`;
-const AttendanceTitle = styled.div`
-    display: flex;
-    align-items: center;
-    width: 200px;
-    margin-left: 20px;
-    justify-content: space-between;
-    margin-bottom: 20px;
-`;
-const MainTitle = styled.h1`
-    color: white;
 `;
 
-const SmallBox = styled.div`
-  width: 100px;
-  height: 100px;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-  &:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1);
-  }
+const AttendanceTitle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  margin-right: 450px;
+`;
+
+const MainTitle = styled.h1`
+  color: white;
 `;
 
 const SquareA = styled.div`
   width: 100%;
-  height: 500px;
+  height: 350px;
   background-color: #375cde;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
+  justify-content: center;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
-//SquareB 부분 column 써서 현재 출결현황 박스와 점 찍힐 박스 2개를 만든다.
+
+const SquareAboxA = styled.div`
+  display: flex;
+  width: 100%;
+  height: 30%;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const SquareAboxB = styled.div`
+  display: flex;
+  width: 100%;
+  height: 70%;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const SquareAboxBAdvertisement = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%; /* Set explicit height to maintain the size */
+  overflow: cover; /* Hide overflow to ensure the image fits within the div */
+`;
+
+const AdvertisementImage = styled.img`
+  width: 100%;
+  height: 100%;
+  /* overflow: hidden;  */
+`;
+
 const SquareB = styled.div`
   width: 100%;
-  height: 200px;
+  height: 150px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 2px;
-  position: relative; /* 부모 요소에 position: relative 추가 */
+  position: relative;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const SquareBboxA = styled.div`
+  display: flex;
+  width: 100%;
+  height: 50%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SquareBboxAtext = styled.div`
+  display: flex;
+  width: auto;
+  height: 100%;
+  font-size: 12px;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  margin-right: 400px;
+`;
+
+const SquareBboxB = styled.div`
+  display: flex;
+  width: 100%;
+  height: 50%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SquareBboxBcircle = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  height: 100%;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const SquareC = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  height: 100vh;
+  overflow-y: auto; /* 스크롤이 필요한 경우만 표시 */
+  &::-webkit-scrollbar {
+    width: 0; /* 수평 스크롤바 너비를 0으로 설정하여 숨김 */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent; /* 스크롤바 썸 색상을 투명으로 설정하여 숨김 */
+  }
+`;
+const SquareCboxA = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+  gap: 80px;
+`;
+
+const SquareCboxASquare = styled.div`
+  display: flex;
+  width: 100px;
+  height: 100px;
+  background-color: white;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
   &:hover {
@@ -72,110 +164,119 @@ const SquareB = styled.div`
   }
 `;
 
-//SquareC 부분도 위쪽 라인에 박스 3개 넣을 박스와 밑에 라인에 박스 3개 넣을 박스 이렇게 총 2개로 나눠야해
-const SquareC = styled.div`
-  display: flex;
-  justify-content: space-around;
-  background-color: white;
-  height: 100%;
-  padding: 40px 0px;
-`;
-
-const AdvertisementBox = styled(Slider)`
-  height: 200px;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  overflow: hidden;
-  margin-bottom: 20px;
-`;
-
-const TextB = styled.div`
-  color: black;
-  font-size: 10px;
-  font-weight: bold;
-  position: absolute;
-  top: 15px;
-  left: 25px;
-`;
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-`;
-
-const CirclesContainer = styled.div`
-  display: flex;
-  gap: 60px; /* 동그라미 사이 간격 설정 */
-  height: 0px;
-`;
-
 const CircleA = styled.div`
+  display: flex;
   background-color: red;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
 `;
 
 const CircleB = styled.div`
   background-color: green;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+`;
+
+const CircleC = styled.div`
+  background-color: green;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+`;
+
+const CircleD = styled.div`
+  background-color: green;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+`;
+
+const CircleE = styled.div`
+  background-color: green;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
 `;
 
 const images = [
   'https://pimg.hackers.com/land/main/land_default.jpg',
-  'https://img.seoul.co.kr/img/upload/2023/06/27/SSC_20230627135839_O2.jpg',
-
-]
+  'https://i.ytimg.com/vi/zvTgwgams-Q/maxresdefault.jpg',
+  'https://cdn.autotribune.co.kr/news/photo/202312/11209_56884_5312.png',
+  'https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png'
+];
 
 function Mainpage() {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 300,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: true,
-    autoplay: true,
-    autoplaySpeed: 3000,
-  };
+  const [numberOfBoxes, setNumberOfBoxes] = useState(1); // 숫자 값을 상태로 관리
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  //settings.dots = images.length <= settings.slidesToShow;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+  // const settings = {
+  //   dots: true,
+  //   infinite: true,
+  //   speed: 300,
+  //   slidesToShow: 1,
+  //   slidesToScroll: 1,
+  //   arrows: true,
+  //   autoplay: true,
+  //   autoplaySpeed: 3000,
+  // };
+
+  // SquareCboxA를 numberOfBoxes 수만큼 반복해서 렌더링
+  const renderSquareCboxA = () => {
+    const boxes = [];
+    for (let i = 0; i < numberOfBoxes; i++) {
+      boxes.push(
+        <SquareCboxA key={i}>
+          <SquareCboxASquare />
+          <SquareCboxASquare />
+          <SquareCboxASquare />
+        </SquareCboxA>
+      );
+    }
+    return boxes;
+  };
 
   return (
     <BigBox>
-    <SquareA>
-      <AttendanceTitle>
-        <MainTitle>CheQ</MainTitle>
-      </AttendanceTitle>
-      <AdvertisementBox {...settings}>
-        {images.map((image, index) => (
-          <Image key={index} src={image} alt={`AdvertisementBox ${index}`} />
-        ))}
-      </AdvertisementBox>
-    </SquareA>
-    <SquareB>
-      <TextB>현재 출결 현황</TextB>
-      <CirclesContainer>
-        <CircleA />
-        <CircleB />
-        <CircleB />
-        <CircleB />
-        <CircleB />
-      </CirclesContainer>
-    </SquareB>
-    <SquareC>
-      <SmallBox />
-      <SmallBox />
-      <SmallBox />
-    </SquareC>
-     <Nav /> {/* NaverBar 컴포넌트 사용 */}
- 
-  </BigBox>
-  
-
+      <SquareA>
+        <SquareAboxA>
+          <AttendanceTitle>
+            <MainTitle>CheQ</MainTitle>
+          </AttendanceTitle>
+        </SquareAboxA>
+        <SquareAboxB>
+          <SquareAboxBAdvertisement>
+            <AdvertisementImage src={images[currentImageIndex]} alt="Advertisement" />
+          </SquareAboxBAdvertisement>
+        </SquareAboxB>
+      </SquareA>
+      <SquareB>
+        <SquareBboxA>
+          <SquareBboxAtext>현재 출결사항</SquareBboxAtext>
+        </SquareBboxA>
+        <SquareBboxB>
+          <SquareBboxBcircle>
+            <CircleA />
+            <CircleB />
+            <CircleC />
+            <CircleD />
+            <CircleE />
+          </SquareBboxBcircle>
+        </SquareBboxB>
+      </SquareB>
+      <SquareC>
+        {renderSquareCboxA()} {/* 동적으로 SquareCboxA 렌더링 */}
+      </SquareC>
+      <Nav /> {/* NaverBar 컴포넌트 사용 */}
+    </BigBox>
   );
 }
 

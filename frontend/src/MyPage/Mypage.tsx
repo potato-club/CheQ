@@ -6,7 +6,7 @@ import QRImage from '../Image/qr -1004.png';
 const BigBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 390px;
+  width: 100vw;
   height: 100vh;
   min-width: 200px;
   max-width: 600px;
@@ -14,16 +14,16 @@ const BigBox = styled.div`
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
-
+//BigBox를 2개의 박스로 만들어서 AttendanceTitle부분 박스와 SquareA B C 박스가 들어갈 박스 총
 const AttendanceTitle = styled.div`
-    display: flex;
-    align-items: center;
-    width: 200px;
-    margin-left: 20px;
-    margin-top: 3px;
-    justify-content: space-between;
-    margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 260px;
+  margin-right: 250px;
+  margin-top: 35px;
 `;
+
 const MainTitle = styled.h1`
     color: #375cde;
 `;
@@ -32,83 +32,59 @@ const SubTitle = styled.h3`
 `;
 
 const SquareA = styled.div`
-  width: 80%;
-  height: 10px; /* SquareA의 높이를 고정 */
-  display: flex;
-  border-radius: 20px;
-  flex-direction: row;
-  justify-content: center;
-  //align-items: center;
-  padding-bottom: 120px;
-  margin-left: 38px;
-  margin-right: 38px;
-  margin-bottom: 20px; //SquareA 와 SquareB 부분 여백주기
-  position: relative;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-  &:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1);
-  }
-`;
-
-const SquareB = styled.div`
-  width: 80%;
-  height: 500px;
-  display: flex;
-  flex-direction: column; //세로로 네모 나누기
-  margin-left: 38px;
-  margin-right: 38px;
-  margin-bottom: 20px; //SquareB와 SquareC 여백주기
-  justify-content: center;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-    &:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1);
-  }
-`;
-
-const SquareC = styled.div`
-  width: 80%;
-  height: 150px;
-  border-radius: 20px;
-  margin-left: 38px;
-  margin-right: 38px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-    &:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1);
-  }
+  width: 100%;
+  height: 30%;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
 `;
 
-const ProfilBox = styled.div`
-  width:45%;
-  height:100%; /* SquareA의 높이에 맞추기 위해 100%로 설정 */
-  margin-right: 15px;
-  margin-left: 85px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 40px;
+const SquareAboxA = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width:100%;
+  height:15%;
+  margin-bottom: 15px;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+`
+const SquareAboxB = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:100%;
+  height:85%;
+  
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+`;
+
+const SquareAboxBinformationbox = styled.div`
+  display:flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  width:80%;
+  height:70%;
+  border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-    &:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1);
-  }  
+`;
+
+const ProfilBox = styled.div`
+  width:20%;;
+  height:80%; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 50px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
 const ProfilContentBox = styled.div`
@@ -116,62 +92,12 @@ const ProfilContentBox = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width:30%;
-  height:100%; /* SquareA의 높이에 맞추기 위해 100%로 설정 */
-  margin-right: 80px;
-  margin-top: 20px;
-  padding: 40px;
+  gap: 5px;
+  width:40%;
+  height:80%;
+  margin-right: 50px;
   /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
-`;
-
-const ProfilContentBoxA = styled.div`
-  display: flex;
-  align-items: center;
-  width:100%;
-  height:100%;
-  margin-top: 10px;
-  margin-bottom: 13px;
-  margin-right: 30px;
-  font-size:12px;
-  font-weight: bold;
-  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
-`;
-
-const ProfilContentBoxB = styled.div`
-  display: flex;
-  align-items: center;
-  width:100%;
-  height:100%;
-  margin-bottom: 13px;
-  margin-right: 30px;
-  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
-  font-size:12px;
-  font-weight: bold;
-`;
-
-const ProfilContentBoxC = styled.div`
-  display: flex;
-  align-items: center;
-  width:100%;
-  height:100%;
-  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
-  font-size:12px;
-  font-weight: bold;
-  margin-bottom: 13px;
-  margin-right: 30px;
-`;
-
-const ProfilContentBoxD = styled.div`
-  display: flex;
-  align-items: center;
-  width:100%;
-  height:100%;
-  margin-bottom: 13px;
-  margin-right: 30px;
-  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
-  font-size:12px;
-  font-weight: bold;
 `;
 
 const ProfilContentNameTag = styled.div`
@@ -186,18 +112,87 @@ const ProfilContentNameTag = styled.div`
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
 `;
 
+const ProfilContentBoxA = styled.div`
+  display: flex;
+  align-items: center;
+  width:100%;
+  height:100%;
+  font-size:12px;
+  font-weight: bold;
+  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
+`;
+
+const ProfilContentBoxB = styled.div`
+  display: flex;
+  align-items: center;
+  width:100%;
+  height:100%;
+  font-size:12px;
+  font-weight: bold;
+  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
+`;
+
+const ProfilContentBoxC = styled.div`
+  display: flex;
+  align-items: center;
+  width:100%;
+  height:100%;
+  font-size:12px;
+  font-weight: bold;
+  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
+`;
+
+const ProfilContentBoxD = styled.div`
+  display: flex;
+  align-items: center;
+  width:100%;
+  height:100%;
+  font-size:12px;
+  font-weight:bold;
+  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
+  `;
+
+const SquareB = styled.div`
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 70%;
+  flex-direction: column;
+` ; 
 const SquareBboxA = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 25%; /* 반반으로 나누기 */
-  margin-bottom: 20px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
+  height: 65%;
+  flex-direction: column;
 `;
 
-const SquareBboxAText = styled.div`
+const SquareBboxAQRBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:80%;
+  aspect-ratio: 1 / 1; //1대1비율 쓰기위해서는 width를 지정해주면 그거에 맞게 1대1비율로 높이가 지정된다.
+  flex-direction: column;
+  border-radius: 20px; 
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const SquareBboxAQRBoxA = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:100%;
+  height:20%;
+  border-radius: 20px;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+`;
+
+const SquareBboxAQRBoxAtext = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -205,33 +200,31 @@ const SquareBboxAText = styled.div`
   font-weight: bold;
   font-size: 12px;
   height: 100%;
-  margin-top: 5px;
-  margin-right: 220px;
+  position: relative; //정적위치시킬때
+  left: -150px;
   /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
 `;
 
-const SquareBboxB = styled.div`
+const SquareBboxAQRBoxB = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 75%; /* 반반으로 나누기 */
+  width:100%;
+  height:80%;
   border-radius: 20px;
   /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
 `;
 
-const SquareBboxBQr = styled.div`
+const SquareBboxAQRBoxBqr = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60%;
-  height: 80%;
-  margin-bottom: 15px;
-  border-radius: 20px;
+  width: 45%;
+  aspect-ratio: 1 / 1; //1대1 비율
   overflow: hidden;
-  position: relative;
+  border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); 
     &:hover {
@@ -241,69 +234,106 @@ const SquareBboxBQr = styled.div`
   }  
 `;
 
+const Divider = styled.div`
+  width: 95%;
+  height: 2px; /* 두께 조정 */
+  background-color: #e8e5e5; /* 색상 조정 */
+`;
+
 const QRImageStyled = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover; /* 이미지를 컨테이너에 꽉 차도록 함 */
 `;
 
-const SquareCboxA = styled.div`
+const SquareBboxB = styled.div`
   display: flex;
-  flex-direction: center;
+  justify-content: center;
   align-items: center;
-  width:100%;
-  height:60px;
-  margin-top: 15px;
-  margin-bottom: 10px;
-`;
-const SquareCboxB = styled.div`
-  display: flex;
-  flex-direction: center;
-  align-items: center;
-  width:100%;
-  height:60px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  width: 100%;
+  height: 35%;
+  flex-direction: column;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
 `;
 
-const SquareCboxC = styled.div`
+const SquareBboxBsetting = styled.div`
   display: flex;
-  flex-direction: center;
+  justify-content: center;
   align-items: center;
-  width:100%;
-  height:60px;
-  margin-bottom: 15px;
-`; 
+  width: 80%;
+  height: 80%;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); 
+`;
 
-const SquareCboxText = styled.div`
+const SquareBboxBsettingA = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  height: 80%;
+  border-radius: 20px;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
+ `;
+
+const SquareBboxBsettingA1 = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+  margin-left: 25px;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);    */
+`;
+
+const SquareBboxsettingA1text = styled.div`
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  width: auto;
+  height: 100%;
+  font-size: 12px;
+  font-weight: bold;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);    */
+`;
+
+const SquareBboxBsettingA2 = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+  margin-left: 35px;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
+`;
+
+const SquareBboxsettingA2text = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   width: auto;
-  font-weight: bold;
-  font-size: 12px;
   height: 100%;
-  margin-top: 5px;
-  margin-left: 15px;
-  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);    */
 `;
 
-
-const LineA = styled.div`
-  width: auto; /* Same width as SquareB */
-  height: 1px;
-  background-color: #ccc; /* Color of the line */
-  margin-left: 10px; /* Same left position as SquareB */
-  margin-right: 10px;
-  position: relative;
-  top: -15px/* Move the line above by 5 pixels */
-`;
-
-const LineB = styled.div`
+const SquareBboxBsettingA3= styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 1px;
-  background-color: #ccc;
-  top: -5px;
+  height: 50%;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
 `;
 
 function Mypage(){
@@ -317,11 +347,16 @@ function Mypage(){
 
   return(
       <BigBox>
-         <AttendanceTitle>
-              <MainTitle>CheQ</MainTitle>
-              <SubTitle>마이 페이지</SubTitle>
-         </AttendanceTitle>
-         <SquareA>
+
+           <SquareA>
+             <SquareAboxA>
+                <AttendanceTitle>
+                  <MainTitle>CheQ</MainTitle>
+                  <SubTitle>마이 페이지</SubTitle>
+                </AttendanceTitle>
+             </SquareAboxA> 
+             <SquareAboxB> 
+             <SquareAboxBinformationbox>      
               <ProfilBox>
                  {/* <사진 넣을예정> */}
               </ProfilBox>
@@ -343,31 +378,40 @@ function Mypage(){
                       {limitText('H32')}
                     </ProfilContentBoxD>
               </ProfilContentBox>
-         </SquareA>
+            </SquareAboxBinformationbox>  
+            </SquareAboxB>   
+         </SquareA> 
          <SquareB>
-              <SquareBboxA>
-                <SquareBboxAText>내 QR코드</SquareBboxAText>
-              </SquareBboxA>
-              <LineA />
-              <SquareBboxB>
-                <SquareBboxBQr> 
-                  <QRImageStyled src={QRImage} alt="QR Code" />
-                </SquareBboxBQr>
-              </SquareBboxB>   
+            <SquareBboxA>
+              <SquareBboxAQRBox>
+                <SquareBboxAQRBoxA>
+                  <SquareBboxAQRBoxAtext>내 QR코드</SquareBboxAQRBoxAtext>
+                </SquareBboxAQRBoxA>
+                  <Divider />
+                <SquareBboxAQRBoxB>
+                  <SquareBboxAQRBoxBqr> 
+                    <QRImageStyled src={QRImage} alt="QR Code" />
+                  </SquareBboxAQRBoxBqr>
+                </SquareBboxAQRBoxB>
+              </SquareBboxAQRBox>
+            </SquareBboxA>
+            <SquareBboxB> 
+              <SquareBboxBsetting>
+                <SquareBboxBsettingA>
+                  <SquareBboxBsettingA1>
+                    <SquareBboxsettingA1text>푸시 알림 설정</SquareBboxsettingA1text>
+                  </SquareBboxBsettingA1>
+                  <Divider />
+                  <SquareBboxBsettingA2>
+                   <SquareBboxsettingA2text>앱 설정</SquareBboxsettingA2text>
+                  </SquareBboxBsettingA2>
+                  <Divider />
+                  <SquareBboxBsettingA3> </SquareBboxBsettingA3>
+                </SquareBboxBsettingA>
+              </SquareBboxBsetting>
+            </SquareBboxB>
          </SquareB>
-         <SquareC>
-             <SquareCboxA>
-               <SquareCboxText >푸시 알람설정</SquareCboxText>
-             </SquareCboxA>
-                <LineB />
-             <SquareCboxB>
-               <SquareCboxText >앱 설정</SquareCboxText>
-             </SquareCboxB>
-                <LineB />
-             <SquareCboxC>
-              
-             </SquareCboxC>
-        </SquareC>
+         
          
          <Nav /> 
       </BigBox>
