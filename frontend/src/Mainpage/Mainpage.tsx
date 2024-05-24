@@ -1,204 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 // import Slider from 'react-slick';
-import Nav from '../UnderNavBar/NaverBar';
+//import Nav from '../UnderNavBar/NaverBar';
 // import 'slick-carousel/slick/slick.css';
 // import 'slick-carousel/slick/slick-theme.css';
-
-const BigBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-  min-width: 200px;
-  max-width: 600px;
-  margin: 0 auto;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const AttendanceTitle = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  margin-right: 450px;
-`;
-
-const MainTitle = styled.h1`
-  color: white;
-`;
-
-const SquareA = styled.div`
-  width: 100%;
-  height: 350px;
-  background-color: #375cde;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const SquareAboxA = styled.div`
-  display: flex;
-  width: 100%;
-  height: 30%;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const SquareAboxB = styled.div`
-  display: flex;
-  width: 100%;
-  height: 70%;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const SquareAboxBAdvertisement = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%; /* Set explicit height to maintain the size */
-  overflow: cover; /* Hide overflow to ensure the image fits within the div */
-`;
-
-const AdvertisementImage = styled.img`
-  width: 100%;
-  height: 100%;
-  /* overflow: hidden;  */
-`;
-
-const SquareB = styled.div`
-  width: 100%;
-  height: 150px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const SquareBboxA = styled.div`
-  display: flex;
-  width: 100%;
-  height: 50%;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SquareBboxAtext = styled.div`
-  display: flex;
-  width: auto;
-  height: 100%;
-  font-size: 12px;
-  font-weight: bold;
-  justify-content: center;
-  align-items: center;
-  margin-right: 400px;
-`;
-
-const SquareBboxB = styled.div`
-  display: flex;
-  width: 100%;
-  height: 50%;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SquareBboxBcircle = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 80px;
-  height: 100%;
-  width: 100%;
-  margin-bottom: 20px;
-`;
-
-const SquareC = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  height: 100vh;
-  overflow-y: auto; /* 스크롤이 필요한 경우만 표시 */
-  &::-webkit-scrollbar {
-    width: 0; /* 수평 스크롤바 너비를 0으로 설정하여 숨김 */
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: transparent; /* 스크롤바 썸 색상을 투명으로 설정하여 숨김 */
-  }
-`;
-const SquareCboxA = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 50%;
-  gap: 80px;
-`;
-
-const SquareCboxASquare = styled.div`
-  display: flex;
-  width: 100px;
-  height: 100px;
-  background-color: white;
-  border-radius: 5px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-  &:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1);
-  }
-`;
-
-const CircleA = styled.div`
-  display: flex;
-  background-color: red;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
-`;
-
-const CircleB = styled.div`
-  background-color: green;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
-`;
-
-const CircleC = styled.div`
-  background-color: green;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
-`;
-
-const CircleD = styled.div`
-  background-color: green;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
-`;
-
-const CircleE = styled.div`
-  background-color: green;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
-`;
 
 const images = [
   'https://pimg.hackers.com/land/main/land_default.jpg',
@@ -208,7 +13,6 @@ const images = [
 ];
 
 function Mainpage() {
-  const [numberOfBoxes, setNumberOfBoxes] = useState(1); // 숫자 값을 상태로 관리
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
@@ -216,68 +20,274 @@ function Mainpage() {
       setCurrentImageIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
     }, 5000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // 정리 함수 추가
   }, []);
-  // const settings = {
-  //   dots: true,
-  //   infinite: true,
-  //   speed: 300,
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  //   arrows: true,
-  //   autoplay: true,
-  //   autoplaySpeed: 3000,
-  // };
-
-  // SquareCboxA를 numberOfBoxes 수만큼 반복해서 렌더링
-  const renderSquareCboxA = () => {
-    const boxes = [];
-    for (let i = 0; i < numberOfBoxes; i++) {
-      boxes.push(
-        <SquareCboxA key={i}>
-          <SquareCboxASquare />
-          <SquareCboxASquare />
-          <SquareCboxASquare />
-        </SquareCboxA>
-      );
-    }
-    return boxes;
-  };
-
-  return (
-    <BigBox>
-      <SquareA>
-        <SquareAboxA>
+  
+  return(
+    <div>
+      <BigBox>
+        <Box1>
           <AttendanceTitle>
-            <MainTitle>CheQ</MainTitle>
+           <MainTitle>CheQ</MainTitle> 
           </AttendanceTitle>
-        </SquareAboxA>
-        <SquareAboxB>
-          <SquareAboxBAdvertisement>
+        </Box1>
+        <Box2>
+          <Box2Advertisement>
             <AdvertisementImage src={images[currentImageIndex]} alt="Advertisement" />
-          </SquareAboxBAdvertisement>
-        </SquareAboxB>
-      </SquareA>
-      <SquareB>
-        <SquareBboxA>
-          <SquareBboxAtext>현재 출결사항</SquareBboxAtext>
-        </SquareBboxA>
-        <SquareBboxB>
-          <SquareBboxBcircle>
-            <CircleA />
-            <CircleB />
-            <CircleC />
-            <CircleD />
-            <CircleE />
-          </SquareBboxBcircle>
-        </SquareBboxB>
-      </SquareB>
-      <SquareC>
-        {renderSquareCboxA()} {/* 동적으로 SquareCboxA 렌더링 */}
-      </SquareC>
-      <Nav /> {/* NaverBar 컴포넌트 사용 */}
-    </BigBox>
+          </Box2Advertisement>
+        </Box2>
+        <Box3A>
+          <Box3Atext>
+            <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
+          </Box3Atext>
+        </Box3A>
+        <Box3B>
+          <Box3BCircle>
+            <Box3BCircleA></Box3BCircleA>
+            <Box3BCircleB></Box3BCircleB>
+            <Box3BCircleC></Box3BCircleC>
+            <Box3BCircleD></Box3BCircleD>
+            <Box3BCircleE></Box3BCircleE>
+          </Box3BCircle>
+        </Box3B>
+        <Box4>
+          <Box4MainA>
+            <Box4MainAButton1>
+
+            </Box4MainAButton1>
+            <Box4MainAButton2>
+
+            </Box4MainAButton2>
+            <Box4MainAButton3>
+
+            </Box4MainAButton3>
+          </Box4MainA>
+
+          {/* <Box4MainB>
+
+          </Box4MainB> */}
+        </Box4>
+      </BigBox>
+
+    </div>
+  
   );
 }
 
 export default Mainpage;
+
+const BigBox = styled.div`
+  display: flex;
+  width: 100vw;
+  min-width: 200px;
+  max-width: 600px;
+  margin: auto;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const Box1 = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+  background-color: #375cde;
+`;
+
+const AttendanceTitle = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+`;
+
+const MainTitle = styled.h1`
+  color: white;
+`;
+
+const Box2 = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+height: 250px;
+flex-direction: column;
+box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); 
+`;
+
+const Box2Advertisement = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: cover;
+`;
+
+const AdvertisementImage = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+const Box3A = styled.div`
+display: flex;
+justify-content: flex-start;
+align-items: center;
+padding: 5px;
+box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const Box3Atext = styled.div`
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ font-size: 8px;
+ margin-left: 50px;
+ /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+ border-radius: 10px; */
+`;
+
+const Box3AtextTitle = styled.h2`
+ color: black;
+`;
+
+const Box3B = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+padding:5px;
+box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`; 
+ 
+const Box3BCircle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around; //요소 주위를 동일하게 나누기
+  flex-direction: row;
+  padding: 3px;
+  width: 80%;
+  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+`;
+
+const Box3BCircleA = styled.div`
+  display: flex;
+  background-color: red;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+`;
+
+const Box3BCircleB = styled.div`
+  display: flex;
+  background-color: green;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+ 
+`;
+
+const Box3BCircleC = styled.div`
+  display: flex;
+  background-color: green;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+ 
+`;
+
+const Box3BCircleD = styled.div`
+  display: flex;
+  background-color: green;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+ 
+`;
+
+const Box3BCircleE = styled.div`
+  display: flex;
+  background-color: green;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+  
+`;
+
+const Box4 = styled.div`
+display: flex;
+justify-content: center;
+flex-direction: column;
+align-items: center; //컨테이너 박스를 꼭대기에 옮기기
+padding: 30px 10px 30px 10px;
+box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const Box4MainA = styled.div`
+  display: flex;
+  justify-content: space-around; //요소 주의 간격을 동일하게
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  height: 130px;
+  margin-bottom: 50px;
+`; 
+
+const Box4MainAButton1 = styled.div`
+  display: flex;
+  align-items: center;
+  width: 150px;
+  height: 100%;
+  margin-left: 5px;
+  margin-right: 5px; 
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const Box4MainAButton2 = styled.div`
+  display: flex;
+  align-items: center;
+  width: 150px;
+  height: 100%;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const Box4MainAButton3 = styled.div`
+  display: flex;
+  align-items: center;
+  width: 150px;
+  height: 100%;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+// const Box4MainB = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   width: 100%;
+//   height: 150px;
+//   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+//     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+// `;
+
+
+
+
+
+
+
+
