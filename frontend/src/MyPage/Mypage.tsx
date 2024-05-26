@@ -1,421 +1,365 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../UnderNavBar/NaverBar';
 import QRImage from '../Image/qr -1004.png';
 
+function Mypage() {
+  const [userData, setUserData] = useState({
+    studentId: '202110034',
+    department: '컴퓨터공학과',
+    chapel: '3교시',
+    seat: 'H3',
+  });
+
+  // 텍스트 길이를 11자로 제한하는 함수
+  const limitText = (text: string) => {
+    if (text.length > 11) {
+      return text.substring(0, 11) + '...';
+    }
+    return text;
+  };
+
+  useEffect(() => {
+    // 데이터를 limitText 함수를 통해 제한합니다.
+    setUserData({
+      studentId: limitText(userData.studentId),
+      department: limitText(userData.department),
+      chapel: limitText(userData.chapel),
+      seat: limitText(userData.seat),
+    });
+  }, []);
+
+  return (
+    <div>
+      <BigBox>
+        <BoxA>
+          <AttendanceTitle>
+            <MainTitle>CheQ</MainTitle>
+            <SubTitle>마이 페이지</SubTitle>
+          </AttendanceTitle>
+        </BoxA>
+        <BoxB>
+          <BoxBMain>
+            <BoxBMainProfil></BoxBMainProfil>
+            <BoxBMaininformation>
+              <BoxBMaininformation1>
+                <FixedText>학번 | </FixedText>{userData.studentId}
+              </BoxBMaininformation1>
+              <BoxBMaininformation2>
+                <FixedText>학과 | </FixedText>{userData.department}
+              </BoxBMaininformation2>
+              <BoxBMaininformation3>
+                <FixedText>채플 | </FixedText>{userData.chapel}
+              </BoxBMaininformation3>
+              <BoxBMaininformation4>
+                <FixedText>좌석 | </FixedText>{userData.seat}
+              </BoxBMaininformation4>
+            </BoxBMaininformation>
+            <BoXBProfilchangeBox>
+              <BoxBProfilchangeButton>
+                <BoxBProfilchangeButtontext>정보수정</BoxBProfilchangeButtontext>
+              </BoxBProfilchangeButton>
+            </BoXBProfilchangeBox>
+          </BoxBMain>
+        </BoxB>
+        <BoxC>
+          <BoxCMain>
+            <BoxCMainTextBox>
+              <BoxCMainText>내 QR 코드</BoxCMainText>
+            </BoxCMainTextBox>
+            <Line />
+          <BoxCMainQRBox>
+            <BoxCMainQrBoxTag>
+              <BoxCMainQr src={QRImage} alt="QR Code" />
+            </BoxCMainQrBoxTag>
+          </BoxCMainQRBox>
+          </BoxCMain>
+        </BoxC> 
+         <BoxD>
+            <BoxDMain>
+              <BoxDMainA>
+                <BoxDmainAtext>푸쉬 알람설정</BoxDmainAtext>
+              </BoxDMainA>
+              <Line />
+              <BoxDMainB>
+                <BoxDmainBtext>앱 설정</BoxDmainBtext>
+              </BoxDMainB>
+              <Line />
+              <BoxDMainC>
+
+              </BoxDMainC>
+            </BoxDMain>
+        </BoxD>   
+      </BigBox>
+      <Nav />
+     
+    </div>
+  );
+}
+
+export default Mypage;
+
 const BigBox = styled.div`
   display: flex;
-  flex-direction: column;
   width: 100vw;
-  height: 100vh;
   min-width: 200px;
   max-width: 600px;
-  margin: 0 auto;
+  margin: auto;
+  flex-direction: column;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
-//BigBox를 2개의 박스로 만들어서 AttendanceTitle부분 박스와 SquareA B C 박스가 들어갈 박스 총
+
+const BoxA = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  padding: 5px;
+`;
+
 const AttendanceTitle = styled.div`
   display: flex;
+  width: 250px;
   justify-content: space-between;
   align-items: center;
-  width: 260px;
-  margin-right: 250px;
-  margin-top: 35px;
+  margin-left: 55px;
 `;
 
 const MainTitle = styled.h1`
-    color: #375cde;
+  color: #375cde;
 `;
 const SubTitle = styled.h3`
-    color: #375cde;
+  color: #375cde;
 `;
 
-const SquareA = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 30%;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
-`;
-
-const SquareAboxA = styled.div`
+const BoxB = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width:100%;
-  height:15%;
-  margin-bottom: 15px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
-`
-const SquareAboxB = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width:100%;
-  height:85%;
-  
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+  padding: 5px;
 `;
 
-const SquareAboxBinformationbox = styled.div`
-  display:flex;
-  justify-content: center;
+const BoxBMain = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   flex-direction: row;
-  align-items: center;
-  width:80%;
-  height:70%;
+  width: 70%;
+  height: 150px;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
-const ProfilBox = styled.div`
-  width:20%;;
-  height:80%; 
+const BoxBMainProfil = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-right: 50px;
+  width: 110px;
+  height: 110px;
   border-radius: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
-const ProfilContentBox = styled.div`
+const BoxBMaininformation = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: space-around;
   flex-direction: column;
-  gap: 5px;
-  width:40%;
-  height:80%;
-  margin-right: 50px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
-`;
-
-const ProfilContentNameTag = styled.div`
-  display: flex;
-  justify-content: flex-end; /* 왼쪽에 글씨를 고정하기 위해 flex-end로 설정 */
-  align-items: center;
-  width:auto;
-  height:100%;
-  margin-right: 20px;
-  font-weight: bold;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
-`;
-
-const ProfilContentBoxA = styled.div`
-  display: flex;
-  align-items: center;
-  width:100%;
-  height:100%;
-  font-size:12px;
-  font-weight: bold;
-  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
-`;
-
-const ProfilContentBoxB = styled.div`
-  display: flex;
-  align-items: center;
-  width:100%;
-  height:100%;
-  font-size:12px;
-  font-weight: bold;
-  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
-`;
-
-const ProfilContentBoxC = styled.div`
-  display: flex;
-  align-items: center;
-  width:100%;
-  height:100%;
-  font-size:12px;
-  font-weight: bold;
-  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
-`;
-
-const ProfilContentBoxD = styled.div`
-  display: flex;
-  align-items: center;
-  width:100%;
-  height:100%;
-  font-size:12px;
-  font-weight:bold;
-  white-space: nowrap; /* 텍스트가 공간을 벗어나지 않도록 설정 */
+  width: 200px;
+  height: 110px;
+  margin-left: 10px;
+  margin-right: 10px;;
   `;
 
-const SquareB = styled.div`
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 70%;
-  flex-direction: column;
-` ; 
-const SquareBboxA = styled.div`
+const BoxBMaininformation1 = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
+  flex-direction: row;
   width: 100%;
-  height: 65%;
-  flex-direction: column;
+  font-weight: bold;
+  font-size: 12px;
 `;
 
-const SquareBboxAQRBox = styled.div`
+const BoxBMaininformation2 = styled.div`
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
+  width: 100%;
+  font-weight: bold;
+  font-size: 12px;
+`;
+
+const BoxBMaininformation3 = styled.div`
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
+  width: 100%;
+  font-weight: bold;
+  font-size: 12px;
+`;
+
+const BoxBMaininformation4 = styled.div`
+  display: flex;
+  align-items: baseline;
+  flex-direction: row;
+  width: 100%;
+  font-weight: bold;
+  font-size: 12px;
+`;
+
+const FixedText = styled.span`
+  flex: 0 0 40px; /* 고정된 너비를 설정 */
+`;
+
+const BoXBProfilchangeBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100px;
+  height: 110px;
+  margin-left: 10px;
+  margin-right: 10px;
+`;
+
+const BoxBProfilchangeButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width:80%;
-  aspect-ratio: 1 / 1; //1대1비율 쓰기위해서는 width를 지정해주면 그거에 맞게 1대1비율로 높이가 지정된다.
-  flex-direction: column;
-  border-radius: 20px; 
+  width: 50px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #375cde;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
-const SquareBboxAQRBoxA = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width:100%;
-  height:20%;
-  border-radius: 20px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
-`;
-
-const SquareBboxAQRBoxAtext = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: auto;
+const BoxBProfilchangeButtontext = styled.h1`
+  font-size: 10px;
   font-weight: bold;
-  font-size: 12px;
-  height: 100%;
-  position: relative; //정적위치시킬때
-  left: -150px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
+  color: black;
 `;
 
-const SquareBboxAQRBoxB = styled.div`
+const BoxC = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width:100%;
-  height:80%;
-  border-radius: 20px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+  padding: 5px; 
 `;
 
-const SquareBboxAQRBoxBqr = styled.div`
+const BoxCMain = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 45%;
-  aspect-ratio: 1 / 1; //1대1 비율
-  overflow: hidden;
+  flex-direction: column;
+  width: 70%;
+  aspect-ratio: 1 / 1; 
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); 
-    &:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1);
-  }  
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
-const Divider = styled.div`
+const BoxCMainTextBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 15%;
+  border-radius: 20px;
+`;
+
+const BoxCMainText = styled.h1`
+  margin-left: 20px;;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+`;
+
+const Line = styled.div`
   width: 95%;
-  height: 2px; /* 두께 조정 */
-  background-color: #e8e5e5; /* 색상 조정 */
+  height: 2px; //선 두께
+  background-color: #E3E3E3;
 `;
 
-const QRImageStyled = styled.img`
+const BoxCMainQRBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 85%;
+  border-radius: 20px;
+`; 
+
+const BoxCMainQrBoxTag = styled.div`
+  display: flex;
+  width: 70%;
+  aspect-ratio: 1/1;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`
+const BoxCMainQr = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover; /* 이미지를 컨테이너에 꽉 차도록 함 */
 `;
 
-const SquareBboxB = styled.div`
+const BoxD = styled.div`
   display: flex;
-  justify-content: center;
+  padding: 5px;
   align-items: center;
-  width: 100%;
-  height: 35%;
+  justify-content: center;
   flex-direction: column;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
 `;
 
-const SquareBboxBsetting = styled.div`
+const BoxDMain = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 80%;
-  height: 80%;
+  width: 70%;
+  height: 100px;
   border-radius: 20px;
+  margin: 5px 0px 5px 0px;
+  flex-direction: column;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); 
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
-
-const SquareBboxBsettingA = styled.div`
+  
+const BoxDMainA = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 90%;
-  height: 80%;
+  width: 100%;
+  height: 30px;
   border-radius: 20px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
- `;
-
-const SquareBboxBsettingA1 = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  height: 50%;
-  margin-left: 25px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);    */
+  margin-top: 5px;
 `;
 
-const SquareBboxsettingA1text = styled.div`
+const BoxDmainAtext = styled.h1`
   display: flex;
-  justify-content:center;
-  align-items: center;
-  width: auto;
-  height: 100%;
+  margin-left: 15px;
   font-size: 12px;
   font-weight: bold;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);    */
+  color: black;
 `;
 
-const SquareBboxBsettingA2 = styled.div`
+const BoxDMainB = styled.div`
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
   width: 100%;
-  height: 50%;
-  margin-left: 35px;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
+  height: 30px;
+  border-radius: 20px;
 `;
 
-const SquareBboxsettingA2text = styled.div`
+const BoxDmainBtext = styled.h1`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: auto;
-  height: 100%;
+  margin-left: 15px;
   font-size: 12px;
   font-weight: bold;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);    */
+  color: black;
 `;
 
-const SquareBboxBsettingA3= styled.div`
+const BoxDMainC = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  height: 50%;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);  */
-`;
-
-function Mypage(){
-  // 텍스트 길이를 10으로 제한하는 함수
-  const limitText = (text: string) => {
-      if (text.length > 10) {
-          return text.substring(0, 10) + '...';
-      }
-      return text;
-  };
-
-  return(
-      <BigBox>
-
-           <SquareA>
-             <SquareAboxA>
-                <AttendanceTitle>
-                  <MainTitle>CheQ</MainTitle>
-                  <SubTitle>마이 페이지</SubTitle>
-                </AttendanceTitle>
-             </SquareAboxA> 
-             <SquareAboxB> 
-             <SquareAboxBinformationbox>      
-              <ProfilBox>
-                 {/* <사진 넣을예정> */}
-              </ProfilBox>
-              <ProfilContentBox>
-                    <ProfilContentBoxA>
-                      <ProfilContentNameTag>학번| </ProfilContentNameTag>
-                      {limitText('202110034')}
-                    </ProfilContentBoxA>
-                    <ProfilContentBoxB>
-                      <ProfilContentNameTag>전공| </ProfilContentNameTag>
-                      {limitText('컴퓨터공학과')}
-                    </ProfilContentBoxB>
-                    <ProfilContentBoxC>
-                      <ProfilContentNameTag>채플| </ProfilContentNameTag>
-                      {limitText('3교시')}
-                    </ProfilContentBoxC>
-                    <ProfilContentBoxD>
-                      <ProfilContentNameTag>좌석| </ProfilContentNameTag>
-                      {limitText('H32')}
-                    </ProfilContentBoxD>
-              </ProfilContentBox>
-            </SquareAboxBinformationbox>  
-            </SquareAboxB>   
-         </SquareA> 
-         <SquareB>
-            <SquareBboxA>
-              <SquareBboxAQRBox>
-                <SquareBboxAQRBoxA>
-                  <SquareBboxAQRBoxAtext>내 QR코드</SquareBboxAQRBoxAtext>
-                </SquareBboxAQRBoxA>
-                  <Divider />
-                <SquareBboxAQRBoxB>
-                  <SquareBboxAQRBoxBqr> 
-                    <QRImageStyled src={QRImage} alt="QR Code" />
-                  </SquareBboxAQRBoxBqr>
-                </SquareBboxAQRBoxB>
-              </SquareBboxAQRBox>
-            </SquareBboxA>
-            <SquareBboxB> 
-              <SquareBboxBsetting>
-                <SquareBboxBsettingA>
-                  <SquareBboxBsettingA1>
-                    <SquareBboxsettingA1text>푸시 알림 설정</SquareBboxsettingA1text>
-                  </SquareBboxBsettingA1>
-                  <Divider />
-                  <SquareBboxBsettingA2>
-                   <SquareBboxsettingA2text>앱 설정</SquareBboxsettingA2text>
-                  </SquareBboxBsettingA2>
-                  <Divider />
-                  <SquareBboxBsettingA3> </SquareBboxBsettingA3>
-                </SquareBboxBsettingA>
-              </SquareBboxBsetting>
-            </SquareBboxB>
-         </SquareB>
-         
-         
-         <Nav /> 
-      </BigBox>
-  );
-}
-
-export default Mypage;
+  height: 30px;
+  margin-bottom: 5px;
+  border-radius: 20px;
+`

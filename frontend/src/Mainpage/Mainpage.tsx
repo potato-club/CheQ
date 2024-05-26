@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import Nav from '../UnderNavBar/NaverBar';
 // import Slider from 'react-slick';
 //import Nav from '../UnderNavBar/NaverBar';
 // import 'slick-carousel/slick/slick.css';
@@ -62,13 +63,20 @@ function Mainpage() {
 
             </Box4MainAButton3>
           </Box4MainA>
+          <Box4MainA>
+            <Box4MainAButton1>
 
-          {/* <Box4MainB>
+            </Box4MainAButton1>
+            <Box4MainAButton2>
 
-          </Box4MainB> */}
+            </Box4MainAButton2>
+            <Box4MainAButton3>
+
+            </Box4MainAButton3>
+          </Box4MainA>
         </Box4>
       </BigBox>
-
+        <Nav />
     </div>
   
   );
@@ -98,8 +106,9 @@ const Box1 = styled.div`
 
 const AttendanceTitle = styled.div`
   display: flex;
+  width: auto;
   align-items: center;
-  margin-left: 30px;
+  margin-left: 55px;
 `;
 
 const MainTitle = styled.h1`
@@ -169,9 +178,7 @@ const Box3BCircle = styled.div`
   justify-content: space-around; //요소 주위를 동일하게 나누기
   flex-direction: row;
   padding: 3px;
-  width: 80%;
-  /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+  width: 70%;
 `;
 
 const Box3BCircleA = styled.div`
@@ -235,14 +242,14 @@ const Box4MainA = styled.div`
   flex-direction: row;
   width: 100%;
   height: 130px;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 `; 
 
 const Box4MainAButton1 = styled.div`
   display: flex;
   align-items: center;
   width: 150px;
-  height: 100%;
+  aspect-ratio: 1/ 1;
   margin-left: 5px;
   margin-right: 5px; 
   border-radius: 20px;
@@ -254,7 +261,7 @@ const Box4MainAButton2 = styled.div`
   display: flex;
   align-items: center;
   width: 150px;
-  height: 100%;
+  aspect-ratio: 1/ 1;
   margin-left: 5px;
   margin-right: 5px;
   border-radius: 20px;
@@ -266,7 +273,7 @@ const Box4MainAButton3 = styled.div`
   display: flex;
   align-items: center;
   width: 150px;
-  height: 100%;
+  aspect-ratio: 1/ 1;
   margin-left: 5px;
   margin-right: 5px;
   border-radius: 20px;
@@ -274,15 +281,6 @@ const Box4MainAButton3 = styled.div`
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
-// const Box4MainB = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   width: 100%;
-//   height: 150px;
-//   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-//     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-// `;
 
 
 

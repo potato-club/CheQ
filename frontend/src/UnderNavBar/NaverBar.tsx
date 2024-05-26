@@ -6,11 +6,15 @@ const NavBar = styled.div`
   display: flex;
   justify-content: space-around;
   background-color: #375cde;
-  height: 50px;
+  height: 80px;
   border-radius: 14px;
   width: 100vw;
   min-width: 200px;
-  max-width: 600px; 
+  max-width: 620px;
+  /* width: 620px; */
+  /* min-width: 200px;
+  max-width: 600px; */
+  padding: 0px 20px 0px 20px;
   margin: auto;
   position: fixed;
   bottom: 0;
@@ -29,10 +33,10 @@ const NavBtn = styled.button`
 function NaverBar() {
   return (
     <NavBar>
-      <NavBtn>HOME</NavBtn>
-      <NavBtn>내 출결</NavBtn>
-      <NavBtn>MY</NavBtn>
-    </NavBar>
+     <NavBtn>HOME</NavBtn>
+     <NavBtn> 내 출결</NavBtn>
+     <NavBtn>MY</NavBtn>
+  </NavBar>
   );
 }
 
