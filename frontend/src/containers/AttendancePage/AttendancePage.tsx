@@ -369,7 +369,7 @@ const HowWeekGray = styled.div`
 const CurrentDateGray = styled.div`
   margin-left: 5px;
   color: #c9c9c9;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 `;
 const CurrentInfoGray = styled.div`
