@@ -177,9 +177,9 @@ const ErrorMessage = styled.small`
 const HanseiIcon = styled.img`
   display: flex;
   margin: auto;
-  padding: 70px 0px;
+  padding: 40px 0px;
   width: 100vw;
-  max-width: 400px;
+  max-width: 300px;
   height: auto;
   object-fit: contain;
   content: url(${Hansei});
