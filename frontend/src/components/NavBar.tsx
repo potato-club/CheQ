@@ -5,14 +5,15 @@ function Navbar() {
   const movebtn = useNavigate(); // useNavigate 훅 사용
 
   const MainBtn = () => {
-    movebtn("/login");
+    movebtn("/");
   };
   const AttendanceBtn = () => {
-    movebtn("/login");
+    movebtn("/attendance");
   };
   const MypageBtn = () => {
-    movebtn("/login");
+    movebtn("/Mypage");
   };
+
   return (
     <div>
       <NavBar>

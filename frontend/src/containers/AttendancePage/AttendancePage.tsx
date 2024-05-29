@@ -351,7 +351,7 @@ const HowWeek = styled.div`
 `;
 const CurrentDate = styled.div`
   margin-left: 5px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 `;
 const CurrentInfo = styled.div`
