@@ -32,12 +32,12 @@ function Mypage() {
   return (
     <div>
       <BigBox>
-        <BoxA>
+        
           <AttendanceTitle>
             <MainTitle>CheQ</MainTitle>
             <SubTitle>마이 페이지</SubTitle>
           </AttendanceTitle>
-        </BoxA>
+        
         <BoxB>
           <BoxBMain>
             <BoxBMainProfil></BoxBMainProfil>
@@ -101,31 +101,24 @@ export default Mypage;
 
 const BigBox = styled.div`
   display: flex;
+  flex-direction: column;
+  margin: auto;
   width: 100vw;
   min-width: 200px;
-  max-width: 600px;
-  margin: auto;
-  flex-direction: column;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const BoxA = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 5px;
+  max-width: 580px;
+  /* width: 580px; */
+  padding: 0px 20px 73px 20px;
 `;
 
 const AttendanceTitle = styled.div`
   display: flex;
-  width: 250px;
-  justify-content: space-between;
+  /* width: 260px;
+  justify-content: space-between; */
   align-items: center;
-  margin-left: 55px;
 `;
-
 const MainTitle = styled.h1`
   color: #375cde;
+  margin-right: 28px;
 `;
 const SubTitle = styled.h3`
   color: #375cde;
@@ -143,7 +136,7 @@ const BoxBMain = styled.div`
   align-items: center;
   //justify-content: flex-start;
   flex-direction: row;
-  width: 70%;
+  width: 100%;
   height: 150px;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
@@ -153,11 +146,11 @@ const BoxBMain = styled.div`
 const BoxBMainProfil = styled.div`
   display: flex;
   align-items: center;
-  width: 110px;
-  height: 110px;
+  width: 125px;
+  aspect-ratio: 1/1;
   border-radius: 20px;
   margin-left: 10px;
-  margin-right: 10px;
+  margin-right: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
@@ -167,8 +160,8 @@ const BoxBMaininformation = styled.div`
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
-  width: 200px;
-  height: 110px;
+  width: 250px;
+  height: 125px;
   margin-left: 10px;
   margin-right: 10px;;
   `;
@@ -217,8 +210,8 @@ const BoXBProfilchangeBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  width: 100px;
-  height: 110px;
+  width: 110px;
+  height: 125px;
   margin-left: 10px;
   margin-right: 10px;
 `;
@@ -228,7 +221,7 @@ const BoxBProfilchangeButton = styled.div`
   justify-content: center;
   align-items: center;
   width: 50px;
-  height: 40px;
+  height: 50px;
   border-radius: 20px;
   background-color: #375cde;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
@@ -252,7 +245,7 @@ const BoxCMain = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 70%;
+  width: 100%;
   aspect-ratio: 1 / 1; 
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
@@ -316,10 +309,10 @@ const BoxD = styled.div`
 const BoxDMain = styled.div`
   display: flex;
   align-items: center;
-  width: 70%;
+  width: 100%;
   height: 100px;
   border-radius: 20px;
-  margin: 10px 0px 5px 0px;
+  margin: 15px 0px 5px 0px;
   flex-direction: column;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);

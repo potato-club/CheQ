@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../../components/NavBar';
-// import Slider from 'react-slick';
-//import Nav from '../UnderNavBar/NaverBar';
-// import 'slick-carousel/slick/slick.css';
-// import 'slick-carousel/slick/slick-theme.css';
 
 const images = [
   'https://pimg.hackers.com/land/main/land_default.jpg',
@@ -21,10 +17,25 @@ function Mainpage() {
       setCurrentImageIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
     }, 5000);
 
-    return () => clearInterval(interval); // 정리 함수 추가
+    return () => clearInterval(interval); // Cleanup function
   }, []);
-  
-  return(
+
+  const attendanceStatuses: string[] = ['present', 'absent', 'late', 'present', 'present'];
+
+  const getColor = (status: string): string => {
+    switch (status) {
+      case 'present':
+        return 'green';
+      case 'absent':
+        return 'red';
+      case 'late':
+        return 'orange';
+      default:
+        return 'gray';
+    }
+  };
+
+  return (
     <div>
       <BigBox>
         <Box1>
@@ -42,44 +53,35 @@ function Mainpage() {
             <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
           </Box3Atext>
         </Box3A>
-        <Line />
+       
         <Box3B>
           <Box3BCircle>
-            <Box3BCircleA></Box3BCircleA>
-            <Box3BCircleB></Box3BCircleB>
-            <Box3BCircleC></Box3BCircleC>
-            <Box3BCircleD></Box3BCircleD>
-            <Box3BCircleE></Box3BCircleE>
+            {attendanceStatuses.map((status, index) => (
+              <Circle key={index} color={getColor(status)} />
+            ))}
           </Box3BCircle>
         </Box3B>
         <Box4>
           <Box4MainA>
             <Box4MainAButton1>
-
             </Box4MainAButton1>
             <Box4MainAButton2>
-
             </Box4MainAButton2>
             <Box4MainAButton3>
-
             </Box4MainAButton3>
           </Box4MainA>
           <Box4MainA>
             <Box4MainAButton1>
-
             </Box4MainAButton1>
             <Box4MainAButton2>
-
             </Box4MainAButton2>
             <Box4MainAButton3>
-
             </Box4MainAButton3>
           </Box4MainA>
         </Box4>
       </BigBox>
         <Nav />
     </div>
-  
   );
 }
 
@@ -87,13 +89,12 @@ export default Mainpage;
 
 const BigBox = styled.div`
   display: flex;
+  flex-direction: column;
+  margin: auto;
   width: 100vw;
   min-width: 200px;
-  max-width: 600px;
-  margin: auto;
-  flex-direction: column;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+  max-width: 580px;
+  padding: 0px 20px 73px 20px;
 `;
 
 const Box1 = styled.div`
@@ -107,9 +108,7 @@ const Box1 = styled.div`
 
 const AttendanceTitle = styled.div`
   display: flex;
-  width: auto;
   align-items: center;
-  margin-left: 55px;
 `;
 
 const MainTitle = styled.h1`
@@ -142,11 +141,10 @@ const AdvertisementImage = styled.img`
 
 const Box3A = styled.div`
 display: flex;
-//justify-content: flex-start;
 align-items: center;
 padding: 5px;
-/* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
 const Box3Atext = styled.div`
@@ -155,9 +153,6 @@ const Box3Atext = styled.div`
  align-items: center;
  font-size: 8px;
  margin-left: 50px;
- /* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
- border-radius: 10px; */
 `;
 
 const Box3AtextTitle = styled.h2`
@@ -169,68 +164,32 @@ display: flex;
 justify-content: center;
 align-items: center;
 padding:5px;
-/* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
+box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `; 
  
 const Box3BCircle = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-around; //요소 주위를 동일하게 나누기
+  justify-content: space-around;
   flex-direction: row;
   padding: 3px;
   width: 70%;
 `;
 
-const Box3BCircleA = styled.div`
+const Circle = styled.div<{ color: string }>`
   display: flex;
-  background-color: red;
+  background-color: ${(props) => props.color};
   width: 15px;
   height: 15px;
-  border-radius: 50px;
-`;
-
-const Box3BCircleB = styled.div`
-  display: flex;
-  background-color: green;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
- 
-`;
-
-const Box3BCircleC = styled.div`
-  display: flex;
-  background-color: green;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
- 
-`;
-
-const Box3BCircleD = styled.div`
-  display: flex;
-  background-color: green;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
- 
-`;
-
-const Box3BCircleE = styled.div`
-  display: flex;
-  background-color: green;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
-  
+  border-radius: 50%;
 `;
 
 const Box4 = styled.div`
 display: flex;
 justify-content: center;
 flex-direction: column;
-align-items: center; //컨테이너 박스를 꼭대기에 옮기기
+align-items: center;
 padding: 30px 10px 30px 10px;
 box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
@@ -238,19 +197,20 @@ box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
 
 const Box4MainA = styled.div`
   display: flex;
-  justify-content: space-around; //요소 주의 간격을 동일하게
+  justify-content: space-around;
   align-items: center;
   flex-direction: row;
   width: 100%;
   height: 130px;
-  margin-bottom: 40px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 `; 
 
 const Box4MainAButton1 = styled.div`
   display: flex;
   align-items: center;
   width: 150px;
-  aspect-ratio: 1/ 1;
+  aspect-ratio: 1 / 1;
   margin-left: 5px;
   margin-right: 5px; 
   border-radius: 20px;
@@ -262,7 +222,7 @@ const Box4MainAButton2 = styled.div`
   display: flex;
   align-items: center;
   width: 150px;
-  aspect-ratio: 1/ 1;
+  aspect-ratio: 1 / 1;
   margin-left: 5px;
   margin-right: 5px;
   border-radius: 20px;
@@ -274,7 +234,7 @@ const Box4MainAButton3 = styled.div`
   display: flex;
   align-items: center;
   width: 150px;
-  aspect-ratio: 1/ 1;
+  aspect-ratio: 1 / 1;
   margin-left: 5px;
   margin-right: 5px;
   border-radius: 20px;
@@ -284,7 +244,7 @@ const Box4MainAButton3 = styled.div`
 
 const Line = styled.div`
   width: 100%;
-  height: 2px; //선 두께
+  height: 2px;
   background-color: #E3E3E3;
 `;
 
