@@ -141,7 +141,7 @@ const BoxB = styled.div`
 const BoxBMain = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  //justify-content: flex-start;
   flex-direction: row;
   width: 70%;
   height: 150px;
@@ -319,7 +319,7 @@ const BoxDMain = styled.div`
   width: 70%;
   height: 100px;
   border-radius: 20px;
-  margin: 5px 0px 5px 0px;
+  margin: 10px 0px 5px 0px;
   flex-direction: column;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);

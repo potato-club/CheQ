@@ -42,6 +42,7 @@ function Mainpage() {
             <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
           </Box3Atext>
         </Box3A>
+        <Line />
         <Box3B>
           <Box3BCircle>
             <Box3BCircleA></Box3BCircleA>
@@ -141,11 +142,11 @@ const AdvertisementImage = styled.img`
 
 const Box3A = styled.div`
 display: flex;
-justify-content: flex-start;
+//justify-content: flex-start;
 align-items: center;
 padding: 5px;
-box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+/* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
 `;
 
 const Box3Atext = styled.div`
@@ -168,8 +169,8 @@ display: flex;
 justify-content: center;
 align-items: center;
 padding:5px;
-box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+/* box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); */
 `; 
  
 const Box3BCircle = styled.div`
@@ -279,6 +280,12 @@ const Box4MainAButton3 = styled.div`
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const Line = styled.div`
+  width: 100%;
+  height: 2px; //선 두께
+  background-color: #E3E3E3;
 `;
 
 
