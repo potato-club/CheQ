@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Nav from '../UnderNavBar/NaverBar';
+import Nav from '../../components/NavBar';
 // import Slider from 'react-slick';
 //import Nav from '../UnderNavBar/NaverBar';
 // import 'slick-carousel/slick/slick.css';

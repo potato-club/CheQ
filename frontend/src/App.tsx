@@ -1,7 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Mainpage from './Mainpage/Mainpage';
-import Mypage from './MyPage/Mypage';
+import Mainpage from './page/Mainpage';
+import Mypage from './page/Mypage';
+import Attendance from "./page/Attendance";
+import Login from "./page/Login";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
@@ -9,6 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Mainpage />} />
         <Route path="/Mypage" element={<Mypage />}/>
+        <Route path="/login" element={<Login />} />
+        <Route path="/attendance" element={<Attendance />} />
       </Routes>
     </Router>
   );
@@ -16,4 +21,4 @@ function App() {
 
 export default App;
 
-//path에는 "/" 사용해줘야 한다.
+

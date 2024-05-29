@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Nav from '../UnderNavBar/NaverBar';
-import QRImage from '../Image/qr -1004.png';
+import Nav from '../../components/NavBar';
+import QRImage from '../../Image/qr -1004.png';
 
 function Mypage() {
   const [userData, setUserData] = useState({
