@@ -3,7 +3,6 @@ package potato.cheq.dto;
 import lombok.Builder;
 import lombok.Data;
 import potato.cheq.entity.UserEntity;
-import potato.cheq.entity.UuidEntity;
 import potato.cheq.enums.ChapelKind;
 
 @Data

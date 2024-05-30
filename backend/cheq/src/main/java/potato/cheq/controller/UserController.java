@@ -46,7 +46,6 @@ public class UserController {
         return ResponseEntity.ok().body("기기정보가 등록되었습니다."); // 추후 기기정보는 2주에 한번 바꿀 수 있도록 수정
     }
 
-
     @GetMapping("/reissue")
     @Operation(summary = "토큰 재발급")
     public ResponseEntity<String> reissueToken(HttpServletRequest request, HttpServletResponse response) {
