@@ -9,14 +9,14 @@ import java.time.LocalDateTime;
 @Data
 public class NFCRequestDto {
     private String mac_address;
-    private String NFC_position;
+    private String nfc_position;
     private LocalDateTime attendanceTime;
 
     @Builder
     public NFCEntity toEntity() {
         return NFCEntity.builder()
                 .mac_address(mac_address)
-                .NFC_position(NFC_position)
+                .nfc_position(nfc_position)
                 .build();
     }
 

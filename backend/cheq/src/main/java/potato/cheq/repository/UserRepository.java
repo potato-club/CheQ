@@ -16,6 +16,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
 //    UserEntity findByUuid(String uuid);
 
+    UserEntity findUuidById(Long id);
+    UserEntity findStudentIdById(Long id);
+
     UserEntity findByStudentId(String studentId);
     @Query("SELECT u.stUuid FROM UserEntity u WHERE u.studentId = :studentId")
     String findUuidByStudentId(@Param("studentId") String studentId);

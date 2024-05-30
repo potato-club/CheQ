@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
 import potato.cheq.repository.UserRepository;
@@ -96,13 +97,13 @@ public class JwtTokenProvider {
         response.setHeader("refreshToken", "Bearer " + refreshToken);
     }
 
-    public String getMacAddress(String studentID) {  // 사용 X
-        String userUUID = userRepository.findUuidByStudentId(studentID);
-        if (userUUID == null) {
-            throw new NullPointerException();
-        }
-        return userUUID;
-    }
+//    public String getMacAddress(String studentID) {  // 사용 X
+//        String userUUID = userRepository.findUuidByStudentId(studentID);
+//        if (userUUID == null) {
+//            throw new NullPointerException();
+//        }
+//        return userUUID;
+//    }
 
     private String encrypt(String plainToken) throws Exception {
         SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getBytes(StandardCharsets.UTF_8), "AES");
@@ -130,16 +131,15 @@ public class JwtTokenProvider {
     }
 
     public Long extractId(String token) throws Exception {
-        Long id = extraValue(token).get("pk").getAsLong();
-        return id;
+        JsonElement id = extraValue(token).get("pk");
+        return id.getAsLong();
     }
 
     public String extractMemberId(String token) throws Exception { // 사용 X
-        JsonElement memberId = extraValue(token).get("studentId");
-        if (memberId.isJsonNull()) {
-            return null;
-        }
-        return memberId.getAsString();
+        Long id = extractId(token);
+        UserEntity memberId = userRepository.findStudentIdById(id);
+
+        return memberId.getStudentId();
     }
 
     private JsonObject extraValue(String token) throws Exception {
