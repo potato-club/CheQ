@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @ToString
 public enum ErrorCode {
 
+    UUID_IS_NULL(HttpStatus.OK, "1000","1000 OK BUT UUID IS NULL"),
     RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, "400","400 BAD REQUEST"),
     ACCESS_DENIED_EXCEPTION(HttpStatus.UNAUTHORIZED,"401","401 UNAUTHORIZED"),
     FORBIDDEN_EXCEPTION(HttpStatus.FORBIDDEN,"403","403 FORBIDDEN"),

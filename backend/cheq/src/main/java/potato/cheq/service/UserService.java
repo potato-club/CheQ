@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import potato.cheq.dto.*;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.entity.UuidEntity;
+import potato.cheq.error.security.ErrorCode;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.repository.UuidRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
@@ -55,6 +56,15 @@ public class UserService {
         this.setJwtTokenInHeader(user.getId(), response);
 
         return ResponseEntity.ok("로그인 성공");
+    }
+
+    public String checkUUID(String accessToken, HttpServletRequest request) throws Exception {
+        Long id = jwtTokenProvider.extractId(accessToken);
+
+        if (id == null) {
+            return ErrorCode.UUID_IS_NULL.getCode();
+        }
+        return null; // 걍 있으면 패스
     }
 
     private void setJwtTokenInHeader(Long id, HttpServletResponse response) throws Exception {

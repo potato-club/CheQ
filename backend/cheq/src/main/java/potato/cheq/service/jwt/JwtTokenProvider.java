@@ -96,7 +96,7 @@ public class JwtTokenProvider {
         response.setHeader("refreshToken", "Bearer " + refreshToken);
     }
 
-    public String getMacAddress(String studentID) {
+    public String getMacAddress(String studentID) {  // 사용 X
         String userUUID = userRepository.findUuidByStudentId(studentID);
         if (userUUID == null) {
             throw new NullPointerException();
@@ -129,15 +129,12 @@ public class JwtTokenProvider {
 
     }
 
-    public String extractMacAddress(String token) throws Exception {
-        JsonElement macAddress = extraValue(token).get("macAddress");
-        if (macAddress.isJsonNull()) {
-            return null;
-        }
-        return macAddress.getAsString();
+    public Long extractId(String token) throws Exception {
+        Long id = extraValue(token).get("pk").getAsLong();
+        return id;
     }
 
-    public String extractMemberId(String token) throws Exception {
+    public String extractMemberId(String token) throws Exception { // 사용 X
         JsonElement memberId = extraValue(token).get("studentId");
         if (memberId.isJsonNull()) {
             return null;
