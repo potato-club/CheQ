@@ -10,10 +10,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import potato.cheq.dto.NFCRequestDto;
-import potato.cheq.dto.RequestUserDevice;
-import potato.cheq.dto.RequestUserDto;
-import potato.cheq.dto.UserMyPageDto;
+import potato.cheq.dto.*;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.UnAuthorizedException;
@@ -105,6 +102,16 @@ public class UserService {
         }
     }
 
+    public void updateUser(UserUpdateRequestDto requestDto, HttpServletRequest request) {
+        Optional<UserEntity> userOptional = findByUserToken(request);
+
+        userOptional.ifPresent(user -> {
+            if (requestDto.getEmail() != null && !requestDto.getSeat().isEmpty()) {
+                user.update(requestDto);
+            }
+        });
+    }
+
     public Optional<UserEntity> findByUserToken(HttpServletRequest request) throws UnAuthorizedException {
         try {
             String token = jwtTokenProvider.resolveAccessToken(request);
@@ -125,6 +132,8 @@ public class UserService {
             throw new UnAuthorizedException("토큰 처리 중 예외가 발생했습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
         }
     }
+
+
 
 
 
