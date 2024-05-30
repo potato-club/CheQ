@@ -5,7 +5,7 @@ function Navbar() {
   const movebtn = useNavigate(); // useNavigate 훅 사용
 
   const MainBtn = () => {
-    movebtn("/");
+    movebtn("/main");
   };
   const AttendanceBtn = () => {
     movebtn("/attendance");
@@ -31,8 +31,10 @@ const NavBar = styled.div`
   display: flex;
   justify-content: space-around;
   background-color: #375cde;
-  height: 80px;
-  border-radius: 14px;
+  height: 65px;
+  /* border-radius: 14px; */
+  border-top-left-radius: 14px; // 왼쪽 위 모서리만 둥글게
+  border-top-right-radius: 14px; // 오른쪽 위 모서리만 둥글게
   width: 100vw;
   min-width: 200px;
   max-width: 620px;
