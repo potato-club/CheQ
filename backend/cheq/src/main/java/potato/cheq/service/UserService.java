@@ -3,21 +3,17 @@ package potato.cheq.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import potato.cheq.dto.*;
 import potato.cheq.entity.UserEntity;
-import potato.cheq.entity.UuidEntity;
-import potato.cheq.error.security.ErrorCode;
-import potato.cheq.error.security.requestError.BusinessException;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.repository.UuidRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
 import potato.cheq.service.jwt.RedisService;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,14 +34,20 @@ public class UserService {
         return user.getId();
     }
 
-//    public Long setUserDevice(RequestUpdateUserDto dto) throws Exception {
-//        if (uuidRepository.existsByDeviceUuid(dto.getUuid())) {
-//            throw new Exception("이미 존재하는 기기입니다.");
-//        }
-//
-//        UuidEntity uuid = userRepository.save(dto.toEntity());
-//        return uuid.getId();
-//    }
+    public void setUserDevice(HttpServletRequest request, Long id, RequestUpdateUserDto dto) throws Exception {
+            // 그 토큰이 어떻게 그사용자꺼인지?
+        if (uuidRepository.existsByDeviceUuid(dto.getUuid())) {
+            throw new Exception("이미 존재하는 기기입니다.");
+        }
+
+        UserEntity originUser = userRepository.findById(id)
+                .orElseThrow(() -> new NullPointerException());
+
+        String updatedUuid = dto.getUuid();
+        originUser.updateUuid(updatedUuid);
+        userRepository.save(originUser);
+
+    }
 
     public ResponseEntity<String> login(RequestLoginDto dto, HttpServletResponse response) throws Exception {
         UserEntity user = userRepository.findByStudentId(dto.getStudentId());
@@ -58,16 +60,6 @@ public class UserService {
 
         return ResponseEntity.ok("로그인 성공");
     }
-
-//    public UserEntity checkUUID(String accessToken) throws Exception {
-//        Long id = jwtTokenProvider.extractId(accessToken);
-//        UserEntity uuid = userRepository.findUuidById(id);
-//
-//        if (uuid == null) {
-//            return null;
-//        }
-//        return uuid;
-//    }
 
 
     private void setJwtTokenInHeader(Long id, HttpServletResponse response) throws Exception {

@@ -19,11 +19,11 @@ public class RequestUpdateUserDto {
     @Builder
     public UserEntity toEntity() {
         return UserEntity.builder()
-                .email(email)
-                .studentId(studentId)
-                .seat(seat)
+//                .email(email)
+//                .studentId(studentId)
+//                .seat(seat)
                 .stUuid(uuid)
-                .chapelKind(chapelKind)
+//                .chapelKind(chapelKind)
                 .build();
     }
 

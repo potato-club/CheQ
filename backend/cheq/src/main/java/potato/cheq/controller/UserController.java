@@ -26,7 +26,6 @@ import potato.cheq.service.UserService;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @PostMapping("/join") // 사용자 회원가입 api
     @Operation(summary = "회원 등록 (추후 관리자만 사용 가능)")
@@ -40,18 +39,13 @@ public class UserController {
         return userService.login(dto, response);
     }
 
-    @PutMapping("/add/device")
+    @PutMapping("/device/{id}")
     @Operation(summary = "회원 정보 수정(기기등록)")
-    public ResponseEntity<String> addUserDevice(@RequestBody RequestUpdateUserDto dto) {
-//        return userService.setUserDevice(dto);
-    return ResponseEntity.ok().body("하이");
+    public ResponseEntity<String> addUserDevice(@RequestBody RequestUpdateUserDto dto, @PathVariable("id") Long id, HttpServletRequest request) throws Exception {
+        userService.setUserDevice(request, id, dto);
+        return ResponseEntity.ok().body("기기정보가 등록되었습니다."); // 추후 기기정보는 2주에 한번 바꿀 수 있도록 수정
     }
 
-//    @PostMapping("/device") // 기기 등록 api 추후 다른 값들 추가
-//    @Operation(summary = "기기 등록 API")
-//    public Long saveUserDevice(@RequestBody RequestUserDevice dto) throws Exception {
-//        return userService.setUserDevice(dto);
-//    }
 
     @GetMapping("/reissue")
     @Operation(summary = "토큰 재발급")
