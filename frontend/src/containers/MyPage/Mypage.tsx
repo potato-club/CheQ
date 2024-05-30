@@ -19,6 +19,11 @@ function Mypage() {
     return text;
   };
 
+  const images = [
+    'https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg',
+  ]
+
+  const [currentImageIndex] = useState(0);
   useEffect(() => {
     // 데이터를 limitText 함수를 통해 제한합니다.
     setUserData({
@@ -40,7 +45,9 @@ function Mypage() {
         
         <BoxB>
           <BoxBMain>
-            <BoxBMainProfil></BoxBMainProfil>
+            <BoxBMainProfil>
+              <BoxBMainProfilimg src={images[currentImageIndex]} alt="profil" />       
+            </BoxBMainProfil>
             <BoxBMaininformation>
               <BoxBMaininformation1>
                 <FixedText>학번 | </FixedText>{userData.studentId}
@@ -106,14 +113,12 @@ const BigBox = styled.div`
   width: 100vw;
   min-width: 200px;
   max-width: 580px;
-  /* width: 580px; */
+  
   padding: 0px 20px 73px 20px;
 `;
 
 const AttendanceTitle = styled.div`
   display: flex;
-  /* width: 260px;
-  justify-content: space-between; */
   align-items: center;
 `;
 const MainTitle = styled.h1`
@@ -134,7 +139,6 @@ const BoxB = styled.div`
 const BoxBMain = styled.div`
   display: flex;
   align-items: center;
-  //justify-content: flex-start;
   flex-direction: row;
   width: 100%;
   height: 150px;
@@ -150,9 +154,16 @@ const BoxBMainProfil = styled.div`
   aspect-ratio: 1/1;
   border-radius: 20px;
   margin-left: 10px;
-  margin-right: 20px;
+  margin-right: 25px;
+  overflow: hidden;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const BoxBMainProfilimg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지를 컨테이너에 꽉 차도록 함 */
 `;
 
 const BoxBMaininformation = styled.div`

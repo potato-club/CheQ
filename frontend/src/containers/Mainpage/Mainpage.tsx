@@ -113,6 +113,7 @@ const AttendanceTitle = styled.div`
 
 const MainTitle = styled.h1`
   color: white;
+  margin-right: 28px;
 `;
 
 const Box2 = styled.div`
