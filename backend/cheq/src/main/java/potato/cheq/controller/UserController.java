@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import potato.cheq.dto.RequestUserDevice;
 import potato.cheq.dto.RequestUserDto;
 import potato.cheq.dto.UserMyPageDto;
+import potato.cheq.dto.UserUpdateRequestDto;
 import potato.cheq.service.UserService;
 
 @RestController
@@ -45,11 +46,18 @@ public class UserController {
         return ResponseEntity.ok().body("토큰 재발급 완료");
     }
 
-    @GetMapping("/mypage")
-    @Operation(summary = "회원 마이페이지")
+    @GetMapping("")
+    @Operation(summary = "회원 정보 확인")
     public ResponseEntity<UserMyPageDto> getUserInfo(HttpServletRequest request) {
         UserMyPageDto userInfo = userService.viewUserInfo(request);
         return ResponseEntity.ok(userInfo);
+    }
+
+    @PutMapping("")
+    @Operation(summary = "회원 정보 수정")
+    public ResponseEntity<String> updateUserInfo(UserUpdateRequestDto userUpdateRequestDto , HttpServletRequest request) {
+        userService.updateUser(userUpdateRequestDto, request);
+        return ResponseEntity.ok("회원 정보 수정 완료");
     }
 
 }
