@@ -14,13 +14,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
 import potato.cheq.repository.UserRepository;
@@ -30,12 +28,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
-//@Transactional -> 당근 필요없지
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
@@ -61,26 +56,25 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createAccessToken(String studentId) {
+    public String createAccessToken(Long id) {
         try {
-            return this.createToken(studentId, getMacAddress(studentId), accessTokenValidTime, "access");
+            return this.createToken(id, accessTokenValidTime, "access");
         } catch (Exception e) {
             throw new RuntimeException(e);
         } // token 생성에서 오류처리를 Exceptions로 하면 다해줘야하네 흠
     }
 
-    public String createRefreshToken(String studentId) {
+    public String createRefreshToken(Long id) {
         try {
-            return this.createToken(studentId, getMacAddress(studentId), refreshTokenValidTime, "refresh");
+            return this.createToken(id, refreshTokenValidTime, "refresh");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String createToken(String studentId, String macAddress, long tokenValid, String tokenType) throws Exception {
+    public String createToken(Long id, long tokenValid, String tokenType) throws Exception {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("studentId", studentId);
-        jsonObject.addProperty("macAddress", macAddress);
+        jsonObject.addProperty("pk", id);
         jsonObject.addProperty("tokenType", tokenType);
 
         Claims claims = Jwts.claims().subject(encrypt(jsonObject.toString())).build();
@@ -153,16 +147,9 @@ public class JwtTokenProvider {
 
     private JsonObject extraValue(String token) throws Exception {
         String subject = extraAllClaims(token).getSubject();
-//        try {
-        log.info(subject);
         String decrypted = decrypt(subject);
-        log.info(decrypted);
         JsonObject jsonObject = new Gson().fromJson(decrypted, JsonObject.class);
         return jsonObject;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
     }
 
     private Claims extraAllClaims(String token) {
@@ -230,10 +217,10 @@ public class JwtTokenProvider {
         }
     }
 
-    public String reissueAccessToken(String refreshToken, HttpServletResponse response) {
+    public String reissueAccessToken(String accessToken, HttpServletResponse response) {
         try {
-            String studentId = redisService.getValues(refreshToken);
-            return createAccessToken(studentId);
+            Long id = redisService.getValues(accessToken);
+            return createAccessToken(id);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ErrorCode.EXPIRED_ACCESS_TOKEN.getMessage();
@@ -242,11 +229,11 @@ public class JwtTokenProvider {
 
     public String reissueRefreshToken(String refreshToken, HttpServletResponse response) {
         try {
-            String studentId = redisService.getValues(refreshToken);
-            String newRefreshToken = createRefreshToken(studentId);
+            Long id = redisService.getValues(refreshToken);
+            String newRefreshToken = createRefreshToken(id);
 
             redisService.delValues(refreshToken);
-            redisService.setValues(studentId, newRefreshToken);
+            redisService.setValues(id, newRefreshToken);
 
             return newRefreshToken;
         } catch (ExpiredJwtException e) {

@@ -9,10 +9,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import potato.cheq.dto.NFCRequestDto;
-import potato.cheq.dto.RequestLoginDto;
-import potato.cheq.dto.RequestUserDevice;
-import potato.cheq.dto.RequestUserDto;
+import potato.cheq.dto.*;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.entity.UuidEntity;
 import potato.cheq.repository.UserRepository;
@@ -30,27 +27,23 @@ public class UserService {
     private final UserRepository userRepository;
     private final UuidRepository uuidRepository;
 
-    public Long setUserData(RequestUserDto dto) throws Exception {
+    public Long setUserData(RequestUserDto dto) throws Exception { // 관리자 기능
         if (userRepository.existsByStudentId(dto.getStudentId())) {
             throw new Exception("이미 존재하는 사용자 정보입니다.");
-        }
-
-        if (userRepository.existsByStUuid(dto.getUuid())) {
-            throw new Exception("이미 존재하는 기기정보값입니다.");
         }
 
         UserEntity user = userRepository.save(dto.toEntity());
         return user.getId();
     }
 
-    public Long setUserDevice(RequestUserDevice dto) throws Exception {
-        if (uuidRepository.existsByDeviceUuid(dto.getDevice_uuid())) {
-            throw new Exception("이미 존재하는 기기입니다.");
-        }
-
-        UuidEntity uuid = uuidRepository.save(dto.toEntity());
-        return uuid.getId();
-    }
+//    public Long setUserDevice(RequestUpdateUserDto dto) throws Exception {
+//        if (uuidRepository.existsByDeviceUuid(dto.getUuid())) {
+//            throw new Exception("이미 존재하는 기기입니다.");
+//        }
+//
+//        UuidEntity uuid = userRepository.save(dto.toEntity());
+//        return uuid.getId();
+//    }
 
     public ResponseEntity<String> login(RequestLoginDto dto, HttpServletResponse response) throws Exception {
         UserEntity user = userRepository.findByStudentId(dto.getStudentId());
@@ -59,18 +52,18 @@ public class UserService {
             throw new Exception("유저 정보를 찾을 수 없습니다.");
         }
 
-        this.setJwtTokenInHeader(dto.getStudentId(), response);
+        this.setJwtTokenInHeader(user.getId(), response);
 
         return ResponseEntity.ok("로그인 성공");
     }
 
-    private void setJwtTokenInHeader(String studentID, HttpServletResponse response) throws Exception {
-        String accessToken = jwtTokenProvider.createAccessToken(studentID);
-        String refreshToken = jwtTokenProvider.createRefreshToken(studentID);
+    private void setJwtTokenInHeader(Long id, HttpServletResponse response) throws Exception {
+        String accessToken = jwtTokenProvider.createAccessToken(id);
+        String refreshToken = jwtTokenProvider.createRefreshToken(id);
 
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
-        redisService.setValues(studentID, refreshToken);
+        redisService.setValues(id, refreshToken);
 
 
     }
