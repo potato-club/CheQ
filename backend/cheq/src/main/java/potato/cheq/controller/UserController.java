@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping("/join") // 사용자 회원가입 api
     @Operation(summary = "회원 등록 (추후 관리자만 사용 가능)")
-    public Long saveUserData(@RequestBody RequestUserDto dto) throws Exception {
+    public Long saveUserData(@RequestBody RequestUserDto dto){
         return userService.setUserData(dto);
     }
 
