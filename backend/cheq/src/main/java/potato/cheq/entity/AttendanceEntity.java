@@ -29,5 +29,6 @@ public class AttendanceEntity extends BaseTime {
     @Column(nullable = false)
     private Long user_id;
 
-    private boolean check; // checkIn = 1, checkOut = 0
+    @Column(nullable = false)
+    private boolean check_inout; // checkIn = 1, checkOut = 0
 }

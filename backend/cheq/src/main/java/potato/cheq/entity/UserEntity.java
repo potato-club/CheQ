@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import potato.cheq.dto.UserUpdateRequestDto;
 import potato.cheq.enums.ChapelKind;
 
 @Entity
@@ -43,4 +44,8 @@ public class UserEntity {
         return this;
     }
 
+    public void update(UserUpdateRequestDto requestDto) {
+        this.email = requestDto.getEmail();
+        this.seat = requestDto.getSeat();
+    }
 }

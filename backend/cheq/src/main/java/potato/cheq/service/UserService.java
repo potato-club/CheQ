@@ -1,19 +1,23 @@
 package potato.cheq.service;
 
+import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import potato.cheq.dto.*;
 import potato.cheq.entity.UserEntity;
+import potato.cheq.error.security.ErrorCode;
+import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.repository.UuidRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
 import potato.cheq.service.jwt.RedisService;
-
 import java.util.Optional;
+import static potato.cheq.error.security.ErrorCode.NOT_FOUND_EXCEPTION;
 
 @Service
 @Transactional
@@ -84,6 +88,55 @@ public class UserService {
         jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
 
     }
+
+    public UserMyPageDto viewUserInfo(HttpServletRequest request) throws IOException {
+        Optional<UserEntity> userEntityOpt = findByUserToken(request);
+
+        if (userEntityOpt.isPresent()) {
+            UserEntity userEntity = userEntityOpt.get();
+            return UserMyPageDto.builder()
+                    .email(userEntity.getEmail())
+                    .studentId(userEntity.getStudentId())
+                    .seat(userEntity.getSeat())
+                    .build();
+        } else {
+            throw new UnAuthorizedException("404", NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    public void updateUser(UserUpdateRequestDto requestDto, HttpServletRequest request) {
+        Optional<UserEntity> userOptional = findByUserToken(request);
+
+        userOptional.ifPresent(user -> {
+            if (requestDto.getEmail() != null && !requestDto.getSeat().isEmpty()) {
+                user.update(requestDto);
+            }
+        });
+    }
+
+    public Optional<UserEntity> findByUserToken(HttpServletRequest request) throws UnAuthorizedException {
+        try {
+            String token = jwtTokenProvider.resolveAccessToken(request);
+            String accessTokenType = jwtTokenProvider.extractTokenType(token);
+
+            if ("refresh".equals(accessTokenType)) {
+                throw new UnAuthorizedException("RefreshToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
+            }
+
+            if (token == null) {
+                return Optional.empty();
+            }
+
+            Long memberId = Long.valueOf(jwtTokenProvider.extractMemberId(token));
+            return userRepository.findById(memberId);
+
+        } catch (Exception e) {
+            throw new UnAuthorizedException("토큰 처리 중 예외가 발생했습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
+        }
+    }
+
+
+
 
 
 }

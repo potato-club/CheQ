@@ -8,7 +8,6 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -97,13 +96,6 @@ public class JwtTokenProvider {
         response.setHeader("refreshToken", "Bearer " + refreshToken);
     }
 
-//    public String getMacAddress(String studentID) {  // 사용 X
-//        String userUUID = userRepository.findUuidByStudentId(studentID);
-//        if (userUUID == null) {
-//            throw new NullPointerException();
-//        }
-//        return userUUID;
-//    }
 
     private String encrypt(String plainToken) throws Exception {
         SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getBytes(StandardCharsets.UTF_8), "AES");
@@ -154,6 +146,32 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
+
+    private Claims extractClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(secretKey.getBytes())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getBody();
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedJwtException("토큰 타입을 추출할 수 없습니다.");
+        }
+    }
+
+
+
+    public String extractTokenType(String token) {
+        Claims claims = extractClaims(token);
+        if(claims != null && claims.containsKey("type")) {
+            return (String) claims.get("type");
+        } else {
+            throw new UnsupportedJwtException("JWT 토큰이 타입이 없습니다.");
+        }
+    }
+
+
 
     private JwtParser getParser() {
         return Jwts.parser()
@@ -238,6 +256,8 @@ public class JwtTokenProvider {
             return ErrorCode.EXPIRED_REFRESH_TOKEN.getMessage();
         }
     }
+
+
 
 
 }
