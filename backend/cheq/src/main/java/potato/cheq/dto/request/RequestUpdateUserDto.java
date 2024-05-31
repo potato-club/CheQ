@@ -1,4 +1,5 @@
-package potato.cheq.dto;
+package potato.cheq.dto.request;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestLoginDto {
-    private String studentId;
+public class RequestUpdateUserDto {
+    private String uuid;
 }
+

@@ -61,7 +61,7 @@ public class JwtTokenProvider {
             return this.createToken(id, accessTokenValidTime, "access");
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } // token 생성에서 오류처리를 Exceptions로 하면 다해줘야하네 흠
+        }
     }
 
     public String createRefreshToken(Long id) {
@@ -148,29 +148,19 @@ public class JwtTokenProvider {
     }
 
 
-    private Claims extractClaims(String token) {
-        try {
-            return Jwts.parser()
-                    .setSigningKey(secretKey.getBytes())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getBody();
-        } catch (IllegalArgumentException e) {
-            throw new UnsupportedJwtException("토큰 타입을 추출할 수 없습니다.");
-        }
+    private Claims extractAllClaims(String token){
+        return Jwts.parser()
+                .verifyWith(this.getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
 
-
-    public String extractTokenType(String token) {
-        Claims claims = extractClaims(token);
-        if(claims != null && claims.containsKey("type")) {
-            return (String) claims.get("type");
-        } else {
-            throw new UnsupportedJwtException("JWT 토큰이 타입이 없습니다.");
-        }
+    public String extractTokenType(String token) throws Exception {
+        JsonElement tokenType = extraValue(token).get("tokenType");
+        return String.valueOf(tokenType);
     }
-
 
 
     private JwtParser getParser() {
@@ -180,8 +170,10 @@ public class JwtTokenProvider {
     }
 
     public String resolveAccessToken(HttpServletRequest request) {
-        if (request.getHeader("authorization") != null)
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return request.getHeader("authorization").substring(7);
+        }
         return null;
     }
 
