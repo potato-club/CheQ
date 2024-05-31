@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import potato.cheq.dto.NFCRequestDto;
+import potato.cheq.dto.request.NFCRequestDto;
 import potato.cheq.service.AttendanceService;
 
 

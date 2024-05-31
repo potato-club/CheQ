@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import potato.cheq.dto.NFCRequestDto;
+import potato.cheq.dto.request.NFCRequestDto;
 import potato.cheq.entity.NFCEntity;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.ErrorCode;
