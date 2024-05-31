@@ -1,4 +1,4 @@
-package potato.cheq.dto;
+package potato.cheq.dto.response;
 
 import io.swagger.v3.oas.annotations.info.Contact;
 import lombok.AllArgsConstructor;

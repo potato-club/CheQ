@@ -1,4 +1,4 @@
-package potato.cheq.dto;
+package potato.cheq.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
