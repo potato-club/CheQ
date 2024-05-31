@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import potato.cheq.dto.UserUpdateRequestDto;
+import potato.cheq.dto.request.UserUpdateRequestDto;
 import potato.cheq.enums.ChapelKind;
 
 @Entity

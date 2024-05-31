@@ -1,4 +1,4 @@
-package potato.cheq.dto;
+package potato.cheq.dto.request;
 
 import lombok.Builder;
 import lombok.Data;

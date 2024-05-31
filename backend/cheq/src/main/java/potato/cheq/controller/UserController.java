@@ -5,20 +5,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.view.RedirectView;
-import potato.cheq.dto.RequestLoginDto;
-import potato.cheq.dto.RequestUpdateUserDto;
-import potato.cheq.dto.RequestUserDevice;
-import potato.cheq.dto.RequestUserDto;
-import potato.cheq.repository.UserRepository;
-import potato.cheq.dto.UserMyPageDto;
-import potato.cheq.dto.UserUpdateRequestDto;
+import potato.cheq.dto.request.RequestLoginDto;
+import potato.cheq.dto.request.RequestUpdateUserDto;
+import potato.cheq.dto.request.RequestUserDto;
+import potato.cheq.dto.response.UserMyPageDto;
+import potato.cheq.dto.request.UserUpdateRequestDto;
 import potato.cheq.service.UserService;
 
 @RestController
@@ -55,14 +48,14 @@ public class UserController {
         return ResponseEntity.ok().body("토큰 재발급 완료");
     }
 
-    @GetMapping("")
+    @GetMapping("/viewinfo")
     @Operation(summary = "회원 정보 확인")
     public ResponseEntity<UserMyPageDto> getUserInfo(HttpServletRequest request) {
         UserMyPageDto userInfo = userService.viewUserInfo(request);
         return ResponseEntity.ok(userInfo);
     }
 
-    @PutMapping("")
+    @PutMapping("/")
     @Operation(summary = "회원 정보 수정")
     public ResponseEntity<String> updateUserInfo(UserUpdateRequestDto userUpdateRequestDto , HttpServletRequest request) {
         userService.updateUser(userUpdateRequestDto, request);

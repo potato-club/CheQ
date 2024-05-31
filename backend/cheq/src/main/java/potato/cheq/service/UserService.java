@@ -7,8 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import potato.cheq.dto.*;
+import potato.cheq.dto.request.RequestLoginDto;
+import potato.cheq.dto.request.RequestUpdateUserDto;
+import potato.cheq.dto.request.RequestUserDto;
+import potato.cheq.dto.request.UserUpdateRequestDto;
+import potato.cheq.dto.response.UserMyPageDto;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.UnAuthorizedException;
@@ -39,7 +42,7 @@ public class UserService {
     }
 
     public void setUserDevice(HttpServletRequest request, Long id, RequestUpdateUserDto dto) throws Exception {
-            // 그 토큰이 어떻게 그사용자꺼인지?
+        // 그 토큰이 어떻게 그사용자꺼인지?
         if (uuidRepository.existsByDeviceUuid(dto.getUuid())) {
             throw new Exception("이미 존재하는 기기입니다.");
         }
@@ -114,10 +117,11 @@ public class UserService {
         });
     }
 
-    public Optional<UserEntity> findByUserToken(HttpServletRequest request) throws UnAuthorizedException {
+    public Optional<UserEntity> findByUserToken(HttpServletRequest request) {
         try {
             String token = jwtTokenProvider.resolveAccessToken(request);
             String accessTokenType = jwtTokenProvider.extractTokenType(token);
+
 
             if ("refresh".equals(accessTokenType)) {
                 throw new UnAuthorizedException("RefreshToken은 사용할 수 없습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
@@ -127,16 +131,14 @@ public class UserService {
                 return Optional.empty();
             }
 
-            Long memberId = Long.valueOf(jwtTokenProvider.extractMemberId(token));
-            return userRepository.findById(memberId);
+            String memberId = jwtTokenProvider.extractMemberId(token);
+            return Optional.ofNullable(userRepository.findByStudentId(memberId));
+
+
 
         } catch (Exception e) {
-            throw new UnAuthorizedException("토큰 처리 중 예외가 발생했습니다.", ErrorCode.INVALID_TOKEN_EXCEPTION);
+            throw new RuntimeException(e);
+
         }
     }
-
-
-
-
-
 }
