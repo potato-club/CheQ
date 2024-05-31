@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
+import potato.cheq.error.security.requestError.NotFoundException;
+import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.UserRepository;
 
 import javax.crypto.Cipher;
@@ -148,7 +150,7 @@ public class JwtTokenProvider {
     }
 
 
-    private Claims extractAllClaims(String token){
+    private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(this.getSigningKey())
                 .build()
@@ -249,7 +251,17 @@ public class JwtTokenProvider {
         }
     }
 
+    public UserEntity findUserIdByToken(HttpServletRequest request) throws Exception {
+        String token = resolveAccessToken(request);
+        String accessTokenType = extractTokenType(token);
 
+        if ("refresh".equals(accessTokenType)) {
+            throw new UnAuthorizedException("RefeshToken은 사용 할 수 없습니다.", ErrorCode.ACCESS_DENIED_EXCEPTION);
+        }
+
+        return token == null ? null : userRepository.findById(extractId(token))
+                .orElseThrow(() -> new NotFoundException("토큰에 해당하는 ID값을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION));
+    }
 
 
 }
