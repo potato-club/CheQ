@@ -21,7 +21,7 @@ public class RequestUserDto {
                 .email(email)
                 .studentId(studentId)
                 .seat(seat)
-                .uuid(uuid)
+                .stUuid(uuid)
                 .chapelKind(chapelKind)
                 .build();
     }

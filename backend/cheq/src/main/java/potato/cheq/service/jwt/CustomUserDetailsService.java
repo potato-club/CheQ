@@ -12,11 +12,11 @@ import potato.cheq.repository.UserRepository;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository memberRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String studentId) throws UsernameNotFoundException {
-        UserEntity user = memberRepository.findByStudentId(studentId);
+        UserEntity user = userRepository.findByStudentId(studentId);
 
         if (user == null) {
             throw new UsernameNotFoundException(studentId + "는 존재하지 않는 사용자입니다.");

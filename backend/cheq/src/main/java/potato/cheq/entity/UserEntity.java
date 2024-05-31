@@ -26,20 +26,23 @@ public class UserEntity {
     @Column(nullable = false)
     private String studentId;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String password; // 우선 사용하지않는 필드
 
     @Column(nullable = false)
     private String seat;
 
-//    private String st_mac_address; // 회원 기기 mac_address
-
     @Column()
-    private String uuid;
+    private String stUuid;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ChapelKind chapelKind;
+
+    public UserEntity updateUuid(String stUuid) {
+        this.stUuid = stUuid;
+        return this;
+    }
 
     public void update(UserUpdateRequestDto requestDto) {
         this.email = requestDto.getEmail();

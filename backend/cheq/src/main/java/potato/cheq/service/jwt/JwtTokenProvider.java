@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
 import potato.cheq.repository.UserRepository;
@@ -30,7 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-//@Transactional -> 당근 필요없지 당근!
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
@@ -56,26 +56,25 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createAccessToken(String studentId) {
+    public String createAccessToken(Long id) {
         try {
-            return this.createToken(studentId, getMacAddress(studentId), accessTokenValidTime, "access");
+            return this.createToken(id, accessTokenValidTime, "access");
         } catch (Exception e) {
             throw new RuntimeException(e);
         } // token 생성에서 오류처리를 Exceptions로 하면 다해줘야하네 흠
     }
 
-    public String createRefreshToken(String studentId) {
+    public String createRefreshToken(Long id) {
         try {
-            return this.createToken(studentId, getMacAddress(studentId), refreshTokenValidTime, "refresh");
+            return this.createToken(id, refreshTokenValidTime, "refresh");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String createToken(String studentId, String macAddress, long tokenValid, String tokenType) throws Exception {
+    public String createToken(Long id, long tokenValid, String tokenType) throws Exception {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("studentId", studentId);
-        jsonObject.addProperty("macAddress", macAddress);
+        jsonObject.addProperty("pk", id);
         jsonObject.addProperty("tokenType", tokenType);
 
         Claims claims = Jwts.claims().subject(encrypt(jsonObject.toString())).build();
@@ -97,13 +96,6 @@ public class JwtTokenProvider {
         response.setHeader("refreshToken", "Bearer " + refreshToken);
     }
 
-    public String getMacAddress(String studentID) {
-        String userUUID = userRepository.findUuidByStudentId(studentID);
-        if (userUUID == null) {
-            throw new NullPointerException();
-        }
-        return userUUID;
-    }
 
     private String encrypt(String plainToken) throws Exception {
         SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getBytes(StandardCharsets.UTF_8), "AES");
@@ -130,34 +122,23 @@ public class JwtTokenProvider {
 
     }
 
-    public String extractMacAddress(String token) throws Exception {
-        JsonElement macAddress = extraValue(token).get("macAddress");
-        if (macAddress.isJsonNull()) {
-            return null;
-        }
-        return macAddress.getAsString();
+    public Long extractId(String token) throws Exception {
+        JsonElement id = extraValue(token).get("pk");
+        return id.getAsLong();
     }
 
-    public String extractMemberId(String token) throws Exception {
-        JsonElement memberId = extraValue(token).get("studentId");
-        if (memberId.isJsonNull()) {
-            return null;
-        }
-        return memberId.getAsString();
+    public String extractMemberId(String token) throws Exception { // 사용 X
+        Long id = extractId(token);
+        UserEntity memberId = userRepository.findStudentIdById(id);
+
+        return memberId.getStudentId();
     }
 
     private JsonObject extraValue(String token) throws Exception {
         String subject = extraAllClaims(token).getSubject();
-//        try {
-        log.info(subject);
         String decrypted = decrypt(subject);
-        log.info(decrypted);
         JsonObject jsonObject = new Gson().fromJson(decrypted, JsonObject.class);
         return jsonObject;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
     }
 
     private Claims extraAllClaims(String token) {
@@ -251,10 +232,10 @@ public class JwtTokenProvider {
         }
     }
 
-    public String reissueAccessToken(String refreshToken, HttpServletResponse response) {
+    public String reissueAccessToken(String accessToken, HttpServletResponse response) {
         try {
-            String studentId = redisService.getValues(refreshToken);
-            return createAccessToken(studentId);
+            Long id = redisService.getValues(accessToken);
+            return createAccessToken(id);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ErrorCode.EXPIRED_ACCESS_TOKEN.getMessage();
@@ -263,11 +244,11 @@ public class JwtTokenProvider {
 
     public String reissueRefreshToken(String refreshToken, HttpServletResponse response) {
         try {
-            String studentId = redisService.getValues(refreshToken);
-            String newRefreshToken = createRefreshToken(studentId);
+            Long id = redisService.getValues(refreshToken);
+            String newRefreshToken = createRefreshToken(id);
 
             redisService.delValues(refreshToken);
-            redisService.setValues(studentId, newRefreshToken);
+            redisService.setValues(id, newRefreshToken);
 
             return newRefreshToken;
         } catch (ExpiredJwtException e) {

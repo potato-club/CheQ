@@ -5,18 +5,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import potato.cheq.entity.UserEntity;
+import potato.cheq.entity.UuidEntity;
 
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     boolean existsByStudentId(String studentId);
-    boolean existsByUuid(String uuid);
+    boolean existsByStUuid(String uuid);
 
-    UserEntity findByUuid(String uuid);
+//    UserEntity findByUuid(String uuid);
+
+    UserEntity findUuidById(Long id);
+    UserEntity findStudentIdById(Long id);
 
     UserEntity findByStudentId(String studentId);
-    @Query("SELECT u.uuid FROM UserEntity u WHERE u.studentId = :studentId")
+    @Query("SELECT u.stUuid FROM UserEntity u WHERE u.studentId = :studentId")
     String findUuidByStudentId(@Param("studentId") String studentId);
 
 

@@ -4,8 +4,6 @@ import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +13,10 @@ import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.UserRepository;
+import potato.cheq.repository.UuidRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
 import potato.cheq.service.jwt.RedisService;
-
 import java.util.Optional;
-
 import static potato.cheq.error.security.ErrorCode.NOT_FOUND_EXCEPTION;
 
 @Service
@@ -30,48 +27,53 @@ public class UserService {
     private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final UuidRepository uuidRepository;
 
-    public Long setUserData(RequestUserDto dto) throws Exception {
+    public Long setUserData(RequestUserDto dto) throws Exception { // 관리자 기능
         if (userRepository.existsByStudentId(dto.getStudentId())) {
             throw new Exception("이미 존재하는 사용자 정보입니다.");
         }
 
-        if (userRepository.existsByUuid(dto.getUuid())) {
-            throw new Exception("이미 존재하는 기기정보값입니다.");
-        }
-
         UserEntity user = userRepository.save(dto.toEntity());
         return user.getId();
     }
 
-    public Long setUserDevice(RequestUserDevice dto) throws Exception {
-        if (userRepository.existsByUuid(dto.getUuid())) {
+    public void setUserDevice(HttpServletRequest request, Long id, RequestUpdateUserDto dto) throws Exception {
+            // 그 토큰이 어떻게 그사용자꺼인지?
+        if (uuidRepository.existsByDeviceUuid(dto.getUuid())) {
             throw new Exception("이미 존재하는 기기입니다.");
         }
 
-        UserEntity user = userRepository.save(dto.toEntity());
-        return user.getId();
+        UserEntity originUser = userRepository.findById(id)
+                .orElseThrow(() -> new NullPointerException());
+
+        String updatedUuid = dto.getUuid();
+        originUser.updateUuid(updatedUuid);
+        userRepository.save(originUser);
+
     }
 
-    public ResponseEntity<String> login(RequestUserDto dto, HttpServletResponse response) throws Exception {
+    public ResponseEntity<String> login(RequestLoginDto dto, HttpServletResponse response) throws Exception {
         UserEntity user = userRepository.findByStudentId(dto.getStudentId());
 
         if (user == null) {
             throw new Exception("유저 정보를 찾을 수 없습니다.");
         }
 
-        this.setJwtTokenInHeader(dto.getStudentId(), response);
+        this.setJwtTokenInHeader(user.getId(), response);
 
         return ResponseEntity.ok("로그인 성공");
     }
 
-    private void setJwtTokenInHeader(String studentID, HttpServletResponse response) throws Exception {
-        String accessToken = jwtTokenProvider.createAccessToken(studentID);
-        String refreshToken = jwtTokenProvider.createRefreshToken(studentID);
+
+    private void setJwtTokenInHeader(Long id, HttpServletResponse response) throws Exception {
+        String accessToken = jwtTokenProvider.createAccessToken(id);
+        String refreshToken = jwtTokenProvider.createRefreshToken(id);
 
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
-        redisService.setValues(studentID, refreshToken);
+        redisService.setValues(id, refreshToken);
+
     }
 
     public void reissueToken(HttpServletRequest request, HttpServletResponse response) {
