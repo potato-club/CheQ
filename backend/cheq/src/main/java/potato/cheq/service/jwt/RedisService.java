@@ -1,9 +1,12 @@
 package potato.cheq.service.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import potato.cheq.error.security.ErrorCode;
+import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
 
 import java.time.Duration;
 
@@ -31,7 +34,7 @@ public class RedisService {
                 return id;
             }
         } catch (NullPointerException e) {
-            throw new NullPointerException(); // 커스텀에러로 수정
+            throw new ExpiredRefreshTokenException("RefreshToken Expired", ErrorCode.EXPIRED_REFRESH_TOKEN); // 커스텀에러로 수정
         }
         return null;
     }

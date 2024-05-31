@@ -14,12 +14,16 @@ import potato.cheq.dto.request.UserUpdateRequestDto;
 import potato.cheq.dto.response.UserMyPageDto;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.ErrorCode;
+import potato.cheq.error.security.requestError.DuplicateException;
+import potato.cheq.error.security.requestError.NotFoundException;
 import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.repository.UuidRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
 import potato.cheq.service.jwt.RedisService;
+
 import java.util.Optional;
+
 import static potato.cheq.error.security.ErrorCode.NOT_FOUND_EXCEPTION;
 
 @Service
@@ -32,9 +36,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final UuidRepository uuidRepository;
 
-    public Long setUserData(RequestUserDto dto) throws Exception { // 관리자 기능
+    public Long setUserData(RequestUserDto dto) { // 관리자 기능
         if (userRepository.existsByStudentId(dto.getStudentId())) {
-            throw new Exception("이미 존재하는 사용자 정보입니다.");
+            throw new DuplicateException("이미 존재하는 사용자 정보입니다.", ErrorCode.FORBIDDEN_EXCEPTION);
         }
 
         UserEntity user = userRepository.save(dto.toEntity());
@@ -60,7 +64,7 @@ public class UserService {
         UserEntity user = userRepository.findByStudentId(dto.getStudentId());
 
         if (user == null) {
-            throw new Exception("유저 정보를 찾을 수 없습니다.");
+            throw new NotFoundException("유저 정보를 찾을 수 없습니다.", NOT_FOUND_EXCEPTION);
         }
 
         this.setJwtTokenInHeader(user.getId(), response);
@@ -133,7 +137,6 @@ public class UserService {
 
             String memberId = jwtTokenProvider.extractMemberId(token);
             return Optional.ofNullable(userRepository.findByStudentId(memberId));
-
 
 
         } catch (Exception e) {
