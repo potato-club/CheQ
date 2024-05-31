@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import potato.cheq.dto.NFCRequestDto;
 import potato.cheq.entity.NFCEntity;
 import potato.cheq.entity.UserEntity;
+import potato.cheq.error.security.ErrorCode;
+import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.NFCRepository;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
@@ -31,13 +33,12 @@ public class AttendanceService {
         String uuid = id.get().getStUuid();
 
         if(uuid == null) {
-            throw new NullPointerException(); // 일단 uuid 없으면 nullpoint 오류임 에러커스텀하면 추가하자
+            throw new UnAuthorizedException("기기정보가 등록되지 않은 회원입니다.", ErrorCode.ACCESS_DENIED_EXCEPTION);
         }
 
         if (!jwtTokenProvider.validateAccessToken(userToken)) {
-            throw new NullPointerException(); // AccessToken 만료
+            throw new UnAuthorizedException("AccessToken이 만료되었습니다.", ErrorCode.EXPIRED_ACCESS_TOKEN);
         }
-
 
         if (uuid.equals(nfcRequestDto.getMac_address())) {
 
@@ -50,6 +51,6 @@ public class AttendanceService {
 
             return uuid;
         }
-        return null; // 만약 null 이 컨트롤러로 날라가면 사용자가 등록된 기기가 없다고 @HttpStatus 어노테이션으로 나타내보자
+        return null;
     }
 }
