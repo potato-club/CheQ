@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../../components/NavBar';
 import QRImage from '../../Image/qr -1004.png';
+import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 
 function Mypage() {
   const [userData, setUserData] = useState({
@@ -22,6 +23,11 @@ function Mypage() {
   const images = [
     'https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg',
   ]
+  const changeinfo = useNavigate(); // useNavigate 훅 사용
+
+  const ChangeInfo = () => {
+    changeinfo("/change");
+  };
 
   const [currentImageIndex] = useState(0);
   useEffect(() => {
@@ -64,7 +70,7 @@ function Mypage() {
             </BoxBMaininformation>
             <BoXBProfilchangeBox>
               <BoxBProfilchangeButton>
-                <BoxBProfilchangeButtontext>정보수정</BoxBProfilchangeButtontext>
+              <BoxBProfilchangeButtontext onClick={ChangeInfo}>정보수정</BoxBProfilchangeButtontext>
               </BoxBProfilchangeButton>
             </BoXBProfilchangeBox>
           </BoxBMain>
@@ -227,22 +233,25 @@ const BoXBProfilchangeBox = styled.div`
   margin-right: 10px;
 `;
 
-const BoxBProfilchangeButton = styled.div`
+const BoxBProfilchangeButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 20px;
+  width: 58px;
+  height: 58px;
+  border-radius: 26px;
   background-color: #375cde;
+  border: none;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
+
 const BoxBProfilchangeButtontext = styled.h1`
+  cursor: pointer;
   font-size: 10px;
   font-weight: bold;
-  color: black;
+  color: white;
 `;
 
 const BoxC = styled.div`

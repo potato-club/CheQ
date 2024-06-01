@@ -20,7 +20,7 @@ function Mainpage() {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
-  const attendanceStatuses: string[] = ['present', 'absent', 'late', 'present', 'present'];
+  const attendanceStatuses = ['present', 'absent', 'late', 'present', 'present'];
 
   const getColor = (status: string): string => {
     switch (status) {
@@ -35,12 +35,22 @@ function Mainpage() {
     }
   };
 
+  // Example data for buttons from the backend
+  const buttonsData = [
+    { label: 'Menu 1' },
+    { label: 'Menu 2' },
+    { label: 'Menu 3' },
+    { label: 'Menu 4' },
+
+
+  ];
+
   return (
     <div>
       <BigBox>
         <Box1>
           <AttendanceTitle>
-           <MainTitle>CheQ</MainTitle> 
+            <MainTitle>CheQ</MainTitle>
           </AttendanceTitle>
         </Box1>
         <Box2>
@@ -53,7 +63,6 @@ function Mainpage() {
             <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
           </Box3Atext>
         </Box3A>
-       
         <Box3B>
           <Box3BCircle>
             {attendanceStatuses.map((status, index) => (
@@ -63,24 +72,15 @@ function Mainpage() {
         </Box3B>
         <Box4>
           <Box4MainA>
-            <Box4MainAButton1>
-            </Box4MainAButton1>
-            <Box4MainAButton2>
-            </Box4MainAButton2>
-            <Box4MainAButton3>
-            </Box4MainAButton3>
-          </Box4MainA>
-          <Box4MainA>
-            <Box4MainAButton1>
-            </Box4MainAButton1>
-            <Box4MainAButton2>
-            </Box4MainAButton2>
-            <Box4MainAButton3>
-            </Box4MainAButton3>
+            {buttonsData.map((button, index) => (
+              <Box4MainAButton key={index}>
+                {button.label}
+              </Box4MainAButton>
+            ))}
           </Box4MainA>
         </Box4>
       </BigBox>
-        <Nav />
+      <Nav />
     </div>
   );
 }
@@ -117,13 +117,13 @@ const MainTitle = styled.h1`
 `;
 
 const Box2 = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-height: 250px;
-flex-direction: column;
-box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
 const Box2Advertisement = styled.div`
@@ -132,43 +132,44 @@ const Box2Advertisement = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  overflow: cover;
+  overflow: hidden;
 `;
 
 const AdvertisementImage = styled.img`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `;
 
 const Box3A = styled.div`
-display: flex;
-align-items: center;
-padding: 5px;
-box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
 const Box3Atext = styled.div`
- display: flex;
- justify-content: center;
- align-items: center;
- font-size: 8px;
- margin-left: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 8px;
+  margin-left: 50px;
 `;
 
 const Box3AtextTitle = styled.h2`
- color: black;
+  color: black;
 `;
 
 const Box3B = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-padding:5px;
-box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`; 
- 
+`;
+
 const Box3BCircle = styled.div`
   display: flex;
   align-items: center;
@@ -178,7 +179,7 @@ const Box3BCircle = styled.div`
   width: 70%;
 `;
 
-const Circle = styled.div<{ color: string }>`
+const Circle = styled.div`
   display: flex;
   background-color: ${(props) => props.color};
   width: 15px;
@@ -187,69 +188,43 @@ const Circle = styled.div<{ color: string }>`
 `;
 
 const Box4 = styled.div`
-display: flex;
-justify-content: center;
-flex-direction: column;
-align-items: center;
-padding: 30px 10px 30px 10px;
-box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+  display: flex;
+  padding: 30px 10px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const Box4MainA = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
   width: 100%;
-  height: 130px;
-  margin-top: 30px;
-  margin-bottom: 30px;
-`; 
-
-const Box4MainAButton1 = styled.div`
-  display: flex;
-  align-items: center;
-  width: 150px;
-  aspect-ratio: 1 / 1;
-  margin-left: 5px;
-  margin-right: 5px; 
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+  box-sizing: border-box;
+  //max-width: 100%; /* 이 속성은 필요한 경우에 추가합니다. */
 `;
 
-const Box4MainAButton2 = styled.div`
+const Box4MainAButton = styled.div`
   display: flex;
   align-items: center;
-  width: 150px;
-  aspect-ratio: 1 / 1;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const Box4MainAButton3 = styled.div`
-  display: flex;
-  align-items: center;
-  width: 150px;
-  aspect-ratio: 1 / 1;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const Line = styled.div`
+  justify-content: center;
   width: 100%;
-  height: 2px;
-  background-color: #E3E3E3;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+  //background-color: #f0f0f0; 
+  cursor: pointer;
+  box-sizing: border-box;
+  //margin: auto;
 `;
 
-
+// const Line = styled.div`
+//   width: 100%;
+//   height: 2px;
+//   background-color: #E3E3E3;
+// `;
 
 
 
