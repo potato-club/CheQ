@@ -22,6 +22,7 @@ function Mainpage() {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
+<<<<<<< HEAD
   const attendanceStatuses: string[] = [
     "present",
     "absent",
@@ -29,6 +30,9 @@ function Mainpage() {
     "present",
     "present",
   ];
+=======
+  const attendanceStatuses = ['present', 'absent', 'late', 'present', 'present'];
+>>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
 
   const getColor = (status: string): string => {
     switch (status) {
@@ -42,6 +46,16 @@ function Mainpage() {
         return "gray";
     }
   };
+
+  // Example data for buttons from the backend
+  const buttonsData = [
+    { label: 'Menu 1' },
+    { label: 'Menu 2' },
+    { label: 'Menu 3' },
+    { label: 'Menu 4' },
+
+
+  ];
 
   return (
     <div>
@@ -64,7 +78,10 @@ function Mainpage() {
             <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
           </Box3Atext>
         </Box3A>
+<<<<<<< HEAD
 
+=======
+>>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
         <Box3B>
           <Box3BCircle>
             {attendanceStatuses.map((status, index) => (
@@ -74,6 +91,7 @@ function Mainpage() {
         </Box3B>
         <Box4>
           <Box4MainA>
+<<<<<<< HEAD
             <Box4MainAButton1></Box4MainAButton1>
             <Box4MainAButton2></Box4MainAButton2>
             <Box4MainAButton3></Box4MainAButton3>
@@ -82,6 +100,13 @@ function Mainpage() {
             <Box4MainAButton1></Box4MainAButton1>
             <Box4MainAButton2></Box4MainAButton2>
             <Box4MainAButton3></Box4MainAButton3>
+=======
+            {buttonsData.map((button, index) => (
+              <Box4MainAButton key={index}>
+                {button.label}
+              </Box4MainAButton>
+            ))}
+>>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
           </Box4MainA>
         </Box4>
       </BigBox>
@@ -137,12 +162,13 @@ const Box2Advertisement = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  overflow: cover;
+  overflow: hidden;
 `;
 
 const AdvertisementImage = styled.img`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `;
 
 const Box3A = styled.div`
@@ -183,7 +209,7 @@ const Box3BCircle = styled.div`
   width: 70%;
 `;
 
-const Circle = styled.div<{ color: string }>`
+const Circle = styled.div`
   display: flex;
   background-color: ${(props) => props.color};
   width: 15px;
@@ -193,20 +219,26 @@ const Circle = styled.div<{ color: string }>`
 
 const Box4 = styled.div`
   display: flex;
+<<<<<<< HEAD
   justify-content: center;
   flex-direction: column;
   align-items: center;
   padding: 30px 10px 30px 10px;
+=======
+  padding: 30px 10px;
+>>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const Box4MainA = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
   width: 100%;
+<<<<<<< HEAD
   height: 130px;
   margin-top: 30px;
   margin-bottom: 30px;
@@ -222,34 +254,42 @@ const Box4MainAButton1 = styled.div`
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+=======
+  box-sizing: border-box;
+  //max-width: 100%; /* 이 속성은 필요한 경우에 추가합니다. */
+>>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
 `;
 
-const Box4MainAButton2 = styled.div`
+const Box4MainAButton = styled.div`
   display: flex;
   align-items: center;
-  width: 150px;
-  aspect-ratio: 1 / 1;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const Box4MainAButton3 = styled.div`
-  display: flex;
-  align-items: center;
-  width: 150px;
-  aspect-ratio: 1 / 1;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`;
-
-const Line = styled.div`
+  justify-content: center;
   width: 100%;
+<<<<<<< HEAD
   height: 2px;
   background-color: #e3e3e3;
 `;
+=======
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
+    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+  //background-color: #f0f0f0; 
+  cursor: pointer;
+  box-sizing: border-box;
+  //margin: auto;
+`;
+
+// const Line = styled.div`
+//   width: 100%;
+//   height: 2px;
+//   background-color: #E3E3E3;
+// `;
+
+
+
+
+
+
+
+>>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735

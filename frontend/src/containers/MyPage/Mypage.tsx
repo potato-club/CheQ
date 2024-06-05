@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Nav from "../../components/NavBar";
-import QRImage from "../../image/qr -1004.png";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Nav from '../../components/NavBar';
+import QRImage from '../../Image/qr -1004.png';
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 
 function Mypage() {
@@ -26,8 +26,13 @@ function Mypage() {
   };
 
   const images = [
-    "https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg",
-  ];
+    'https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg',
+  ]
+  const changeinfo = useNavigate(); // useNavigate 훅 사용
+
+  const ChangeInfo = () => {
+    changeinfo("/change");
+  };
 
   const [currentImageIndex] = useState(0);
   useEffect(() => {
@@ -73,9 +78,13 @@ function Mypage() {
             </BoxBMaininformation>
             <BoXBProfilchangeBox>
               <BoxBProfilchangeButton>
+<<<<<<< HEAD
                 <BoxBProfilchangeButtontext onClick={ChangeInfo}>
                   정보수정
                 </BoxBProfilchangeButtontext>
+=======
+              <BoxBProfilchangeButtontext onClick={ChangeInfo}>정보수정</BoxBProfilchangeButtontext>
+>>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
               </BoxBProfilchangeButton>
             </BoXBProfilchangeBox>
           </BoxBMain>
@@ -247,6 +256,7 @@ const BoxBProfilchangeButton = styled.button`
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
+
 
 const BoxBProfilchangeButtontext = styled.h1`
   cursor: pointer;
