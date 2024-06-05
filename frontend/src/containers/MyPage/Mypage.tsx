@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
 import QRImage from "../../image/qr -1004.png";
+import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 
 function Mypage() {
   const [userData, setUserData] = useState({
@@ -11,6 +12,11 @@ function Mypage() {
     seat: "H3",
   });
 
+  const changeinfo = useNavigate(); // useNavigate 훅 사용
+
+  const ChangeInfo = () => {
+    changeinfo("/change");
+  };
   // 텍스트 길이를 11자로 제한하는 함수
   const limitText = (text: string) => {
     if (text.length > 11) {
@@ -19,6 +25,11 @@ function Mypage() {
     return text;
   };
 
+  const images = [
+    "https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg",
+  ];
+
+  const [currentImageIndex] = useState(0);
   useEffect(() => {
     // 데이터를 limitText 함수를 통해 제한합니다.
     setUserData({
@@ -39,7 +50,9 @@ function Mypage() {
 
         <BoxB>
           <BoxBMain>
-            <BoxBMainProfil></BoxBMainProfil>
+            <BoxBMainProfil>
+              <BoxBMainProfilimg src={images[currentImageIndex]} alt="profil" />
+            </BoxBMainProfil>
             <BoxBMaininformation>
               <BoxBMaininformation1>
                 <FixedText>학번 | </FixedText>
@@ -60,7 +73,7 @@ function Mypage() {
             </BoxBMaininformation>
             <BoXBProfilchangeBox>
               <BoxBProfilchangeButton>
-                <BoxBProfilchangeButtontext>
+                <BoxBProfilchangeButtontext onClick={ChangeInfo}>
                   정보수정
                 </BoxBProfilchangeButtontext>
               </BoxBProfilchangeButton>
@@ -108,14 +121,12 @@ const BigBox = styled.div`
   width: 100vw;
   min-width: 200px;
   max-width: 580px;
-  /* width: 580px; */
+
   padding: 0px 20px 73px 20px;
 `;
 
 const AttendanceTitle = styled.div`
   display: flex;
-  /* width: 260px;
-  justify-content: space-between; */
   align-items: center;
 `;
 const MainTitle = styled.h1`
@@ -136,7 +147,6 @@ const BoxB = styled.div`
 const BoxBMain = styled.div`
   display: flex;
   align-items: center;
-  //justify-content: flex-start;
   flex-direction: row;
   width: 100%;
   height: 150px;
@@ -152,9 +162,16 @@ const BoxBMainProfil = styled.div`
   aspect-ratio: 1/1;
   border-radius: 20px;
   margin-left: 10px;
-  margin-right: 20px;
+  margin-right: 25px;
+  overflow: hidden;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
+`;
+
+const BoxBMainProfilimg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지를 컨테이너에 꽉 차도록 함 */
 `;
 
 const BoxBMaininformation = styled.div`
@@ -218,22 +235,24 @@ const BoXBProfilchangeBox = styled.div`
   margin-right: 10px;
 `;
 
-const BoxBProfilchangeButton = styled.div`
+const BoxBProfilchangeButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 20px;
+  width: 58px;
+  height: 58px;
+  border-radius: 26px;
   background-color: #375cde;
+  border: none;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
 
 const BoxBProfilchangeButtontext = styled.h1`
+  cursor: pointer;
   font-size: 10px;
   font-weight: bold;
-  color: black;
+  color: white;
 `;
 
 const BoxC = styled.div`
@@ -247,7 +266,7 @@ const BoxCMain = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 70%;
+  width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
