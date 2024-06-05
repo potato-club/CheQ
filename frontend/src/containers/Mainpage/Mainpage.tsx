@@ -121,7 +121,7 @@ const Box2 = styled.div`
   justify-content: center;
   align-items: center;
   height: 250px;
-  flex-direction: column;
+  //flex-direction: column;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
@@ -138,7 +138,7 @@ const Box2Advertisement = styled.div`
 const AdvertisementImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  //object-fit: cover;
 `;
 
 const Box3A = styled.div`
@@ -225,8 +225,6 @@ const Box4MainAButton = styled.div`
 //   height: 2px;
 //   background-color: #E3E3E3;
 // `;
-
-
 
 
 
