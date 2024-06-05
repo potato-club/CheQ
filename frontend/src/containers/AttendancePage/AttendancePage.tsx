@@ -207,11 +207,6 @@ const AttendancePage = () => {
 };
 
 export default AttendancePage;
-// const Wrapper = styled.div`
-//   margin: auto;
-//   min-width: 200px;
-//   max-width: 600px;
-// `;
 
 const StyleAttendancePage = styled.div`
   display: flex;

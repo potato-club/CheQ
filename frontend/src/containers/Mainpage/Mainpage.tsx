@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../../components/NavBar';
 
+
 const images = [
   'https://pimg.hackers.com/land/main/land_default.jpg',
   'https://i.ytimg.com/vi/zvTgwgams-Q/maxresdefault.jpg',
