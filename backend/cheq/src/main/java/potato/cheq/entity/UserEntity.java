@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import potato.cheq.dto.admin.RequestUpdateStudentDto;
 import potato.cheq.dto.request.UserUpdateRequestDto;
 import potato.cheq.enums.ChapelKind;
+import potato.cheq.enums.UserRole;
 
 @Entity
 @Getter
@@ -53,4 +55,12 @@ public class UserEntity {
         this.email = requestDto.getEmail();
         this.seat = requestDto.getSeat();
     }
+
+    public void Adminupdate(RequestUpdateStudentDto requestDto) {
+        this.studentId = requestDto.getStudentId();
+        this.seat = requestDto.getSeat();
+        this.chapelKind = ChapelKind.valueOf(requestDto.getChapelKind());
+
+    }
+
 }
