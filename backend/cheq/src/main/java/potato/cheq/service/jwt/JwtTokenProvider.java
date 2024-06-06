@@ -3,8 +3,6 @@ package potato.cheq.service.jwt;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -31,6 +29,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -58,26 +57,28 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createAccessToken(Long id) {
+    public String createAccessToken(Long id, String role) {
         try {
-            return this.createToken(id, accessTokenValidTime, "access");
+            return this.createToken(id, role, accessTokenValidTime, "access");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String createRefreshToken(Long id) {
+    public String createRefreshToken(Long id, String role) {
         try {
-            return this.createToken(id, refreshTokenValidTime, "refresh");
+            return this.createToken(id, role, refreshTokenValidTime, "refresh");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String createToken(Long id, long tokenValid, String tokenType) throws Exception {
+    public String createToken(Long id, String role, long tokenValid, String tokenType) throws Exception {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("pk", id);
+        jsonObject.addProperty("role", role);
         jsonObject.addProperty("tokenType", tokenType);
+
 
         Claims claims = Jwts.claims().subject(encrypt(jsonObject.toString())).build();
         Date date = new Date();
@@ -129,10 +130,14 @@ public class JwtTokenProvider {
         return id.getAsLong();
     }
 
+    public String extractRole(String token) throws Exception {
+        JsonElement role = extraValue(token).get("role");
+        return role.getAsString();
+    }
+
     public String extractMemberId(String token) throws Exception { // 사용 X
         Long id = extractId(token);
         UserEntity memberId = userRepository.findStudentIdById(id);
-
         return memberId.getStudentId();
     }
 
@@ -149,7 +154,6 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
-
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(this.getSigningKey())
@@ -158,12 +162,10 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
-
     public String extractTokenType(String token) throws Exception {
         JsonElement tokenType = extraValue(token).get("tokenType");
         return String.valueOf(tokenType);
     }
-
 
     private JwtParser getParser() {
         return Jwts.parser()
@@ -184,7 +186,6 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-
     public String resolveRefreshToken(HttpServletRequest request) {
         if (request.getHeader("refreshToken") != null)
             return request.getHeader("refreshToken").substring(7);
@@ -194,7 +195,6 @@ public class JwtTokenProvider {
     public boolean validateRefreshToken(String refreshToken) {
         try {
             Claims claims = extraAllClaims(refreshToken);
-
             return !claims.getExpiration().before(new Date());
         } catch (MalformedJwtException e) {
             throw new MalformedJwtException("Invalid JWT token");
@@ -206,7 +206,6 @@ public class JwtTokenProvider {
             throw new IllegalArgumentException("JWT claims string is empty");
         }
     }
-
 
     public boolean validateAccessToken(String accessToken) {
         try {
@@ -229,7 +228,8 @@ public class JwtTokenProvider {
     public String reissueAccessToken(String accessToken, HttpServletResponse response) {
         try {
             Long id = redisService.getValues(accessToken);
-            return createAccessToken(id);
+            Optional<UserEntity> user = userRepository.findById(id);
+            return createAccessToken(id, String.valueOf(user.get().getUserRole()));
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ErrorCode.EXPIRED_ACCESS_TOKEN.getMessage();
@@ -239,7 +239,9 @@ public class JwtTokenProvider {
     public String reissueRefreshToken(String refreshToken, HttpServletResponse response) {
         try {
             Long id = redisService.getValues(refreshToken);
-            String newRefreshToken = createRefreshToken(id);
+            Optional<UserEntity> user = userRepository.findById(id);
+
+            String newRefreshToken = createRefreshToken(id, String.valueOf(user.get().getUserRole()));
 
             redisService.delValues(refreshToken);
             redisService.setValues(id, newRefreshToken);
@@ -262,6 +264,4 @@ public class JwtTokenProvider {
         return token == null ? null : userRepository.findById(extractId(token))
                 .orElseThrow(() -> new NotFoundException("토큰에 해당하는 ID값을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION));
     }
-
-
 }

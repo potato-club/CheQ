@@ -1,4 +1,4 @@
-package potato.cheq.dto.request;
+package potato.cheq.dto.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RequestAdminLoginDto {
 
-    private String id;
+    private String email;
     private String password;
 
 }

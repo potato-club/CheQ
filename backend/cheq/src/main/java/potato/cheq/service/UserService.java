@@ -67,15 +67,15 @@ public class UserService {
             throw new NotFoundException("유저 정보를 찾을 수 없습니다.", NOT_FOUND_EXCEPTION);
         }
 
-        this.setJwtTokenInHeader(user.getId(), response);
+        this.setJwtTokenInHeader(user.getId(), String.valueOf(user.getUserRole()), response);
 
         return ResponseEntity.ok("로그인 성공");
     }
 
 
-    private void setJwtTokenInHeader(Long id, HttpServletResponse response) throws Exception {
-        String accessToken = jwtTokenProvider.createAccessToken(id);
-        String refreshToken = jwtTokenProvider.createRefreshToken(id);
+    private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) throws Exception {
+        String accessToken = jwtTokenProvider.createAccessToken(id, role);
+        String refreshToken = jwtTokenProvider.createRefreshToken(id, role);
 
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);

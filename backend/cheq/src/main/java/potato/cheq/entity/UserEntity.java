@@ -37,7 +37,12 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private UserRole userRole;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ChapelKind chapelKind;
+
 
     public UserEntity updateUuid(String stUuid) {
         this.stUuid = stUuid;
