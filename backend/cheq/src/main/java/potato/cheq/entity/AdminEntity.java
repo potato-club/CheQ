@@ -19,18 +19,21 @@ public class AdminEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String admin_account;
-
-    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private String telephone_number;
+    private String telephoneNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String admin_role;
+    private UserRole userRole;
 
+    public void updateInfo(String email, String password, String telephoneNumber) {
+        this.email = email;
+        this.password = password;
+        this.telephoneNumber = telephoneNumber;
+    }
 }
