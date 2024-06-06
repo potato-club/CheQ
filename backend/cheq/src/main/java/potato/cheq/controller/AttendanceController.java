@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import potato.cheq.dto.request.BeaconRequestDto;
 import potato.cheq.dto.request.NFCRequestDto;
 import potato.cheq.service.AttendanceService;
 
@@ -24,8 +25,17 @@ public class AttendanceController {
     @PostMapping("/nfc")
     @Operation(summary = "nfc 출결 API")
     public ResponseEntity<String> checkAttendanceByNFC(HttpServletRequest request, @RequestBody NFCRequestDto nfcRequestDto) throws Exception {
-        String macAddress = attendanceService.checkAttendanceByNfcService(request, nfcRequestDto);
-        return ResponseEntity.ok().body(macAddress + " 기기 NFC 태그");
+        String uuid = attendanceService.checkAttendanceByNfcService(request, nfcRequestDto);
+        return ResponseEntity.ok().body(uuid + " 기기 NFC 태그");
     }
+
+    @PostMapping("/beacon")
+    @Operation(summary = "beacon 출결 API")
+    public ResponseEntity<String> checkAttendanceByBeacon(HttpServletRequest request, @RequestBody BeaconRequestDto beaconRequestDto) throws Exception {
+        String uuid = attendanceService.checkAttendanceByBeaconService(request, beaconRequestDto);
+        return ResponseEntity.ok().body(uuid + " 기기 Beacon 출결");
+    }
+
+
 
 }

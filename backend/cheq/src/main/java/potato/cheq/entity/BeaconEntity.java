@@ -2,15 +2,16 @@ package potato.cheq.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class BeaconEntity extends BaseTime {
 
     @Id
@@ -19,10 +20,7 @@ public class BeaconEntity extends BaseTime {
     private Long id;
 
     @Column(nullable = false)
-    private String mac_address;
-
-//    @Column(nullable = false)
-//    private LocalDateTime attendance_time;
+    private String uuid;
 
     private String beacon_position;
 }
