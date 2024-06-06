@@ -1,15 +1,20 @@
 package potato.cheq.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import potato.cheq.dto.admin.RequestAdminLoginDto;
+import potato.cheq.dto.admin.RequestUpdateStudentDto;
 import potato.cheq.dto.admin.UpdateAdminDto;
 import potato.cheq.entity.AdminEntity;
+import potato.cheq.entity.UserEntity;
 import potato.cheq.error.security.requestError.NotFoundException;
+import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.AdminRepository;
+import potato.cheq.repository.UserRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
 import potato.cheq.service.jwt.RedisService;
 import potato.cheq.error.security.ErrorCode;
@@ -21,6 +26,8 @@ public class AdminService {
     private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     public ResponseEntity<String> adminLogin(RequestAdminLoginDto requestDto, HttpServletResponse response) throws Exception {
@@ -35,20 +42,45 @@ public class AdminService {
         return ResponseEntity.ok("Admin 로그인 성공");
     }
 
-    public ResponseEntity<String> updateAdmin(Long id, UpdateAdminDto updateAdminDto) {
-        AdminEntity admin = adminRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Admin not found", ErrorCode.NOT_FOUND_EXCEPTION));
+    public ResponseEntity<String> updateStudent(HttpServletRequest request, Long userId, RequestUpdateStudentDto requestDto) throws Exception {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+        if (token == null || !jwtTokenProvider.validateAccessToken(token)) {
+            throw new UnAuthorizedException("토큰 오류", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
 
-        admin.updateInfo(updateAdminDto.getEmail(), passwordEncoder.encode(updateAdminDto.getPassword()), updateAdminDto.getTelephoneNumber());
-        adminRepository.save(admin);
+        String userRole = jwtTokenProvider.extractRole(token);
 
-        return ResponseEntity.ok("Admin 정보 수정 성공");
+        if (!userRole.equals("admin")) {
+            throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("학생을 찾을 수 없습니다", ErrorCode.NOT_FOUND_EXCEPTION));
+
+        user.Adminupdate(requestDto);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Student 정보 수정 성공");
     }
 
-    public ResponseEntity<String> deleteAdmin(Long id) {
-        adminRepository.deleteById(id);
-        return ResponseEntity.ok("Admin 삭제 성공");
-    }
+
+
+//    public ResponseEntity<String> deleteStudent(HttpServletRequest request, Long studentId) throws Exception {
+//        String token = jwtTokenProvider.resolveAccessToken(request);
+//        if (token == null || !jwtTokenProvider.validateAccessToken(token)) {
+//            throw new UnAuthorizedException("토큰 오류", ErrorCode.UNAUTHORIZED_EXCEPTION);
+//        }
+//
+//        String userRole = jwtTokenProvider.extractRole(token);
+//
+//        if (!userRole.equals("admin")) {
+//            throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
+//        }
+//
+//        userRepository.deleteById(studentId);
+//        return ResponseEntity.ok("Student 삭제 성공");
+//    }
+
 
     private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) throws Exception {
         String accessToken = jwtTokenProvider.createAccessToken(id, role);

@@ -2,11 +2,14 @@ package potato.cheq.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import potato.cheq.dto.admin.RequestAdminLoginDto;
+import potato.cheq.dto.admin.RequestUpdateStudentDto;
 import potato.cheq.dto.admin.UpdateAdminDto;
 import potato.cheq.service.AdminService;
 
@@ -24,15 +27,15 @@ public class AdminController {
         return adminService.adminLogin(requestDto, response);
     }
 
-//    @PutMapping("/update/{id}")
-//    @Operation(summary = "사용자 정보 수정")
-//    public ResponseEntity<String> updateAdmin(@PathVariable Long id, @RequestBody UpdateAdminDto updateAdminDto) {
-//        return adminService.updateAdmin(id, updateAdminDto);
+//    @PutMapping("/update/{userId}")
+//    @Operation(summary = "학생 정보 수정")
+//    public ResponseEntity<String> updateStudent(HttpServletRequest request, @PathVariable Long userId, @RequestBody RequestUpdateStudentDto updateStudentDto) throws Exception {
+//       return adminService.updateStudent(request, userId, updateStudentDto);
 //    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    @Operation(summary = "사용자 삭제")
-//    public ResponseEntity<String> deleteAdmin(@PathVariable Long id) {
-//        return adminService.deleteAdmin(id);
+
+//    @DeleteMapping("/student/{studentId}")
+//    @Operation(summary = "학생 삭제")
+//    public ResponseEntity<String> deleteStudent(HttpServletRequest request, @PathVariable Long studentId) throws Exception {
+//        return adminService.deleteStudent(request, studentId);
 //    }
 }

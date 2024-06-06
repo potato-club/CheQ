@@ -135,10 +135,13 @@ public class JwtTokenProvider {
         return role.getAsString();
     }
 
-    public String extractMemberId(String token) throws Exception { // 사용 X
+    public String extractMemberId(String token) throws Exception {
         Long id = extractId(token);
-        UserEntity memberId = userRepository.findStudentIdById(id);
-        return memberId.getStudentId();
+        Optional<String> studentIdOptional = userRepository.findStudentIdById(id);
+        if (!studentIdOptional.isPresent()) {
+            throw new NotFoundException("사용자를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+        }
+        return studentIdOptional.get();
     }
 
     private JsonObject extraValue(String token) throws Exception {
@@ -146,6 +149,11 @@ public class JwtTokenProvider {
         String decrypted = decrypt(subject);
         JsonObject jsonObject = new Gson().fromJson(decrypted, JsonObject.class);
         return jsonObject;
+    }
+
+    public boolean isAdmin(String token) throws Exception {
+        String role = extractRole(token);
+        return role.equals("admin");
     }
 
     private Claims extraAllClaims(String token) {
