@@ -1,6 +1,5 @@
 package potato.cheq.service.jwt;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -18,8 +17,9 @@ public class RedisService {
 
     public void setValues(Long id, String token) {
         ValueOperations<String, Long> operations = redisTemplate.opsForValue();
-        if(getValues(token) != null) {
-            delValues(token);
+
+        if(this.getValues(token) != null) {
+            this.delValues(token);
         }
         operations.set(token, id, Duration.ofDays(7)); // 우선 7일이긴한데 음
     }
@@ -34,9 +34,9 @@ public class RedisService {
                 return id;
             }
         } catch (NullPointerException e) {
-            throw new ExpiredRefreshTokenException("RefreshToken Expired", ErrorCode.EXPIRED_REFRESH_TOKEN); // 커스텀에러로 수정
+            throw new ExpiredRefreshTokenException("RefreshToken Expired", ErrorCode.EXPIRED_REFRESH_TOKEN);
         }
-        return null;
+            return null;
     }
 
     public void delValues(String token) {

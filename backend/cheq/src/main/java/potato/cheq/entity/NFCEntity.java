@@ -21,10 +21,7 @@ public class NFCEntity extends BaseTime {
     private Long id;
 
     @Column(nullable = false)
-    private String mac_address;
-
-//    @Column(nullable = false)
-//    private LocalDateTime attendance_time;
+    private String uuid;
 
     private boolean NFC_type; // 1 = major, 0 = minor
 
