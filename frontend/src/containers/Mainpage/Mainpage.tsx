@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
+import axios from "axios";
 
 const images = [
   "https://pimg.hackers.com/land/main/land_default.jpg",
@@ -11,6 +12,7 @@ const images = [
 
 function Mainpage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [NFC, setNFC] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,97 +24,93 @@ function Mainpage() {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
-<<<<<<< HEAD
-  const attendanceStatuses: string[] = [
-    "present",
-    "absent",
-    "late",
-    "present",
-    "present",
-  ];
-=======
-  const attendanceStatuses = ['present', 'absent', 'late', 'present', 'present'];
->>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
-
-  const getColor = (status: string): string => {
-    switch (status) {
-      case "present":
-        return "green";
-      case "absent":
-        return "red";
-      case "late":
-        return "orange";
-      default:
-        return "gray";
+  const onSubmit = async (data: any) => {
+    if (NFC) {
+      //alert("잠시 후 다시 시도해주세요."); //?
+      return;
     }
+
+    axios
+      .post("http://isaacnas.duckdns.org:8083/attendance/nfc", {
+        mac_address: data.address,
+        password: data.password,
+      })
+      .then((response) => {
+        "성공하셨습니다";
+      })
+      .catch((error) => {
+        "오류가 발생했습니다";
+      });
+
+    const attendanceStatuses = [
+      "present",
+      "absent",
+      "late",
+      "present",
+      "present",
+    ];
+
+    const getColor = (status: string): string => {
+      switch (status) {
+        case "present":
+          return "green";
+        case "absent":
+          return "red";
+        case "late":
+          return "orange";
+        default:
+          return "gray";
+      }
+    };
+
+    // Example data for buttons from the backend
+    const buttonsData = [
+      { label: "Menu 1" },
+      { label: "Menu 2" },
+      { label: "Menu 3" },
+      { label: "Menu 4" },
+    ];
+
+    return (
+      <div>
+        <BigBox>
+          <Box1>
+            <AttendanceTitle>
+              <MainTitle>CheQ</MainTitle>
+            </AttendanceTitle>
+          </Box1>
+          <Box2>
+            <Box2Advertisement>
+              <AdvertisementImage
+                src={images[currentImageIndex]}
+                alt="Advertisement"
+              />
+            </Box2Advertisement>
+          </Box2>
+          <Box3A>
+            <Box3Atext>
+              <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
+            </Box3Atext>
+          </Box3A>
+          <Box3B>
+            <Box3BCircle>
+              {attendanceStatuses.map((status, index) => (
+                <Circle key={index} color={getColor(status)} />
+              ))}
+            </Box3BCircle>
+          </Box3B>
+          <Box4>
+            <Box4MainA>
+              {buttonsData.map((button, index) => (
+                <Box4MainAButton key={index}>{button.label}</Box4MainAButton>
+              ))}
+            </Box4MainA>
+          </Box4>
+        </BigBox>
+        <Nav />
+      </div>
+    );
   };
-
-  // Example data for buttons from the backend
-  const buttonsData = [
-    { label: 'Menu 1' },
-    { label: 'Menu 2' },
-    { label: 'Menu 3' },
-    { label: 'Menu 4' },
-
-
-  ];
-
-  return (
-    <div>
-      <BigBox>
-        <Box1>
-          <AttendanceTitle>
-            <MainTitle>CheQ</MainTitle>
-          </AttendanceTitle>
-        </Box1>
-        <Box2>
-          <Box2Advertisement>
-            <AdvertisementImage
-              src={images[currentImageIndex]}
-              alt="Advertisement"
-            />
-          </Box2Advertisement>
-        </Box2>
-        <Box3A>
-          <Box3Atext>
-            <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
-          </Box3Atext>
-        </Box3A>
-<<<<<<< HEAD
-
-=======
->>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
-        <Box3B>
-          <Box3BCircle>
-            {attendanceStatuses.map((status, index) => (
-              <Circle key={index} color={getColor(status)} />
-            ))}
-          </Box3BCircle>
-        </Box3B>
-        <Box4>
-          <Box4MainA>
-<<<<<<< HEAD
-            <Box4MainAButton1></Box4MainAButton1>
-            <Box4MainAButton2></Box4MainAButton2>
-            <Box4MainAButton3></Box4MainAButton3>
-          </Box4MainA>
-          <Box4MainA>
-            <Box4MainAButton1></Box4MainAButton1>
-            <Box4MainAButton2></Box4MainAButton2>
-            <Box4MainAButton3></Box4MainAButton3>
-=======
-            {buttonsData.map((button, index) => (
-              <Box4MainAButton key={index}>
-                {button.label}
-              </Box4MainAButton>
-            ))}
->>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
-          </Box4MainA>
-        </Box4>
-      </BigBox>
-      <Nav />
-    </div>
-  );
 }
 
 export default Mainpage;
@@ -151,7 +149,7 @@ const Box2 = styled.div`
   justify-content: center;
   align-items: center;
   height: 250px;
-  flex-direction: column;
+  //flex-direction: column;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
@@ -168,7 +166,7 @@ const Box2Advertisement = styled.div`
 const AdvertisementImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  //object-fit: cover;
 `;
 
 const Box3A = styled.div`
@@ -219,14 +217,7 @@ const Circle = styled.div`
 
 const Box4 = styled.div`
   display: flex;
-<<<<<<< HEAD
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px 10px 30px 10px;
-=======
   padding: 30px 10px;
->>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
   width: 100%;
@@ -238,26 +229,8 @@ const Box4MainA = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
   width: 100%;
-<<<<<<< HEAD
-  height: 130px;
-  margin-top: 30px;
-  margin-bottom: 30px;
-`;
-
-const Box4MainAButton1 = styled.div`
-  display: flex;
-  align-items: center;
-  width: 150px;
-  aspect-ratio: 1 / 1;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
-    2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-=======
   box-sizing: border-box;
   //max-width: 100%; /* 이 속성은 필요한 경우에 추가합니다. */
->>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
 `;
 
 const Box4MainAButton = styled.div`
@@ -265,16 +238,11 @@ const Box4MainAButton = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-<<<<<<< HEAD
-  height: 2px;
-  background-color: #e3e3e3;
-`;
-=======
   aspect-ratio: 1 / 1;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-  //background-color: #f0f0f0; 
+  //background-color: #f0f0f0;
   cursor: pointer;
   box-sizing: border-box;
   //margin: auto;
@@ -285,11 +253,3 @@ const Box4MainAButton = styled.div`
 //   height: 2px;
 //   background-color: #E3E3E3;
 // `;
-
-
-
-
-
-
-
->>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
