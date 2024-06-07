@@ -6,16 +6,21 @@ import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 
 function Mypage() {
   const [userData, setUserData] = useState({
-    studentId: '202110034',
-    department: '컴퓨터공학과',
-    chapel: '3교시',
-    seat: 'H3',
+    studentId: "202110034",
+    department: "컴퓨터공학과",
+    chapel: "3교시",
+    seat: "H3",
   });
 
+  const changeinfo = useNavigate(); // useNavigate 훅 사용
+
+  const ChangeInfo = () => {
+    changeinfo("/change");
+  };
   // 텍스트 길이를 11자로 제한하는 함수
   const limitText = (text: string) => {
     if (text.length > 11) {
-      return text.substring(0, 11) + '...';
+      return text.substring(0, 11) + "...";
     }
     return text;
   };
@@ -43,34 +48,43 @@ function Mypage() {
   return (
     <div>
       <BigBox>
-        
-          <AttendanceTitle>
-            <MainTitle>CheQ</MainTitle>
-            <SubTitle>마이 페이지</SubTitle>
-          </AttendanceTitle>
-        
+        <AttendanceTitle>
+          <MainTitle>CheQ</MainTitle>
+          <SubTitle>마이 페이지</SubTitle>
+        </AttendanceTitle>
+
         <BoxB>
           <BoxBMain>
             <BoxBMainProfil>
-              <BoxBMainProfilimg src={images[currentImageIndex]} alt="profil" />       
+              <BoxBMainProfilimg src={images[currentImageIndex]} alt="profil" />
             </BoxBMainProfil>
             <BoxBMaininformation>
               <BoxBMaininformation1>
-                <FixedText>학번 | </FixedText>{userData.studentId}
+                <FixedText>학번 | </FixedText>
+                {userData.studentId}
               </BoxBMaininformation1>
               <BoxBMaininformation2>
-                <FixedText>학과 | </FixedText>{userData.department}
+                <FixedText>학과 | </FixedText>
+                {userData.department}
               </BoxBMaininformation2>
               <BoxBMaininformation3>
-                <FixedText>채플 | </FixedText>{userData.chapel}
+                <FixedText>채플 | </FixedText>
+                {userData.chapel}
               </BoxBMaininformation3>
               <BoxBMaininformation4>
-                <FixedText>좌석 | </FixedText>{userData.seat}
+                <FixedText>좌석 | </FixedText>
+                {userData.seat}
               </BoxBMaininformation4>
             </BoxBMaininformation>
             <BoXBProfilchangeBox>
               <BoxBProfilchangeButton>
+<<<<<<< HEAD
+                <BoxBProfilchangeButtontext onClick={ChangeInfo}>
+                  정보수정
+                </BoxBProfilchangeButtontext>
+=======
               <BoxBProfilchangeButtontext onClick={ChangeInfo}>정보수정</BoxBProfilchangeButtontext>
+>>>>>>> eb6fcb19d74153f1ac8ba970654e9343fca78735
               </BoxBProfilchangeButton>
             </BoXBProfilchangeBox>
           </BoxBMain>
@@ -81,31 +95,28 @@ function Mypage() {
               <BoxCMainText>내 QR 코드</BoxCMainText>
             </BoxCMainTextBox>
             <Line />
-          <BoxCMainQRBox>
-            <BoxCMainQrBoxTag>
-              <BoxCMainQr src={QRImage} alt="QR Code" />
-            </BoxCMainQrBoxTag>
-          </BoxCMainQRBox>
+            <BoxCMainQRBox>
+              <BoxCMainQrBoxTag>
+                <BoxCMainQr src={QRImage} alt="QR Code" />
+              </BoxCMainQrBoxTag>
+            </BoxCMainQRBox>
           </BoxCMain>
-        </BoxC> 
-         <BoxD>
-            <BoxDMain>
-              <BoxDMainA>
-                <BoxDmainAtext>푸쉬 알람설정</BoxDmainAtext>
-              </BoxDMainA>
-              <Line />
-              <BoxDMainB>
-                <BoxDmainBtext>앱 설정</BoxDmainBtext>
-              </BoxDMainB>
-              <Line />
-              <BoxDMainC>
-
-              </BoxDMainC>
-            </BoxDMain>
-        </BoxD>   
+        </BoxC>
+        <BoxD>
+          <BoxDMain>
+            <BoxDMainA>
+              <BoxDmainAtext>푸쉬 알람설정</BoxDmainAtext>
+            </BoxDMainA>
+            <Line />
+            <BoxDMainB>
+              <BoxDmainBtext>앱 설정</BoxDmainBtext>
+            </BoxDMainB>
+            <Line />
+            <BoxDMainC></BoxDMainC>
+          </BoxDMain>
+        </BoxD>
       </BigBox>
       <Nav />
-     
     </div>
   );
 }
@@ -119,7 +130,7 @@ const BigBox = styled.div`
   width: 100vw;
   min-width: 200px;
   max-width: 580px;
-  
+
   padding: 0px 20px 73px 20px;
 `;
 
@@ -180,8 +191,8 @@ const BoxBMaininformation = styled.div`
   width: 250px;
   height: 125px;
   margin-left: 10px;
-  margin-right: 10px;;
-  `;
+  margin-right: 10px;
+`;
 
 const BoxBMaininformation1 = styled.div`
   display: flex;
@@ -258,7 +269,7 @@ const BoxC = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px; 
+  padding: 5px;
 `;
 
 const BoxCMain = styled.div`
@@ -266,7 +277,7 @@ const BoxCMain = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  aspect-ratio: 1 / 1; 
+  aspect-ratio: 1 / 1;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
@@ -282,7 +293,7 @@ const BoxCMainTextBox = styled.div`
 `;
 
 const BoxCMainText = styled.h1`
-  margin-left: 20px;;
+  margin-left: 20px;
   font-size: 12px;
   font-weight: bold;
   color: black;
@@ -291,7 +302,7 @@ const BoxCMainText = styled.h1`
 const Line = styled.div`
   width: 95%;
   height: 2px; //선 두께
-  background-color: #E3E3E3;
+  background-color: #e3e3e3;
 `;
 
 const BoxCMainQRBox = styled.div`
@@ -301,7 +312,7 @@ const BoxCMainQRBox = styled.div`
   width: 100%;
   height: 85%;
   border-radius: 20px;
-`; 
+`;
 
 const BoxCMainQrBoxTag = styled.div`
   display: flex;
@@ -311,7 +322,7 @@ const BoxCMainQrBoxTag = styled.div`
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-`
+`;
 const BoxCMainQr = styled.img`
   width: 100%;
   height: 100%;
@@ -337,7 +348,7 @@ const BoxDMain = styled.div`
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
-  
+
 const BoxDMainA = styled.div`
   display: flex;
   width: 100%;
@@ -375,4 +386,4 @@ const BoxDMainC = styled.div`
   height: 30px;
   margin-bottom: 5px;
   border-radius: 20px;
-`
+`;

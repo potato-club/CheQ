@@ -1,11 +1,53 @@
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 
+interface AttendanceData {
+  week: number;
+  date: string;
+  status: "출석" | "지각" | "조퇴" | "결석" | "미출결";
+}
+
 const AttendancePage = () => {
-  const attendance: number = 4;
-  const lateAndEarlyLeave: number = 1;
-  const absence: number = 1;
+  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
+  const [attendanceCount, setAttendanceCount] = useState(0);
+  const [lateAndEarlyLeaveCount, setLateAndEarlyLeaveCount] = useState(0);
+  const [absenceCount, setAbsenceCount] = useState(0);
+
+  useEffect(() => {
+    //테스트 코드
+    const testData: AttendanceData[] = [
+      { week: 1, date: "03월 05일", status: "결석" },
+      { week: 2, date: "03월 12일", status: "출석" },
+      { week: 3, date: "03월 19일", status: "지각" },
+      { week: 4, date: "03월 26일", status: "출석" },
+      { week: 5, date: "04월 02일", status: "지각" },
+      { week: 6, date: "04월 09일", status: "결석" },
+      { week: 7, date: "04월 16일", status: "결석" },
+      { week: 8, date: "04월 23일", status: "결석" },
+      { week: 9, date: "04월 30일", status: "결석" },
+      { week: 10, date: "05월 07일", status: "미출결" },
+      { week: 11, date: "05월 14일", status: "미출결" },
+      { week: 12, date: "05월 21일", status: "미출결" },
+      { week: 13, date: "05월 28일", status: "미출결" },
+      { week: 14, date: "06월 04일", status: "미출결" },
+      { week: 15, date: "06월 11일", status: "미출결" },
+      { week: 16, date: "06월 18일", status: "미출결" },
+    ];
+
+    setAttendanceData(testData);
+
+    // 출석, 지각/조퇴, 결석 횟수 계산
+    const attendance = testData.filter((item) => item.status === "출석").length;
+    const lateAndEarlyLeave = testData.filter(
+      (item) => item.status === "지각" || item.status === "조퇴"
+    ).length;
+    const absence = testData.filter((item) => item.status === "결석").length;
+
+    setAttendanceCount(attendance);
+    setLateAndEarlyLeaveCount(lateAndEarlyLeave);
+    setAbsenceCount(absence);
+  }, []);
 
   return (
     <div>
@@ -34,171 +76,23 @@ const AttendancePage = () => {
         </AttendanceIcon>
         <AttendanceCurrent>
           <CurrentBox>
-            출석: {attendance} | 지각,조퇴: {lateAndEarlyLeave} | 결석:{" "}
-            {absence}
+            출석: {attendanceCount} | 지각,조퇴: {lateAndEarlyLeaveCount} |
+            결석: {absenceCount}
           </CurrentBox>
         </AttendanceCurrent>
         <AttendanceInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorR />
-              <HowWeek>1주차</HowWeek>
-              <CurrentDate>( 03월 05일 )</CurrentDate>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfo>결석</CurrentInfo>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorG />
-              <HowWeek>2주차</HowWeek>
-              <CurrentDate>( 03월 12일 )</CurrentDate>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfo>출석</CurrentInfo>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorO />
-              <HowWeek>3주차</HowWeek>
-              <CurrentDate>( 03월 19일 )</CurrentDate>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfo>지각</CurrentInfo>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorG />
-              <HowWeek>4주차</HowWeek>
-              <CurrentDate>( 03월 26일 )</CurrentDate>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfo>출석</CurrentInfo>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>5주차</HowWeekGray>
-              <CurrentDateGray>( 04월 02일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>6주차</HowWeekGray>
-              <CurrentDateGray>( 04월 09일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>7주차</HowWeekGray>
-              <CurrentDateGray>( 04월 16일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>8주차</HowWeekGray>
-              <CurrentDateGray>( 04월 23일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>9주차</HowWeekGray>
-              <CurrentDateGray>( 04월 30일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>10주차</HowWeekGray>
-              <CurrentDateGray>( 05월 07일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>11주차</HowWeekGray>
-              <CurrentDateGray>( 05월 14일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>12주차</HowWeekGray>
-              <CurrentDateGray>( 05월 21일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>13주차</HowWeekGray>
-              <CurrentDateGray>( 05월 28일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>14주차</HowWeekGray>
-              <CurrentDateGray>( 06월 04일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>15주차</HowWeekGray>
-              <CurrentDateGray>( 06월 11일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
-          <WeekInfo>
-            <InfoBox>
-              <IconColorGray />
-              <HowWeekGray>16주차</HowWeekGray>
-              <CurrentDateGray>( 06월 18일 )</CurrentDateGray>
-            </InfoBox>
-            <InfoBox>
-              <CurrentInfoGray>미출결</CurrentInfoGray>
-            </InfoBox>
-          </WeekInfo>
+          {attendanceData.map((data) => (
+            <WeekInfo key={data.week}>
+              <InfoBox>
+                <IconColor status={data.status} />
+                <HowWeek status={data.status}>{data.week}주차</HowWeek>
+                <CurrentDate status={data.status}>({data.date})</CurrentDate>
+              </InfoBox>
+              <InfoBox>
+                <CurrentInfo status={data.status}>{data.status}</CurrentInfo>
+              </InfoBox>
+            </WeekInfo>
+          ))}
         </AttendanceInfo>
       </StyleAttendancePage>
       <NavBar />
@@ -207,11 +101,21 @@ const AttendancePage = () => {
 };
 
 export default AttendancePage;
-// const Wrapper = styled.div`
-//   margin: auto;
-//   min-width: 200px;
-//   max-width: 600px;
-// `;
+
+const IconColor = styled.div<{ status: string }>`
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  margin-left: 5px;
+  background-color: ${({ status }) =>
+    status === "출석"
+      ? "#22d013"
+      : status === "지각" || status === "조퇴"
+      ? "#ffb800"
+      : status === "결석"
+      ? "#ff0000"
+      : "#bdbdbd"};
+`;
 
 const StyleAttendancePage = styled.div`
   display: flex;
@@ -221,7 +125,7 @@ const StyleAttendancePage = styled.div`
   min-width: 200px;
   max-width: 580px;
   /* width: 580px; */
-  padding: 0px 20px 73px 20px;
+  padding: 0px 20px 65px 20px;
 `;
 
 const AttendanceTitle = styled.div`
@@ -295,7 +199,6 @@ const AttendanceInfo = styled.div`
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
   padding: 0px 34px 0px 34px;
   border-radius: 30px;
-
   // 수정
   /* max-width: 546px;
   max-height: 600px;
@@ -306,7 +209,7 @@ const WeekInfo = styled.div`
   display: flex;
   justify-content: space-between;
   height: 30px;
-  padding: 30px 0px 30px 0px;
+  padding: 24px 0px; // 주차 칸 너비
   border-bottom: 1px solid #e3e3e3;
   /* width: 512px; */
 `;
@@ -315,66 +218,21 @@ const InfoBox = styled.div`
   align-items: center;
 `;
 
-const IconColorR = styled.div`
-  width: 13px;
-  height: 13px;
-  background-color: #ff0000;
-  border-radius: 50%;
-  margin-left: 5px;
-`;
-const IconColorG = styled.div`
-  width: 13px;
-  height: 13px;
-  background-color: #22d013;
-  border-radius: 50%;
-  margin-left: 5px;
-`;
-const IconColorO = styled.div`
-  width: 13px;
-  height: 13px;
-  background-color: #ffb800;
-  border-radius: 50%;
-  margin-left: 5px;
-`;
-const IconColorGray = styled.div`
-  width: 13px;
-  height: 13px;
-  background-color: #bdbdbd;
-  border-radius: 50%;
-  margin-left: 5px;
-`;
-
-const HowWeek = styled.div`
+const HowWeek = styled.div<{ status: string }>`
   margin-left: 15px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
+  color: ${({ status }) => (status === "미출결" ? "#c9c9c9" : "black")};
 `;
-const CurrentDate = styled.div`
+const CurrentDate = styled.div<{ status: string }>`
   margin-left: 5px;
   font-size: 14px;
   font-weight: bold;
+  color: ${({ status }) => (status === "미출결" ? "#c9c9c9" : "black")};
 `;
-const CurrentInfo = styled.div`
+const CurrentInfo = styled.div<{ status: string }>`
   padding: 30px;
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const HowWeekGray = styled.div`
-  margin-left: 15px;
-  color: #c9c9c9;
-  font-size: 16px;
-  font-weight: bold;
-`;
-const CurrentDateGray = styled.div`
-  margin-left: 5px;
-  color: #c9c9c9;
   font-size: 14px;
   font-weight: bold;
-`;
-const CurrentInfoGray = styled.div`
-  color: #c9c9c9;
-  padding: 30px;
-  font-size: 16px;
-  font-weight: bold;
+  color: ${({ status }) => (status === "미출결" ? "#c9c9c9" : "black")};
 `;

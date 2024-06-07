@@ -1,48 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Nav from '../../components/NavBar';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import Nav from "../../components/NavBar";
+import axios from "axios";
 
 const images = [
-  'https://pimg.hackers.com/land/main/land_default.jpg',
-  'https://i.ytimg.com/vi/zvTgwgams-Q/maxresdefault.jpg',
-  'https://cdn.autotribune.co.kr/news/photo/202312/11209_56884_5312.png',
-  'https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png'
+  "https://pimg.hackers.com/land/main/land_default.jpg",
+  "https://i.ytimg.com/vi/zvTgwgams-Q/maxresdefault.jpg",
+  "https://cdn.autotribune.co.kr/news/photo/202312/11209_56884_5312.png",
+  "https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png",
 ];
 
-function Mainpage() {
+const Mainpage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [NFC, setNFC] = useState(false); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
     }, 5000);
 
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
-  const attendanceStatuses = ['present', 'absent', 'late', 'present', 'present'];
+  const onSubmit = async (data: any) => {
+    if (NFC) {
+      return;
+    }
+
+    try {
+      const nfc = await axios.post(
+        "http://isaacnas.duckdns.org:8083/attendance/nfc",
+        {
+          mac_address: data.address,
+          nfc_position: data.position,
+          attendanceTime: new Date().toISOString(), // or any appropriate time format
+        },
+        {
+          headers: {
+            Authorization: "Bearer your-auth-token", // Include your token here
+          },
+        }
+      );
+    } catch (error) {
+      alert("오류가 발생했습니다");
+    }
+  };
+
+  const attendanceStatuses = [
+    "present",
+    "absent",
+    "late",
+    "present",
+    "present",
+  ];
 
   const getColor = (status: string): string => {
     switch (status) {
-      case 'present':
-        return 'green';
-      case 'absent':
-        return 'red';
-      case 'late':
-        return 'orange';
+      case "present":
+        return "green";
+      case "absent":
+        return "red";
+      case "late":
+        return "orange";
       default:
-        return 'gray';
+        return "gray";
     }
   };
 
   // Example data for buttons from the backend
   const buttonsData = [
-    { label: 'Menu 1' },
-    { label: 'Menu 2' },
-    { label: 'Menu 3' },
-    { label: 'Menu 4' },
-
-
+    { label: "Menu 1" },
+    { label: "Menu 2" },
+    { label: "Menu 3" },
+    { label: "Menu 4" },
   ];
 
   return (
@@ -55,7 +87,10 @@ function Mainpage() {
         </Box1>
         <Box2>
           <Box2Advertisement>
-            <AdvertisementImage src={images[currentImageIndex]} alt="Advertisement" />
+            <AdvertisementImage
+              src={images[currentImageIndex]}
+              alt="Advertisement"
+            />
           </Box2Advertisement>
         </Box2>
         <Box3A>
@@ -73,7 +108,18 @@ function Mainpage() {
         <Box4>
           <Box4MainA>
             {buttonsData.map((button, index) => (
-              <Box4MainAButton key={index}>
+              <Box4MainAButton
+                key={index}
+                onClick={
+                  index === 0
+                    ? () =>
+                        onSubmit({
+                          address: "exampleAddress",
+                          position: "examplePosition",
+                        })
+                    : undefined
+                }
+              >
                 {button.label}
               </Box4MainAButton>
             ))}
@@ -83,7 +129,7 @@ function Mainpage() {
       <Nav />
     </div>
   );
-}
+};
 
 export default Mainpage;
 
@@ -214,19 +260,8 @@ const Box4MainAButton = styled.div`
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-  //background-color: #f0f0f0; 
+  //background-color: #f0f0f0;
   cursor: pointer;
   box-sizing: border-box;
   //margin: auto;
 `;
-
-// const Line = styled.div`
-//   width: 100%;
-//   height: 2px;
-//   background-color: #E3E3E3;
-// `;
-
-
-
-
-
