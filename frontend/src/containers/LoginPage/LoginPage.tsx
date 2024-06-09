@@ -2,22 +2,40 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Hansei from "../../image/hansei.png";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
+import { useState } from "react";
+import axios from "axios";
 
 const LoginPage = () => {
+  const [error, setError] = useState("");
   const signup = useNavigate(); // useNavigate 훅 사용
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
 
   // 정보를 출력하는 코드
-  const onSubmit = (data: any) => {
-    console.log(data);
-    if (data.studentid === "admin" && data.password === "admin") {
+  const onSubmit = async (data: any) => {
+    const loginData = {
+      studentId: data.studentId,
+      password: data.password,
+    };
+
+    if (data.studentId === "admin" && data.password === "admin") {
       signup("/admin");
     } else {
-      signup("/main");
+      try {
+        const response = await axios.post(
+          "http://isaacnas.duckdns.org:8083/user/login",
+          loginData
+        );
+        if (response.status === 200) {
+          signup("/main");
+        }
+      } catch (error) {
+        setError("로그인에 실패했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
@@ -30,12 +48,12 @@ const LoginPage = () => {
         <HanseiIcon />
         <LoginForm onSubmit={handleSubmit(onSubmit)}>
           <FormRow>
-            <label htmlFor="studentid">아이디</label>
+            <label htmlFor="studentId">아이디</label>
             <input
-              id="studentid" // studentid로 변경
+              id="studentId" // studentid로 변경
               type="text"
               placeholder="학번을 입력해주세요."
-              {...register("studentid", {
+              {...register("studentId", {
                 required: "학번은 필수 입력입니다.",
                 validate: (value) =>
                   value === "admin" ||
@@ -43,8 +61,8 @@ const LoginPage = () => {
                   "자신의 학번을 입력해주세요.",
               })}
             />
-            {errors.studentid && (
-              <ErrorMessage>{errors.studentid.message as string}</ErrorMessage>
+            {errors.studentId && (
+              <ErrorMessage>{errors.studentId.message as string}</ErrorMessage>
             )}
           </FormRow>
 
@@ -58,6 +76,7 @@ const LoginPage = () => {
                 required: "비밀번호는 필수 입력입니다.",
                 validate: (value) =>
                   value === "admin" ||
+                  value === watch("studentId") ||
                   /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(value) ||
                   "영문+숫자 조합 8자 이상 입력해주세요.",
               })}
@@ -156,14 +175,6 @@ const ErrorMessage = styled.small`
   margin-left: 16px;
 `;
 
-// const HanseiIcon = styled.img`
-//   margin: auto;
-//   padding: 70px 0px 70px 0px;
-//   width: 400px;
-//   height: 400px;
-//   content: url(${Hansei});
-// `;
-
 const HanseiIcon = styled.img`
   display: flex;
   margin: auto;
@@ -174,16 +185,3 @@ const HanseiIcon = styled.img`
   object-fit: contain;
   content: url(${Hansei});
 `;
-
-// const SignUpButton = styled.button`
-//   width: 100%;
-//   padding: 12px;
-//   background-color: white;
-//   color: #375cde;
-//   font-weight: bold;
-//   border: 1px solid #375cde;
-//   border-radius: 10px;
-//   /* width: 580px; */
-//   cursor: default; /* 클릭 비활성화 */
-//   pointer-events: none; /* 클릭 이벤트 비활성화 */
-// `;
