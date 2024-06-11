@@ -1,7 +1,8 @@
-import React from 'react';
-import Mainpage from './page/Mainpage';
-import Mypage from './page/Mypage';
+import React from "react";
+import Mainpage from "./page/Mainpage";
+import Mypage from "./page/Mypage";
 import Attendance from "./page/Attendance";
+import Admin from "./page/Admin";
 import Login from "./page/Login";
 import Change from "./page/ChangeInformation";
 import ReactDOM from "react-dom";
@@ -11,16 +12,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Mainpage />} />
-        <Route path="/Mypage" element={<Mypage />}/>
-        <Route path="/login" element={<Login />} />
+        <Route path="/main" element={<Mainpage />} />
+        <Route path="/Mypage" element={<Mypage />} />
+        <Route path="/" element={<Login />} />
         <Route path="/attendance" element={<Attendance />} />
-        <Route path="/change" element={<Change/>} />
+        <Route path="/change" element={<Change />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
-
-

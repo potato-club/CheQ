@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import RegisterBar from '../../components/Register';
+import React, { useState } from "react";
+import styled from "styled-components";
+import RegisterBar from "../../components/Register";
 
-function ChangeInformationPage () {
+function ChangeInformationPage() {
   const [thirdChecked, setThirdChecked] = useState(false);
   const [seventhChecked, setSeventhChecked] = useState(false);
 
@@ -19,93 +19,108 @@ function ChangeInformationPage () {
       setThirdChecked(false);
     }
   };
-    
-    return(
+
+  return (
     <div>
-        <BigBox>
-            <AttendanceTitle>
-                <MainTitle>CheQ</MainTitle>
-                <SubTitle>정보 수정</SubTitle>
-            </AttendanceTitle>    
-            <Box1>
-                <Box1IdBox>
-                    <Box1IdBoxText>
-                        <Box1IdBoxTextTag>아이디</Box1IdBoxTextTag>
-                    </Box1IdBoxText>
-                    <Box1IdLineText>
-                        <Box1IdLineTag> 
-                            <input type="text" placeholder="학교의 학번을 입력하세요"  maxLength={25} />
-                        </Box1IdLineTag>
-                    </Box1IdLineText>
-                </Box1IdBox>
-            </Box1>
-            <Box2>
-                <Box2PasswordBox>
-                    <Box2PasswordText>
-                        <Box2PasswordTextTag>비밀번호</Box2PasswordTextTag>
-                    </Box2PasswordText>
-                    <Box2PasswordLineText>
-                        <Box2PasswordLineTag>
-                            <input type="text" placeholder="영문+숫자 조합 8자 이상 입력해주세요"  maxLength={25} />
-                        </Box2PasswordLineTag>
-                    </Box2PasswordLineText>
-                </Box2PasswordBox>
-            </Box2>
-            <Box3>
-                <Box3ChapelChairBox>
-                    <Box3ChapelChairBoxText>
-                        <Box3ChapelChairBoxTextTag>채플좌석</Box3ChapelChairBoxTextTag>
-                    </Box3ChapelChairBoxText>
-                    <Box3LineText>
-                     <Box3LineTextSelectA>
-                        {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map((letter) => (
-                          <Box3LineTextOption key={letter} value={letter}>
-                            {letter}
-                          </Box3LineTextOption>
-                        ))}
-                      </Box3LineTextSelectA>
-                      <Box3LineTextSelectB>
-                        {Array.from({ length:100 }, (_, index) => index + 1).map((number) => (
-                          <Box3LineTextOption key={number} value={number}>
-                            {number}
-                          </Box3LineTextOption>
-                        ))}
-                      </Box3LineTextSelectB>
-                    </Box3LineText>
-                </Box3ChapelChairBox>
-            </Box3>
-            <Box4>
-                <Box4ChapelNumberBox>
-                  <Box4ChapelNumberBoxText>
-                    <Box4ChapelNumberBoxTextTag>채플종류</Box4ChapelNumberBoxTextTag>
-                  </Box4ChapelNumberBoxText>
-                  <Box4LineText>
-                    <Box4LineTextSelectA>
-                      <CheckboxLabel>
-                        <CustomCheckbox checked={thirdChecked} onChange={handleThirdCheckboxChange} />
-                          3교시
-                      </CheckboxLabel>
-                    </Box4LineTextSelectA>
-                    <Box4LineTextSelectB>
-                      <CheckboxLabel>
-                        <CustomCheckbox checked={seventhChecked} onChange={handleSeventhCheckboxChange} />
-                          7교시
-                      </CheckboxLabel>
-                    </Box4LineTextSelectB>
-                  </Box4LineText>
-                </Box4ChapelNumberBox>
-            </Box4>
-            {/* <Box5>
+      <BigBox>
+        <AttendanceTitle>
+          <MainTitle>CheQ</MainTitle>
+          <SubTitle>정보 수정</SubTitle>
+        </AttendanceTitle>
+        <Box1>
+          <Box1IdBox>
+            <Box1IdBoxText>
+              <Box1IdBoxTextTag>아이디</Box1IdBoxTextTag>
+            </Box1IdBoxText>
+            <Box1IdLineText>
+              <Box1IdLineTag>
+                <input
+                  type="text"
+                  placeholder="학교의 학번을 입력하세요"
+                  maxLength={25}
+                />
+              </Box1IdLineTag>
+            </Box1IdLineText>
+          </Box1IdBox>
+        </Box1>
+        <Box2>
+          <Box2PasswordBox>
+            <Box2PasswordText>
+              <Box2PasswordTextTag>비밀번호</Box2PasswordTextTag>
+            </Box2PasswordText>
+            <Box2PasswordLineText>
+              <Box2PasswordLineTag>
+                <input
+                  type="text"
+                  placeholder="영문+숫자 조합 8자 이상 입력해주세요"
+                  maxLength={25}
+                />
+              </Box2PasswordLineTag>
+            </Box2PasswordLineText>
+          </Box2PasswordBox>
+        </Box2>
+        <Box3>
+          <Box3ChapelChairBox>
+            <Box3ChapelChairBoxText>
+              <Box3ChapelChairBoxTextTag>채플좌석</Box3ChapelChairBoxTextTag>
+            </Box3ChapelChairBoxText>
+            <Box3LineText>
+              <Box3LineTextSelectA>
+                {["A", "B", "C", "D", "E", "F", "G", "H"].map((letter) => (
+                  <Box3LineTextOption key={letter} value={letter}>
+                    {letter}
+                  </Box3LineTextOption>
+                ))}
+              </Box3LineTextSelectA>
+              <Box3LineTextSelectB>
+                {Array.from({ length: 100 }, (_, index) => index + 1).map(
+                  (number) => (
+                    <Box3LineTextOption key={number} value={number}>
+                      {number}
+                    </Box3LineTextOption>
+                  )
+                )}
+              </Box3LineTextSelectB>
+            </Box3LineText>
+          </Box3ChapelChairBox>
+        </Box3>
+        <Box4>
+          <Box4ChapelNumberBox>
+            <Box4ChapelNumberBoxText>
+              <Box4ChapelNumberBoxTextTag>채플종류</Box4ChapelNumberBoxTextTag>
+            </Box4ChapelNumberBoxText>
+            <Box4LineText>
+              <Box4LineTextSelectA>
+                <CheckboxLabel>
+                  <CustomCheckbox
+                    checked={thirdChecked}
+                    onChange={handleThirdCheckboxChange}
+                  />
+                  3교시
+                </CheckboxLabel>
+              </Box4LineTextSelectA>
+              <Box4LineTextSelectB>
+                <CheckboxLabel>
+                  <CustomCheckbox
+                    checked={seventhChecked}
+                    onChange={handleSeventhCheckboxChange}
+                  />
+                  7교시
+                </CheckboxLabel>
+              </Box4LineTextSelectB>
+            </Box4LineText>
+          </Box4ChapelNumberBox>
+        </Box4>
+        {/* <Box5>
 
             </Box5> */}
-        </BigBox>
-        <RegisterBar/>
-    </div>    
-    )
+      </BigBox>
+      <RegisterBar />
+    </div>
+  );
 }
 
 export default ChangeInformationPage;
-
 
 const BigBox = styled.div`
   display: flex;
@@ -114,7 +129,7 @@ const BigBox = styled.div`
   width: 100vw;
   min-width: 200px;
   max-width: 580px;
-  padding: 0px 20px 73px 20px;  
+  padding: 0px 20px 73px 20px;
 `;
 
 const AttendanceTitle = styled.div`
@@ -130,10 +145,10 @@ const SubTitle = styled.h2`
 `;
 
 const Box1 = styled.div`
- display: flex;
- padding: 5px;
- align-items: center;
- justify-content: center;
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Box1IdBox = styled.div`
@@ -173,13 +188,13 @@ const Box1IdLineTag = styled.div`
   width: 100%;
   margin-left: 20px;
   margin-bottom: 25px;
-  
+
   &::after {
-    content: '';
+    content: "";
     display: block;
     width: 85%;
     height: 2px;
-    background-color:#375cde;
+    background-color: #375cde;
     bottom: 0;
     left: 0;
   }
@@ -203,10 +218,10 @@ const Box1IdLineTag = styled.div`
 `;
 
 const Box2 = styled.div`
- display: flex;
- padding: 5px;
- align-items: center;
- justify-content: center;
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Box2PasswordBox = styled.div`
@@ -221,7 +236,7 @@ const Box2PasswordText = styled.div`
   display: flex;
   height: 75px;
   justify-content: flex-start;
-  align-items: center;  
+  align-items: center;
 `;
 
 const Box2PasswordTextTag = styled.h1`
@@ -246,13 +261,13 @@ const Box2PasswordLineTag = styled.div`
   width: 100%;
   margin-left: 20px;
   margin-bottom: 25px;
-  
+
   &::after {
-    content: '';
+    content: "";
     display: block;
     width: 85%;
     height: 2px;
-    background-color:#375cde;
+    background-color: #375cde;
     bottom: 0;
     left: 0;
   }
@@ -276,10 +291,10 @@ const Box2PasswordLineTag = styled.div`
 `;
 
 const Box3 = styled.div`
- display: flex;
- padding: 5px;
- align-items: center;
- justify-content: center;
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Box3ChapelChairBox = styled.div`
@@ -346,21 +361,21 @@ const Box3LineTextSelectB = styled.select`
   padding: 0 10px;
   font-size: 16px;
   overflow: hidden; //스크롤 가리기
-  &::-webkit-scrollbar { //Chrome에서 필수
+  &::-webkit-scrollbar {
+    //Chrome에서 필수
     display: none;
   }
-`
+`;
 const Box3LineTextOption = styled.option`
   background-color: #375cde;
   color: white;
 `;
 
-
 const Box4 = styled.div`
- display: flex;
- padding: 5px;
- align-items: center;
- justify-content: center; 
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Box4ChapelNumberBox = styled.div`
@@ -425,10 +440,8 @@ const CheckboxLabel = styled.label`
   font-size: 20px;
 `;
 
-const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
+const CustomCheckbox = styled.input.attrs({ type: "checkbox" })`
   margin-right: 20px;
-  width:20px;
-  height:20px;
+  width: 20px;
+  height: 20px;
 `;
-
-

@@ -1,47 +1,68 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import Hansei from '../../Image/hansei.png';
+import Hansei from "../../image/hansei.png";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
+import { useState } from "react";
+import axios from "axios";
 
 const LoginPage = () => {
+  const [error, setError] = useState("");
   const signup = useNavigate(); // useNavigate 훅 사용
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
 
   // 정보를 출력하는 코드
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
+    const loginData = {
+      studentId: data.studentId,
+      password: data.password,
+    };
 
-    signup("/attendance");
+    if (data.studentId === "admin" && data.password === "admin") {
+      signup("/admin");
+    } else {
+      try {
+        const response = await axios.post(
+          "http://isaacnas.duckdns.org:8083/user/login",
+          loginData
+        );
+        if (response.status === 200) {
+          signup("/main");
+        }
+      } catch (error) {
+        setError("로그인에 실패했습니다. 다시 시도해주세요.");
+      }
+    }
   };
 
   return (
     <div>
       <StyleLoginPage>
-        <AttendanceTitle>
+        <LoginTitle>
           <MainTitle>CheQ</MainTitle>
-        </AttendanceTitle>
+        </LoginTitle>
         <HanseiIcon />
         <LoginForm onSubmit={handleSubmit(onSubmit)}>
           <FormRow>
-            <label htmlFor="studentid">아이디</label>
+            <label htmlFor="studentId">아이디</label>
             <input
-              id="studentid" // studentid로 변경
+              id="studentId" // studentid로 변경
               type="text"
               placeholder="학번을 입력해주세요."
-              {...register("studentid", {
+              {...register("studentId", {
                 required: "학번은 필수 입력입니다.",
-                pattern: {
-                  value: /^\d{9}$/,
-                  message: "자신의 학번을 입력해주세요.",
-                },
+                validate: (value) =>
+                  value === "admin" ||
+                  /^\d{9}$/.test(value) ||
+                  "자신의 학번을 입력해주세요.",
               })}
             />
-            {errors.studentid && (
-              <ErrorMessage>{errors.studentid.message as string}</ErrorMessage>
+            {errors.studentId && (
+              <ErrorMessage>{errors.studentId.message as string}</ErrorMessage>
             )}
           </FormRow>
 
@@ -53,10 +74,11 @@ const LoginPage = () => {
               placeholder="비밀번호를 입력하세요."
               {...register("password", {
                 required: "비밀번호는 필수 입력입니다.",
-                pattern: {
-                  value: /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/,
-                  message: "영문+숫자 조합 8자 이상 입력해주세요.",
-                },
+                validate: (value) =>
+                  value === "admin" ||
+                  value === watch("studentId") ||
+                  /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(value) ||
+                  "영문+숫자 조합 8자 이상 입력해주세요.",
               })}
             />
             {errors.password && (
@@ -65,7 +87,7 @@ const LoginPage = () => {
           </FormRow>
           <LoginBtn>
             <SubmitButton type="submit">로그인</SubmitButton>
-            <SignUpButton>회원가입</SignUpButton>
+            {/* <SignUpButton>회원가입</SignUpButton> */}
           </LoginBtn>
         </LoginForm>
       </StyleLoginPage>
@@ -114,7 +136,7 @@ const StyleLoginPage = styled.div`
   padding: 0px 20px 40px 20px;
 `;
 
-const AttendanceTitle = styled.div`
+const LoginTitle = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -144,20 +166,7 @@ const SubmitButton = styled.button`
   /* width: 580px; */
   cursor: pointer;
   margin-bottom: 15px;
-  margin-top: 40px;
-`;
-
-const SignUpButton = styled.button`
-  width: 100%;
-  padding: 12px;
-  background-color: white;
-  color: #375cde;
-  font-weight: bold;
-  border: 1px solid #375cde;
-  border-radius: 10px;
-  /* width: 580px; */
-  cursor: default; /* 클릭 비활성화 */
-  pointer-events: none; /* 클릭 이벤트 비활성화 */
+  margin-top: 20px;
 `;
 
 const ErrorMessage = styled.small`
@@ -166,18 +175,10 @@ const ErrorMessage = styled.small`
   margin-left: 16px;
 `;
 
-// const HanseiIcon = styled.img`
-//   margin: auto;
-//   padding: 70px 0px 70px 0px;
-//   width: 400px;
-//   height: 400px;
-//   content: url(${Hansei});
-// `;
-
 const HanseiIcon = styled.img`
   display: flex;
   margin: auto;
-  padding: 40px 0px;
+  padding: 20px 0px 40px;
   width: 100vw;
   max-width: 300px;
   height: auto;
