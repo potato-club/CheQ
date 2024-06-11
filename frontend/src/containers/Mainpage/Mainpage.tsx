@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../../components/NavBar';
-
+import axios from 'axios';
 
 const images = [
   'https://pimg.hackers.com/land/main/land_default.jpg',
@@ -10,8 +10,9 @@ const images = [
   'https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png'
 ];
 
-function Mainpage() {
+const Mainpage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [NFC, setNFC] = useState(false); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -21,7 +22,31 @@ function Mainpage() {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
-  const attendanceStatuses = ['present', 'absent', 'late', 'present', 'present'];
+  const onSubmit = async (data: any) => {
+    if (NFC) {
+      return;
+ 
+    }
+  
+    try {
+      const response = await axios.post("http://isaacnas.duckdns.org:8083/attendance/nfc", {
+        mac_address: data.address,
+        nfc_position: data.position,
+        attendanceTime: new Date().toISOString() // or any appropriate time format
+      }, {
+        headers: {
+          'Authorization': 'Bearer your-auth-token' // Include your token here
+        }
+      });
+      console.log('Response:', response.data);//응답처리
+      //응답 실패
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  const attendanceStatuses = ['present', 'absent', 'late']; // Updated to 3 statuses
 
   const getColor = (status: string): string => {
     switch (status) {
@@ -42,8 +67,6 @@ function Mainpage() {
     { label: 'Menu 2' },
     { label: 'Menu 3' },
     { label: 'Menu 4' },
-
-
   ];
 
   return (
@@ -60,9 +83,9 @@ function Mainpage() {
           </Box2Advertisement>
         </Box2>
         <Box3A>
-          <Box3Atext>
-            <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
-          </Box3Atext>
+        <Box3Atext>
+          <Box3AtextTitle>채플현황</Box3AtextTitle>
+        </Box3Atext>
         </Box3A>
         <Box3B>
           <Box3BCircle>
@@ -74,7 +97,9 @@ function Mainpage() {
         <Box4>
           <Box4MainA>
             {buttonsData.map((button, index) => (
-              <Box4MainAButton key={index}>
+              <Box4MainAButton 
+                key={index} 
+                onClick={index === 0 ? () => onSubmit({ address: 'exampleAddress', position: 'examplePosition' }) : undefined}>
                 {button.label}
               </Box4MainAButton>
             ))}
@@ -84,7 +109,7 @@ function Mainpage() {
       <Nav />
     </div>
   );
-}
+};
 
 export default Mainpage;
 
@@ -122,7 +147,6 @@ const Box2 = styled.div`
   justify-content: center;
   align-items: center;
   height: 250px;
-  //flex-direction: column;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
@@ -139,7 +163,6 @@ const Box2Advertisement = styled.div`
 const AdvertisementImage = styled.img`
   width: 100%;
   height: 100%;
-  //object-fit: cover;
 `;
 
 const Box3A = styled.div`
@@ -180,7 +203,7 @@ const Box3BCircle = styled.div`
   width: 70%;
 `;
 
-const Circle = styled.div`
+const Circle = styled.div<{ color: string }>`
   display: flex;
   background-color: ${(props) => props.color};
   width: 15px;
@@ -203,7 +226,6 @@ const Box4MainA = styled.div`
   gap: 20px;
   width: 100%;
   box-sizing: border-box;
-  //max-width: 100%; /* 이 속성은 필요한 경우에 추가합니다. */
 `;
 
 const Box4MainAButton = styled.div`
@@ -212,20 +234,18 @@ const Box4MainAButton = styled.div`
   justify-content: center;
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 20px;
+  background-color: white;
+  color: black;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-  //background-color: #f0f0f0; 
+  text-align: center;
   cursor: pointer;
-  box-sizing: border-box;
-  //margin: auto;
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;
 
-// const Line = styled.div`
-//   width: 100%;
-//   height: 2px;
-//   background-color: #E3E3E3;
-// `;
+
 
 
 
