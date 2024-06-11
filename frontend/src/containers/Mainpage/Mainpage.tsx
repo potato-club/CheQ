@@ -1,20 +1,13 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../../components/NavBar';
 import axios from 'axios';
-=======
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Nav from "../../components/NavBar";
-import axios from "axios";
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
 
 const images = [
-  "https://pimg.hackers.com/land/main/land_default.jpg",
-  "https://i.ytimg.com/vi/zvTgwgams-Q/maxresdefault.jpg",
-  "https://cdn.autotribune.co.kr/news/photo/202312/11209_56884_5312.png",
-  "https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png",
+  'https://pimg.hackers.com/land/main/land_default.jpg',
+  'https://i.ytimg.com/vi/zvTgwgams-Q/maxresdefault.jpg',
+  'https://cdn.autotribune.co.kr/news/photo/202312/11209_56884_5312.png',
+  'https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png'
 ];
 
 const Mainpage = () => {
@@ -23,9 +16,7 @@ const Mainpage = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === images.length - 1 ? 0 : prevIndex + 1
-      );
+      setCurrentImageIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
     }, 5000);
 
     return () => clearInterval(interval); // Cleanup function
@@ -34,7 +25,6 @@ const Mainpage = () => {
   const onSubmit = async (data: any) => {
     if (NFC) {
       return;
-<<<<<<< HEAD
  
     }
   
@@ -49,6 +39,7 @@ const Mainpage = () => {
         }
       });
       console.log('Response:', response.data);//응답처리
+      
       //응답 실패
     } catch (error) {
       console.error(error);
@@ -57,63 +48,26 @@ const Mainpage = () => {
 
 
   const attendanceStatuses = ['present', 'absent', 'late']; // Updated to 3 statuses
-=======
-    }
-
-    try {
-      const nfc = await axios.post(
-        "http://isaacnas.duckdns.org:8083/attendance/nfc",
-        {
-          mac_address: data.address,
-          nfc_position: data.position,
-          attendanceTime: new Date().toISOString(), // or any appropriate time format
-        },
-        {
-          headers: {
-            Authorization: "Bearer your-auth-token", // Include your token here
-          },
-        }
-      );
-    } catch (error) {
-      alert("오류가 발생했습니다");
-    }
-  };
-
-  const attendanceStatuses = [
-    "present",
-    "absent",
-    "late",
-    "present",
-    "present",
-  ];
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
 
   const getColor = (status: string): string => {
     switch (status) {
-      case "present":
-        return "green";
-      case "absent":
-        return "red";
-      case "late":
-        return "orange";
+      case 'present':
+        return 'green';
+      case 'absent':
+        return 'red';
+      case 'late':
+        return 'orange';
       default:
-        return "gray";
+        return 'gray';
     }
   };
 
   // Example data for buttons from the backend
   const buttonsData = [
-<<<<<<< HEAD
     { label: 'Menu 1' },
     { label: 'Menu 2' },
     { label: 'Menu 3' },
     { label: 'Menu 4' },
-=======
-    { label: "Menu 1" },
-    { label: "Menu 2" },
-    { label: "Menu 3" },
-    { label: "Menu 4" },
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
   ];
 
   return (
@@ -126,10 +80,7 @@ const Mainpage = () => {
         </Box1>
         <Box2>
           <Box2Advertisement>
-            <AdvertisementImage
-              src={images[currentImageIndex]}
-              alt="Advertisement"
-            />
+            <AdvertisementImage src={images[currentImageIndex]} alt="Advertisement" />
           </Box2Advertisement>
         </Box2>
         <Box3A>
@@ -147,24 +98,9 @@ const Mainpage = () => {
         <Box4>
           <Box4MainA>
             {buttonsData.map((button, index) => (
-<<<<<<< HEAD
               <Box4MainAButton 
                 key={index} 
                 onClick={index === 0 ? () => onSubmit({ address: 'exampleAddress', position: 'examplePosition' }) : undefined}>
-=======
-              <Box4MainAButton
-                key={index}
-                onClick={
-                  index === 0
-                    ? () =>
-                        onSubmit({
-                          address: "exampleAddress",
-                          position: "examplePosition",
-                        })
-                    : undefined
-                }
-              >
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
                 {button.label}
               </Box4MainAButton>
             ))}
@@ -303,17 +239,12 @@ const Box4MainAButton = styled.div`
   color: black;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-<<<<<<< HEAD
   text-align: center;
-=======
-  //background-color: #f0f0f0;
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
   }
 `;
-<<<<<<< HEAD
 
 
 
@@ -321,5 +252,3 @@ const Box4MainAButton = styled.div`
 
 
 
-=======
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
