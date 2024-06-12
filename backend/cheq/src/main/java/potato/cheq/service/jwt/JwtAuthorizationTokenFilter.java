@@ -54,6 +54,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             } else {
                 if (jwtTokenProvider.validateAccessToken(accessToken)) {
                     this.setAuthentication(accessToken);
+
                 }
             }
         } catch (MalformedJwtException e) {
@@ -88,6 +89,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
     private void setAuthentication(String token) throws Exception {
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

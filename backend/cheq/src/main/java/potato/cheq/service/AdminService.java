@@ -42,7 +42,7 @@ public class AdminService {
         return ResponseEntity.ok("Admin 로그인 성공");
     }
 
-    public ResponseEntity<String> updateStudent(HttpServletRequest request, Long userId, RequestUpdateStudentDto requestDto) throws Exception {
+    public void updateStudent(RequestUpdateStudentDto requestDto, HttpServletRequest request, Long userId) throws Exception {
         String token = jwtTokenProvider.resolveAccessToken(request);
         if (token == null || !jwtTokenProvider.validateAccessToken(token)) {
             throw new UnAuthorizedException("토큰 오류", ErrorCode.UNAUTHORIZED_EXCEPTION);
@@ -50,7 +50,7 @@ public class AdminService {
 
         String userRole = jwtTokenProvider.extractRole(token);
 
-        if (!userRole.equals("admin")) {
+        if (!userRole.equals("ADMIN")) {
             throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
         }
 
@@ -59,8 +59,6 @@ public class AdminService {
 
         user.Adminupdate(requestDto);
         userRepository.save(user);
-
-        return ResponseEntity.ok("Student 정보 수정 성공");
     }
 
 

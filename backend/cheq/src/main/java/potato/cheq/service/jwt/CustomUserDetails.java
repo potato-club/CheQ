@@ -2,50 +2,47 @@ package potato.cheq.service.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import potato.cheq.entity.AdminEntity;
 import potato.cheq.entity.UserEntity;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-
     private final UserEntity user;
-
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        List<String> userRole = new ArrayList<>();
-//        userRole.add(member.getUserRole().toString());
-//        String authority = userRole.get(0);
-//
-//        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
-//        Collection<GrantedAuthority> authorities = new ArrayList<>();
-//        authorities.add(simpleGrantedAuthority);
-//
-//        return authorities;
-//    }
-
-    public UserEntity getMember() {
-        return user;
-    }
-
-    public String getMemberId() {
-        return user.getStudentId();
-    }
+    private final AdminEntity admin;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if (user != null) {
+            return Collections.singletonList(new SimpleGrantedAuthority(user.getUserRole().name()));
+        } else if (admin != null) {
+            return Collections.singletonList(new SimpleGrantedAuthority(admin.getUserRole().name()));
+        }
+        return Collections.emptyList();
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        if (user != null) {
+            return user.getPassword();
+        } else if (admin != null) {
+            return admin.getPassword();
+        }
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        if (user != null) {
+            return user.getEmail();
+        } else if (admin != null) {
+            return admin.getEmail();
+        }
+        return null;
     }
 
     @Override
