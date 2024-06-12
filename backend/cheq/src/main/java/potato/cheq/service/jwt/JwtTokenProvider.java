@@ -16,11 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import potato.cheq.entity.AdminEntity;
 import potato.cheq.entity.UserEntity;
+import potato.cheq.enums.UserRole;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.ExpiredRefreshTokenException;
 import potato.cheq.error.security.requestError.NotFoundException;
 import potato.cheq.error.security.requestError.UnAuthorizedException;
+import potato.cheq.repository.AdminRepository;
 import potato.cheq.repository.UserRepository;
 
 import javax.crypto.Cipher;
@@ -38,6 +41,8 @@ public class JwtTokenProvider {
 
     private final RedisService redisService;
     private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
+
     private final CustomUserDetailsService customUserDetailsService;
 
     @Value("${jwt.secretKey}")
@@ -136,13 +141,33 @@ public class JwtTokenProvider {
     }
 
     public String extractMemberId(String token) throws Exception {
+//        Long id = extractId(token);
+//        Optional<String> studentIdOptional = userRepository.findStudentIdById(id);
+//        if (studentIdOptional.isEmpty()) {
+//            throw new NotFoundException("사용자를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+//        }
+//        return studentIdOptional.get();
         Long id = extractId(token);
-        Optional<String> studentIdOptional = userRepository.findStudentIdById(id);
-        if (!studentIdOptional.isPresent()) {
-            throw new NotFoundException("사용자를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+        String role = extractRole(token); // 토큰에서 역할 추출
+
+        if ("USER".equals(role)) {
+            Optional<String> studentIdOptional = userRepository.findStudentIdById(id);
+            if (studentIdOptional.isEmpty()) {
+                throw new NotFoundException("사용자를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+            }
+            return studentIdOptional.get();
+        } else if ("ADMIN".equals(role)) {
+            Optional<AdminEntity> adminOptional = adminRepository.findById(id);
+            if (adminOptional.isEmpty()) {
+                throw new NotFoundException("관리자를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+            }
+            AdminEntity admin = adminOptional.get();
+            return admin.getEmail(); // 이메일 반환
+        } else {
+            throw new UnAuthorizedException("권한이 없는 사용자입니다.", ErrorCode.ACCESS_DENIED_EXCEPTION);
         }
-        return studentIdOptional.get();
     }
+
 
     private JsonObject extraValue(String token) throws Exception {
         String subject = extraAllClaims(token).getSubject();
@@ -150,6 +175,7 @@ public class JwtTokenProvider {
         JsonObject jsonObject = new Gson().fromJson(decrypted, JsonObject.class);
         return jsonObject;
     }
+
 
     public boolean isAdmin(String token) throws Exception {
         String role = extractRole(token);
