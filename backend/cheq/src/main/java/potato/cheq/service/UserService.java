@@ -22,6 +22,8 @@ import potato.cheq.repository.UuidRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
 import potato.cheq.service.jwt.RedisService;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static potato.cheq.error.security.ErrorCode.NOT_FOUND_EXCEPTION;
@@ -110,15 +112,23 @@ public class UserService {
             throw new UnAuthorizedException("404", NOT_FOUND_EXCEPTION);
         }
     }
-
     public void updateUser(UserUpdateRequestDto requestDto, HttpServletRequest request) {
         Optional<UserEntity> userOptional = findByUserToken(request);
 
-        userOptional.ifPresent(user -> {
-            if (requestDto.getEmail() != null && !requestDto.getSeat().isEmpty()) {
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+
+            LocalDateTime lastUpdate = userRepository.findLastUpdatedByUserId(user.getId());
+            LocalDateTime now = LocalDateTime.now();
+
+            if (lastUpdate == null || ChronoUnit.DAYS.between(lastUpdate, now) >= 3) {
                 user.update(requestDto);
+                userRepository.save(user);
             }
-        });
+            else{
+                throw new RuntimeException("정보는 3일 뒤에 수정 할 수 있습니다");
+            }
+        }
     }
 
     public Optional<UserEntity> findByUserToken(HttpServletRequest request) {

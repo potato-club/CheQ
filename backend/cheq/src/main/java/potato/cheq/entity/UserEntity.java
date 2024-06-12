@@ -10,6 +10,8 @@ import potato.cheq.dto.request.UserUpdateRequestDto;
 import potato.cheq.enums.ChapelKind;
 import potato.cheq.enums.UserRole;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -45,6 +47,9 @@ public class UserEntity {
     @Column(nullable = false)
     private ChapelKind chapelKind;
 
+    @Column()
+    private LocalDateTime lastUpdated;
+
 
     public UserEntity updateUuid(String stUuid) {
         this.stUuid = stUuid;
@@ -54,6 +59,8 @@ public class UserEntity {
     public void update(UserUpdateRequestDto requestDto) {
         this.email = requestDto.getEmail();
         this.seat = requestDto.getSeat();
+        this.chapelKind = requestDto.getChapelKind();
+        this.lastUpdated = LocalDateTime.now();
     }
 
     public void Adminupdate(RequestUpdateStudentDto requestDto) {
@@ -62,5 +69,6 @@ public class UserEntity {
         this.chapelKind = ChapelKind.valueOf(requestDto.getChapelKind());
 
     }
+
 
 }
