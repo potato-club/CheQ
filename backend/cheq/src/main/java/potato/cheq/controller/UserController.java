@@ -55,9 +55,9 @@ public class UserController {
         return ResponseEntity.ok(userInfo);
     }
 
-    @PutMapping("/")
+     @PutMapping("/")
     @Operation(summary = "회원 정보 수정")
-    public ResponseEntity<String> updateUserInfo(UserUpdateRequestDto userUpdateRequestDto , HttpServletRequest request) {
+    public ResponseEntity<String> updateUserInfo(@RequestBody UserUpdateRequestDto userUpdateRequestDto, HttpServletRequest request) {
         userService.updateUser(userUpdateRequestDto, request);
         return ResponseEntity.ok("회원 정보 수정 완료");
     }

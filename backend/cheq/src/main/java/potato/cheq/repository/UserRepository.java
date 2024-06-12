@@ -7,12 +7,17 @@ import org.springframework.stereotype.Repository;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.entity.UuidEntity;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     boolean existsByStudentId(String studentId);
     boolean existsByStUuid(String uuid);
+
+
+    @Query("SELECT u.lastUpdated FROM UserEntity u WHERE u.id = :userId")
+    LocalDateTime findLastUpdatedByUserId(@Param("userId") Long userId);
 
 //    UserEntity findByUuid(String uuid);
 

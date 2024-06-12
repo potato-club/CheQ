@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.enums.ChapelKind;
+import potato.cheq.enums.UserRole;
 
 @Data
 @Builder
@@ -22,6 +23,7 @@ public class RequestUserDto {
                 .studentId(studentId)
                 .seat(seat)
                 .stUuid(uuid)
+                .userRole(UserRole.USER)
                 .chapelKind(chapelKind)
                 .build();
     }
