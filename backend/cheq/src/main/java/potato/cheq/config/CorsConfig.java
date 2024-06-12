@@ -16,7 +16,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("https://localhost:3000", "https://www.isaacnas.duckdns.org:8083","https://isaacnas.duckdns.org:8083","http://localhost:3000","http://www.isaacnas.duckdns.org:8083","http://www.isaacnas.duckdns.org:8083"));
+        config.setAllowedOrigins(List.of("http://localhost:8083","https://localhost:3000", "https://www.isaacnas.duckdns.org:8083","https://isaacnas.duckdns.org:8083","http://localhost:3000","http://www.isaacnas.duckdns.org:8083","http://www.isaacnas.duckdns.org:8083"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("*"));

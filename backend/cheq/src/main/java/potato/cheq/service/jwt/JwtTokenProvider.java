@@ -298,4 +298,10 @@ public class JwtTokenProvider {
         return token == null ? null : userRepository.findById(extractId(token))
                 .orElseThrow(() -> new NotFoundException("토큰에 해당하는 ID값을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION));
     }
+
+    public Optional<UserEntity> extractIdByRequest(HttpServletRequest request) throws Exception {
+        String userToken = resolveAccessToken(request);
+        Long tokenId = extractId(userToken);
+        return userRepository.findById(tokenId);
+    }
 }
