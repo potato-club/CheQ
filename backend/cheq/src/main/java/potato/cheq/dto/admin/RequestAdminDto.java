@@ -1,4 +1,4 @@
-package potato.cheq.dto.request;
+package potato.cheq.dto.admin;
 
 public class RequestAdminDto {
 }
