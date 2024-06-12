@@ -41,12 +41,17 @@ public class AttendanceController {
         String token = jwtTokenProvider.resolveAccessToken(request);
         String studentId = jwtTokenProvider.extractMemberId(token);
         boolean isAttendanceValid = attendanceService.checkAttendance(request);
-        if(isAttendanceValid) {
+        if (isAttendanceValid) {
             return ResponseEntity.ok().body(studentId + "학생 출결 완료");
         }
         return ResponseEntity.ok().body(studentId + "학생 미출결");
     }
 
+    @GetMapping("/tardy")
+    @Operation(summary = "지각 정보")
+    public Long checkStatus(HttpServletRequest request) throws Exception {
+        return attendanceService.determineAttendanceStatus(request);
+    }
 
 
 }

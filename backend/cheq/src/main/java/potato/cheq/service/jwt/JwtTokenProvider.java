@@ -31,6 +31,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 @Component
 @RequiredArgsConstructor
@@ -263,5 +265,9 @@ public class JwtTokenProvider {
                 .orElseThrow(() -> new NotFoundException("토큰에 해당하는 ID값을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION));
     }
 
-
+    public Optional<UserEntity> extractIdByRequest(HttpServletRequest request) throws Exception {
+        String userToken = resolveAccessToken(request);
+        Long tokenId = extractId(userToken);
+        return userRepository.findById(tokenId);
+    }
 }
