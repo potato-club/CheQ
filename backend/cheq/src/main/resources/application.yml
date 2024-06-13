@@ -2,7 +2,7 @@ server:
   port: 8083
 spring:
   redis:
-    host: redis-server # 서버 배포시에는 redis로 변경해야함
+    host: 127.0.0.1 # 서버 배포시에는 redis로 변경해야함
     port: 6379
   datasource:
     url: ENC(Kbgx6qWF/+Hxv5MzqaCOld/b+Ajf60FoAtGJjKVpXWut3oepIictqqThpFBmM4+6fFg/cm75yJ0=)
