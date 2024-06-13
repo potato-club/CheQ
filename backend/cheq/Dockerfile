@@ -4,6 +4,8 @@ RUN apt-get update && apt-get install -y \
     redis-server \
     && rm -rf /var/lib/apt/lists/*
 
+CMD ["redis-server", "--daemonize", "yes"]
+
 FROM openjdk:17-jdk AS build
 
 COPY --from=base /usr/bin/redis-server /usr/bin/redis-server
