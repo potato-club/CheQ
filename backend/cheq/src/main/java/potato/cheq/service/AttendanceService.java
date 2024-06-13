@@ -168,40 +168,4 @@ public class AttendanceService {
         return id.get().getStUuid();
     }
 
-    public int extractChapelKind(HttpServletRequest request) throws Exception {
-        Optional<UserEntity> id = jwtTokenProvider.extractIdByRequest(request);
-
-        if (id.isEmpty()) {
-            throw new NotFoundException("해당하는 회원을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
-        }
-        return id.get().getChapelKind().getPeriod();
-    }
-
-    public String extractChapelStartTime(HttpServletRequest request) throws Exception {
-        Optional<UserEntity> id = jwtTokenProvider.extractIdByRequest(request);
-
-        if (id.isEmpty()) {
-            throw new NotFoundException("해당하는 회원을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
-        }
-        return id.get().getChapelKind().getStartTime();
-    }
-
-    public String extractChapelEndTime(HttpServletRequest request) throws Exception {
-        Optional<UserEntity> id = jwtTokenProvider.extractIdByRequest(request);
-
-        if (id.isEmpty()) {
-            throw new NotFoundException("해당하는 회원을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
-        }
-        return id.get().getChapelKind().getStartTime();
-    }
-
-    public String extractChapelTardyTime(HttpServletRequest request) throws Exception {
-        Optional<UserEntity> id = jwtTokenProvider.extractIdByRequest(request);
-
-        if (id.isEmpty()) {
-            throw new NotFoundException("해당하는 회원을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
-        }
-        return id.get().getChapelKind().getStartTime();
-    }
-
 }

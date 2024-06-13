@@ -8,9 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import potato.cheq.dto.admin.RequestAdminLoginDto;
 import potato.cheq.dto.admin.RequestUpdateStudentDto;
-import potato.cheq.dto.admin.UpdateAdminDto;
 import potato.cheq.entity.AdminEntity;
 import potato.cheq.entity.UserEntity;
+import potato.cheq.error.security.requestError.BadRequestException;
 import potato.cheq.error.security.requestError.NotFoundException;
 import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.AdminRepository;
@@ -63,21 +63,28 @@ public class AdminService {
 
 
 
-//    public ResponseEntity<String> deleteStudent(HttpServletRequest request, Long studentId) throws Exception {
-//        String token = jwtTokenProvider.resolveAccessToken(request);
-//        if (token == null || !jwtTokenProvider.validateAccessToken(token)) {
-//            throw new UnAuthorizedException("토큰 오류", ErrorCode.UNAUTHORIZED_EXCEPTION);
-//        }
-//
-//        String userRole = jwtTokenProvider.extractRole(token);
-//
-//        if (!userRole.equals("admin")) {
-//            throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
-//        }
-//
-//        userRepository.deleteById(studentId);
-//        return ResponseEntity.ok("Student 삭제 성공");
-//    }
+    public void deleteStudent(HttpServletRequest request, String studentId) throws Exception {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+        if (token == null || !jwtTokenProvider.validateAccessToken(token)) {
+            throw new UnAuthorizedException("토큰 오류", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
+
+        String userRole = jwtTokenProvider.extractRole(token);
+
+        if (!userRole.equals("ADMIN")) {
+            throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
+
+        try {
+            Long id = Long.valueOf(studentId);
+            if (!userRepository.existsById(id)) {
+                throw new NotFoundException("학생을 찾을 수 없습니다", ErrorCode.NOT_FOUND_EXCEPTION);
+            }
+            userRepository.deleteById(id);
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("유효하지 않은 학생 ID 형식입니다", ErrorCode.BAD_REQUEST_EXCEPTION);
+        }
+    }
 
 
     private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) throws Exception {

@@ -2,7 +2,6 @@ package potato.cheq.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +33,10 @@ public class AdminController {
         return ResponseEntity.ok().body("학생 정보 수정 완료");
     }
 
-//    @DeleteMapping("/student/{studentId}")
-//    @Operation(summary = "학생 삭제")
-//    public ResponseEntity<String> deleteStudent(HttpServletRequest request, @PathVariable Long studentId) throws Exception {
-//        return adminService.deleteStudent(request, studentId);
-//    }
+    @DeleteMapping("/delete/{studentId}")
+    @Operation(summary = "학생 삭제")
+    public ResponseEntity<String> deleteStudent(HttpServletRequest request, @PathVariable("studentId") String studentId) throws Exception {
+        adminService.deleteStudent(request, studentId);
+        return ResponseEntity.ok().body("학생 정보 삭제 완료");
+    }
 }
