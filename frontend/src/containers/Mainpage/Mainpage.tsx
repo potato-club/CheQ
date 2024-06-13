@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Nav from '../../components/NavBar';
-import axios from 'axios';
-=======
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
 import axios from "axios";
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
 
 const images = [
   "https://pimg.hackers.com/land/main/land_default.jpg",
@@ -34,34 +27,10 @@ const Mainpage = () => {
   const onSubmit = async (data: any) => {
     if (NFC) {
       return;
-<<<<<<< HEAD
- 
-    }
-  
-    try {
-      const response = await axios.post("http://isaacnas.duckdns.org:8083/attendance/nfc", {
-        mac_address: data.address,
-        nfc_position: data.position,
-        attendanceTime: new Date().toISOString() // or any appropriate time format
-      }, {
-        headers: {
-          'Authorization': 'Bearer your-auth-token' // Include your token here
-        }
-      });
-      console.log('Response:', response.data);//응답처리
-      //응답 실패
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-
-  const attendanceStatuses = ['present', 'absent', 'late']; // Updated to 3 statuses
-=======
     }
 
     try {
-      const nfc = await axios.post(
+      const response = await axios.post(
         "http://isaacnas.duckdns.org:8083/attendance/nfc",
         {
           mac_address: data.address,
@@ -74,19 +43,14 @@ const Mainpage = () => {
           },
         }
       );
+      console.log("Response:", response.data); //응답처리
+      //응답 실패
     } catch (error) {
-      alert("오류가 발생했습니다");
+      console.error(error);
     }
   };
 
-  const attendanceStatuses = [
-    "present",
-    "absent",
-    "late",
-    "present",
-    "present",
-  ];
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
+  const attendanceStatuses = ["present", "absent", "late"]; // Updated to 3 statuses
 
   const getColor = (status: string): string => {
     switch (status) {
@@ -103,17 +67,10 @@ const Mainpage = () => {
 
   // Example data for buttons from the backend
   const buttonsData = [
-<<<<<<< HEAD
-    { label: 'Menu 1' },
-    { label: 'Menu 2' },
-    { label: 'Menu 3' },
-    { label: 'Menu 4' },
-=======
     { label: "Menu 1" },
     { label: "Menu 2" },
     { label: "Menu 3" },
     { label: "Menu 4" },
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
   ];
 
   return (
@@ -133,9 +90,9 @@ const Mainpage = () => {
           </Box2Advertisement>
         </Box2>
         <Box3A>
-        <Box3Atext>
-          <Box3AtextTitle>채플현황</Box3AtextTitle>
-        </Box3Atext>
+          <Box3Atext>
+            <Box3AtextTitle>채플현황</Box3AtextTitle>
+          </Box3Atext>
         </Box3A>
         <Box3B>
           <Box3BCircle>
@@ -147,11 +104,6 @@ const Mainpage = () => {
         <Box4>
           <Box4MainA>
             {buttonsData.map((button, index) => (
-<<<<<<< HEAD
-              <Box4MainAButton 
-                key={index} 
-                onClick={index === 0 ? () => onSubmit({ address: 'exampleAddress', position: 'examplePosition' }) : undefined}>
-=======
               <Box4MainAButton
                 key={index}
                 onClick={
@@ -164,7 +116,6 @@ const Mainpage = () => {
                     : undefined
                 }
               >
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
                 {button.label}
               </Box4MainAButton>
             ))}
@@ -303,23 +254,9 @@ const Box4MainAButton = styled.div`
   color: black;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-<<<<<<< HEAD
   text-align: center;
-=======
-  //background-color: #f0f0f0;
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
   }
 `;
-<<<<<<< HEAD
-
-
-
-
-
-
-
-=======
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
