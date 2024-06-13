@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import Hansei from "../../image/hansei.png";
+import Hansei from "../../Image/hansei.png";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 import { useState } from "react";
 import axios from "axios";
 
 const LoginPage = () => {
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
   const signup = useNavigate(); // useNavigate 훅 사용
   const {
     register,
@@ -24,17 +24,41 @@ const LoginPage = () => {
 
     if (data.studentId === "admin" && data.password === "admin") {
       signup("/admin");
-    } else {
-      try {
-        const response = await axios.post(
-          "http://isaacnas.duckdns.org:8083/user/login",
-          loginData
-        );
-        if (response.status === 200) {
-          signup("/main");
+      // if (data.studentId === "admin") {
+      //   signup("/admin");
+    }
+    try {
+      const response = await axios.post(
+        "http://isaacnas.duckdns.org:8083/user/login",
+        loginData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      } catch (error) {
-        setError("로그인에 실패했습니다. 다시 시도해주세요.");
+      );
+
+      console.log("서버 응답:", response); // 디버깅을 위해 콘솔에 출력
+
+      if (response.status === 200 || response.data.success) {
+        alert("로그인 되었습니다!");
+        signup("/main");
+      } else {
+        alert("로그인에 실패했습니다. 다시 시도해주세요.");
+      }
+    } catch (error: any) {
+      if (error.response) {
+        // 요청이 이루어졌고 서버가 2xx 범위 외의 상태 코드로 응답함
+        console.error("Error response:", error.response.data);
+        alert(`로그인에 실패했습니다: ${error.response.data.message}`);
+      } else if (error.request) {
+        // 요청이 이루어졌지만 응답을 받지 못함
+        console.error("Error request:", error.request);
+        alert("로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요.");
+      } else {
+        // 요청 설정 중 오류가 발생함
+        console.error("Error message:", error.message);
+        alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
   };
@@ -78,7 +102,8 @@ const LoginPage = () => {
                   value === "admin" ||
                   value === watch("studentId") ||
                   /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(value) ||
-                  "영문+숫자 조합 8자 이상 입력해주세요.",
+                  "비밀번호를 제대로 입력해주세요.",
+                // "영문+숫자 조합 8자 이상 입력해주세요.",
               })}
             />
             {errors.password && (
@@ -153,6 +178,11 @@ const LoginBtn = styled.div`
   width: 100vw;
   min-width: 200px;
   max-width: 580px;
+  position: fixed;
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
 `;
 
 const SubmitButton = styled.button`
