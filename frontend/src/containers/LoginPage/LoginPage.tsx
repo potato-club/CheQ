@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import Hansei from "../../image/hansei.png";
+import Hansei from "../../Image/hansei.png";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 import { useState } from "react";
 import axios from "axios";

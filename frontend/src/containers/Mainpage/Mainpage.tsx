@@ -1,14 +1,15 @@
-<<<<<<< HEAD
+//복사생성자 deep copy경우 2가지가 필요 (깊은 복사를 할수있게해야한다.)
+//{}연산자 ()연산자 꼭 알아야한다. 
+//상속하는거와 다형성 부모타입으로 하는것을 추상화 객체타입을 부모타입으로 자식객체를 부모타입으로 (참조 and 포인터)
+//virtual 메소드 
+//template 함수와 크래스 템플릿
+//vector 사용할수있게 제거하고 참조하고 조회
+//알고리즘 sort, find만 알면된다.
+//반복자 vector interator 사용
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../../components/NavBar';
 import axios from 'axios';
-=======
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Nav from "../../components/NavBar";
-import axios from "axios";
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
 
 const images = [
   "https://pimg.hackers.com/land/main/land_default.jpg",
@@ -19,7 +20,7 @@ const images = [
 
 const Mainpage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [NFC, setNFC] = useState(false); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
+  const [NFC, setNFC] = useState(null); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,62 +32,45 @@ const Mainpage = () => {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
-  const onSubmit = async (data: any) => {
-    if (NFC) {
-      return;
-<<<<<<< HEAD
+  // const onSubmit = async (data: any) => {
+  //   if (NFC) {
+  //     return;
  
-    }
+  //   }
   
-    try {
-      const response = await axios.post("http://isaacnas.duckdns.org:8083/attendance/nfc", {
-        mac_address: data.address,
-        nfc_position: data.position,
-        attendanceTime: new Date().toISOString() // or any appropriate time format
-      }, {
-        headers: {
-          'Authorization': 'Bearer your-auth-token' // Include your token here
-        }
-      });
-      console.log('Response:', response.data);//응답처리
-      //응답 실패
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   try {
+  //     const response = await axios.post("http://isaacnas.duckdns.org:8083/attendance/nfc", {
+  //       mac_address: data.address,
+  //       nfc_position: data.position,
+  //       attendanceTime: new Date().toISOString() // or any appropriate time format
+  //     }, {
+  //       headers: {
+  //         'Authorization': 'Bearer your-auth-token' // Include your token here
+  //       }
+  //     });
+  //     console.log('Response:', response.data);//응답처리
+  //     //응답 실패
+  //   } catch (error) {
+  //     alert("오류가 뜹니다")
+  //   }
+  // };
+
+  // axios.post("http://isaacnas.duckdns.org:8083/attendance/nfc", {
+  //   uuid: " ",
+  //   nfc_position: " ",
+  //   attendanceTime: " "
+  // })
+  // .then(response => {
+  //    alert("성공했습니다")
+  // }).catch(error => {
+  //    alert("오류가발생")
+  // }).then(() => {
+  //    //항상실행
+  // })
+
 
 
   const attendanceStatuses = ['present', 'absent', 'late']; // Updated to 3 statuses
-=======
-    }
-
-    try {
-      const nfc = await axios.post(
-        "http://isaacnas.duckdns.org:8083/attendance/nfc",
-        {
-          mac_address: data.address,
-          nfc_position: data.position,
-          attendanceTime: new Date().toISOString(), // or any appropriate time format
-        },
-        {
-          headers: {
-            Authorization: "Bearer your-auth-token", // Include your token here
-          },
-        }
-      );
-    } catch (error) {
-      alert("오류가 발생했습니다");
-    }
-  };
-
-  const attendanceStatuses = [
-    "present",
-    "absent",
-    "late",
-    "present",
-    "present",
-  ];
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
 
   const getColor = (status: string): string => {
     switch (status) {
@@ -103,18 +87,62 @@ const Mainpage = () => {
 
   // Example data for buttons from the backend
   const buttonsData = [
-<<<<<<< HEAD
     { label: 'Menu 1' },
     { label: 'Menu 2' },
     { label: 'Menu 3' },
     { label: 'Menu 4' },
-=======
-    { label: "Menu 1" },
-    { label: "Menu 2" },
-    { label: "Menu 3" },
-    { label: "Menu 4" },
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
   ];
+
+  const handleMenu1Click = () => {
+    axios.post("http://isaacnas.duckdns.org:8083/attendance/nfc", {
+      uuid: "",
+      nfc_position: "",
+      attendanceTime: ""
+    }, {
+       headers: {
+         'Authorization': 'Bearer YOUR_TOKEN_HERE', // Include your token here if required
+      //   //'Content-Type': 'application/json'
+       }
+    })
+    .then(response => {
+      alert("성공했습니다");
+    })
+    .catch(error => {
+      if (error.response) {
+        alert(`오류가 발생했습니다: ${error.response.status}`);
+      } else if (error.request) {
+        alert("서버로부터 응답이 없습니다. 서버 상태를 확인하세요.");
+      } else {
+        alert(`요청 중 오류가 발생했습니다: ${error.message}`);
+      }
+    });
+  };
+  
+  //beacon은 연동 안해도된다.
+  // const handleMenu2Click = () => {
+  //   axios.post("http://isaacnas.duckdns.org:8083/attendance/beacon", {
+  //     uuid: "",
+  //     beacon_position: "",
+  //     attendanceTime: ""
+  //   }, {
+  //     // headers: {
+  //     //   'Authorization': 'Bearer YOUR_TOKEN_HERE', // Include your token here if required
+  //     //   //'Content-Type': 'application/json'
+  //     // }
+  //   })
+  //   .then(response => {
+  //     alert("성공했습니다");
+  //   })
+  //   .catch(error => {
+  //     if (error.response) {
+  //       alert(`오류가 발생했습니다: ${error.response.status}`);
+  //     } else if (error.request) {
+  //       alert("서버로부터 응답이 없습니다. 서버 상태를 확인하세요.");
+  //     } else {
+  //       alert(`요청 중 오류가 발생했습니다: ${error.message}`);
+  //     }
+  //   });
+  // };
 
   return (
     <div>
@@ -145,31 +173,20 @@ const Mainpage = () => {
           </Box3BCircle>
         </Box3B>
         <Box4>
-          <Box4MainA>
-            {buttonsData.map((button, index) => (
-<<<<<<< HEAD
-              <Box4MainAButton 
-                key={index} 
-                onClick={index === 0 ? () => onSubmit({ address: 'exampleAddress', position: 'examplePosition' }) : undefined}>
-=======
-              <Box4MainAButton
-                key={index}
-                onClick={
-                  index === 0
-                    ? () =>
-                        onSubmit({
-                          address: "exampleAddress",
-                          position: "examplePosition",
-                        })
-                    : undefined
-                }
-              >
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
-                {button.label}
-              </Box4MainAButton>
-            ))}
-          </Box4MainA>
-        </Box4>
+  <Box4MainA>
+    {buttonsData.map((button, index) => (
+      <Box4MainAButton 
+        key={index} 
+        onClick={
+          index === 0 ? handleMenu1Click :
+         
+          undefined
+        }>
+        {button.label}
+      </Box4MainAButton>
+    ))}
+  </Box4MainA>
+</Box4>
       </BigBox>
       <Nav />
     </div>
@@ -303,17 +320,12 @@ const Box4MainAButton = styled.div`
   color: black;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-<<<<<<< HEAD
   text-align: center;
-=======
-  //background-color: #f0f0f0;
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
   }
 `;
-<<<<<<< HEAD
 
 
 
@@ -321,5 +333,3 @@ const Box4MainAButton = styled.div`
 
 
 
-=======
->>>>>>> e49d78dfdd2e19aebd690bc66fdb9180308d74e9
