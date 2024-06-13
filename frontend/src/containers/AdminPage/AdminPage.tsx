@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
+import { useNavigate } from "react-router-dom";
 
 interface AdminData {
   checkbox: boolean;
@@ -17,6 +17,7 @@ const AdminPage = () => {
   const [filteredData, setFilteredData] = useState<AdminData[]>([]);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
 
   const TestData: AdminData[] = [
@@ -88,26 +89,21 @@ const AdminPage = () => {
   };
 
   const handleDelete = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
     const newData = adminData.filter((item) => !item.checkbox);
     setAdminData(newData);
     setFilteredData(newData);
+    setShowDeleteModal(false);
   };
 
-  const { register, handleSubmit, reset } = useForm();
-  // const newStudent: AdminData = {
-  //   checkbox: false,
-  //   name: data.name,
-  //   studentid: parseInt(data.studentid),
-  //   studentclass: data.studentclass,
-  //   chapel: parseInt(data.chapel),
-  //   chapelseat: data.chapelseat,
-  // };
-  // const newData = [...adminData, newStudent];
-  // setAdminData(newData);
-  // setFilteredData(newData);
-  // reset(); // 입력 폼 초기화
-  // setShowRegistrationModal(false); // 등록 모달 닫기
-  // //
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = (data: any) => {
     const searchQuery = data.search.toLowerCase();
@@ -123,6 +119,38 @@ const AdminPage = () => {
       );
     });
     setFilteredData(filtered);
+  };
+  const handleRegistration = (data: any) => {
+    const existingStudent = adminData.some(
+      (student) =>
+        student.name === data.name ||
+        student.studentid === parseInt(data.studentid)
+    );
+
+    if (existingStudent) {
+      alert("이미 등록된 데이터입니다.");
+    } else {
+      const newAdminData = [
+        ...adminData,
+        {
+          checkbox: false,
+          name: data.name,
+          studentid: parseInt(data.studentid),
+          studentclass: data.studentclass,
+          chapel: parseInt(data.chapel),
+          chapelseat: data.chapelseat,
+        },
+      ];
+      setAdminData(newAdminData);
+      setFilteredData(newAdminData);
+      setShowRegistrationModal(false);
+    }
+  };
+
+  const handleCheckboxChange = (index: number) => {
+    const newData = [...adminData];
+    newData[index].checkbox = !newData[index].checkbox;
+    setAdminData(newData);
   };
 
   return (
@@ -172,11 +200,7 @@ const AdminPage = () => {
                 <ClickBox
                   type="checkbox"
                   checked={data.checkbox}
-                  onChange={() => {
-                    const newData = [...adminData];
-                    newData[index].checkbox = !newData[index].checkbox;
-                    setAdminData(newData);
-                  }}
+                  onChange={() => handleCheckboxChange(index)}
                 />
                 <StudentName>{data.name}</StudentName>
                 <StudentId>{data.studentid}</StudentId>
@@ -188,6 +212,57 @@ const AdminPage = () => {
           </StudentInfo>
         </AdminInfo>
       </StyleAdminPage>
+
+      {showRegistrationModal && (
+        <RegistrationModal>
+          <ModalContent>
+            <ModalTitle>학생 등록</ModalTitle>
+            <InputContainer>
+              <InputLabel>이름:</InputLabel>
+              <InputField {...register("name")} />
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>학번:</InputLabel>
+              <InputField type="number" {...register("studentid")} />
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>학과:</InputLabel>
+              <InputField {...register("studentclass")} />
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>채플:</InputLabel>
+              <InputField type="number" {...register("chapel")} />
+            </InputContainer>
+            <InputContainer>
+              <InputLabel>좌석:</InputLabel>
+              <InputField {...register("chapelseat")} />
+            </InputContainer>
+            <ModulButtonBox>
+              <ModalButton onClick={handleSubmit(handleRegistration)}>
+                등록
+              </ModalButton>
+              <ModalButtonCancel
+                onClick={() => setShowRegistrationModal(false)}
+              >
+                취소
+              </ModalButtonCancel>
+            </ModulButtonBox>
+          </ModalContent>
+        </RegistrationModal>
+      )}
+
+      {showDeleteModal && (
+        <DeleteModal>
+          <ModalContent>
+            <ModalMessage>정말로 삭제할까요?</ModalMessage>
+            <ModalButtonBox>
+              <ModalButton onClick={handleConfirmDelete}>Yes</ModalButton>
+              <ModalButton onClick={handleCancelDelete}>No</ModalButton>
+            </ModalButtonBox>
+          </ModalContent>
+        </DeleteModal>
+      )}
+
       {showLogoutModal && (
         <LogoutModal>
           <ModalContent>
@@ -199,46 +274,27 @@ const AdminPage = () => {
           </ModalContent>
         </LogoutModal>
       )}
-      {showRegistrationModal && (
-        <RegistrationModal>
-          <ModalContent>
-            <ModalTitle>학생 등록</ModalTitle>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <InputContainer>
-                <InputLabel>이름:</InputLabel>
-                <InputField {...register("name")} />
-              </InputContainer>
-              <InputContainer>
-                <InputLabel>학번:</InputLabel>
-                <InputField type="number" {...register("studentid")} />
-              </InputContainer>
-              <InputContainer>
-                <InputLabel>학과:</InputLabel>
-                <InputField {...register("studentclass")} />
-              </InputContainer>
-              <InputContainer>
-                <InputLabel>채플:</InputLabel>
-                <InputField type="number" {...register("chapel")} />
-              </InputContainer>
-              <InputContainer>
-                <InputLabel>좌석:</InputLabel>
-                <InputField {...register("chapelseat")} />
-              </InputContainer>
-              <ModulButtonBox>
-                <ModalButton type="submit">등록</ModalButton>
-                <ModalButton onClick={() => setShowRegistrationModal(false)}>
-                  취소
-                </ModalButton>
-              </ModulButtonBox>
-            </form>
-          </ModalContent>
-        </RegistrationModal>
-      )}
     </div>
   );
 };
 
 export default AdminPage;
+
+const DeleteModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #375cde;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const RegistrationModal = styled.div`
   position: fixed;
   top: 50%;
@@ -316,6 +372,15 @@ const ModalButtonBox = styled.div`
 `;
 
 const ModalButton = styled.button`
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #375cde;
+  color: white;
+  cursor: pointer;
+`;
+const ModalButtonCancel = styled.button`
   padding: 10px 20px;
   margin: 0 10px;
   border-radius: 5px;

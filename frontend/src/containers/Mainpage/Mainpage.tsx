@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //복사생성자 deep copy경우 2가지가 필요 (깊은 복사를 할수있게해야한다.)
 //{}연산자 ()연산자 꼭 알아야한다. 
 //상속하는거와 다형성 부모타입으로 하는것을 추상화 객체타입을 부모타입으로 자식객체를 부모타입으로 (참조 and 포인터)
@@ -10,6 +11,12 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../../components/NavBar';
 import axios from 'axios';
+=======
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import Nav from "../../components/NavBar";
+import axios from "axios";
+>>>>>>> 33c2d9c62bebf15d054d7dbbdc6d483124b20b2e
 
 const images = [
   "https://pimg.hackers.com/land/main/land_default.jpg",
@@ -32,6 +39,7 @@ const Mainpage = () => {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
+<<<<<<< HEAD
   // const onSubmit = async (data: any) => {
   //   if (NFC) {
   //     return;
@@ -71,6 +79,35 @@ const Mainpage = () => {
 
 
   const attendanceStatuses = ['present', 'absent', 'late']; // Updated to 3 statuses
+=======
+  const onSubmit = async (data: any) => {
+    if (NFC) {
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://isaacnas.duckdns.org:8083/attendance/nfc",
+        {
+          mac_address: data.address,
+          nfc_position: data.position,
+          attendanceTime: new Date().toISOString(), // or any appropriate time format
+        },
+        {
+          headers: {
+            Authorization: "Bearer your-auth-token", // Include your token here
+          },
+        }
+      );
+      console.log("Response:", response.data); //응답처리
+      //응답 실패
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const attendanceStatuses = ["present", "absent", "late"]; // Updated to 3 statuses
+>>>>>>> 33c2d9c62bebf15d054d7dbbdc6d483124b20b2e
 
   const getColor = (status: string): string => {
     switch (status) {
@@ -87,10 +124,17 @@ const Mainpage = () => {
 
   // Example data for buttons from the backend
   const buttonsData = [
+<<<<<<< HEAD
     { label: 'Menu 1' },
     { label: 'Menu 2' },
     { label: 'Menu 3' },
     { label: 'Menu 4' },
+=======
+    { label: "Menu 1" },
+    { label: "Menu 2" },
+    { label: "Menu 3" },
+    { label: "Menu 4" },
+>>>>>>> 33c2d9c62bebf15d054d7dbbdc6d483124b20b2e
   ];
 
   const handleMenu1Click = () => {
@@ -161,9 +205,9 @@ const Mainpage = () => {
           </Box2Advertisement>
         </Box2>
         <Box3A>
-        <Box3Atext>
-          <Box3AtextTitle>채플현황</Box3AtextTitle>
-        </Box3Atext>
+          <Box3Atext>
+            <Box3AtextTitle>채플현황</Box3AtextTitle>
+          </Box3Atext>
         </Box3A>
         <Box3B>
           <Box3BCircle>
@@ -173,6 +217,7 @@ const Mainpage = () => {
           </Box3BCircle>
         </Box3B>
         <Box4>
+<<<<<<< HEAD
   <Box4MainA>
     {buttonsData.map((button, index) => (
       <Box4MainAButton 
@@ -187,6 +232,27 @@ const Mainpage = () => {
     ))}
   </Box4MainA>
 </Box4>
+=======
+          <Box4MainA>
+            {buttonsData.map((button, index) => (
+              <Box4MainAButton
+                key={index}
+                onClick={
+                  index === 0
+                    ? () =>
+                        onSubmit({
+                          address: "exampleAddress",
+                          position: "examplePosition",
+                        })
+                    : undefined
+                }
+              >
+                {button.label}
+              </Box4MainAButton>
+            ))}
+          </Box4MainA>
+        </Box4>
+>>>>>>> 33c2d9c62bebf15d054d7dbbdc6d483124b20b2e
       </BigBox>
       <Nav />
     </div>
@@ -326,6 +392,7 @@ const Box4MainAButton = styled.div`
     background-color: #f0f0f0;
   }
 `;
+<<<<<<< HEAD
 
 
 
@@ -333,3 +400,5 @@ const Box4MainAButton = styled.div`
 
 
 
+=======
+>>>>>>> 33c2d9c62bebf15d054d7dbbdc6d483124b20b2e
