@@ -19,6 +19,10 @@ spring:
         format_sql: true
     open-in-view: false
 
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+
 jwt:
   secretKey: ENC(tPEWKhtCjc1Nh87m8lNHDXkWNd8j+ZWGLuzY4+wxP6Y5Dljp7EHiikR88LGmx/5kOr8lSASksuVBxC4Qplpjr+/J/bWycoStp0ZiHk9afA9KCBZv6j8TZ93x5cYWdH9XEcR23AJ20K21GaGroHfrW6OKVSJj9sKs)
   accessExpiration: 3600000 # 30000  #
