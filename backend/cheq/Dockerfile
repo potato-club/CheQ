@@ -1,10 +1,14 @@
 FROM ubuntu AS base
 
-RUN apt-get update && apt-get install -y \
-    redis-server \
-    && rm -rf /var/lib/apt/lists/*
+#RUN apt-get update && apt-get install -y \
+#    redis-server \
+#    && rm -rf /var/lib/apt/lists/*
 
-CMD ["redis-server", "--daemonize", "yes"]
+FROM redis:7.2.4-alpine3.19
+EXPOSE 6379
+CMD ["redis-server"]
+
+#CMD ["redis-server", "--daemonize", "yes"]
 
 FROM openjdk:17-jdk AS build
 
