@@ -12,7 +12,7 @@ CMD ["redis-server"]
 
 FROM openjdk:17-jdk AS build
 
-COPY --from=base /usr/bin/redis-server /usr/bin/redis-server
+#COPY --from=base /usr/bin/redis-server /usr/bin/redis-server
 
 WORKDIR /app
 COPY . /app
