@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import RegisterBar from "../../components/Register";
+import {useNavigate} from "react-router-dom";
 
 function ChangeInformationPage() {
   const [thirdChecked, setThirdChecked] = useState(false);
   const [seventhChecked, setSeventhChecked] = useState(false);
+
+  const movebtn = useNavigate();
+
+  const ChangeBtn = () => {
+    movebtn("/main")
+  };
 
   const handleThirdCheckboxChange = () => {
     if (!thirdChecked) {
@@ -24,7 +31,7 @@ function ChangeInformationPage() {
     <div>
       <BigBox>
         <AttendanceTitle>
-          <MainTitle>CheQ</MainTitle>
+          <MainTitle onClick={ChangeBtn}>CheQ</MainTitle>
           <SubTitle>정보 수정</SubTitle>
         </AttendanceTitle>
         <Box1>
@@ -111,9 +118,6 @@ function ChangeInformationPage() {
             </Box4LineText>
           </Box4ChapelNumberBox>
         </Box4>
-        {/* <Box5>
-
-            </Box5> */}
       </BigBox>
       <RegisterBar />
     </div>
@@ -139,6 +143,7 @@ const AttendanceTitle = styled.div`
 const MainTitle = styled.h1`
   color: #375cde;
   margin-right: 28px;
+  cursor: pointer;
 `;
 const SubTitle = styled.h2`
   color: #375cde;

@@ -7,15 +7,16 @@ import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 function Mypage() {
   const [userData, setUserData] = useState({
     studentId: "202110034",
-    department: "컴퓨터공학과",
-    chapel: "3교시",
+    //department: "컴퓨터공학과",
+    // chapel: "3",
     seat: "H3",
+    email: "songtj2743@naver.com"
   });
 
   // 텍스트 길이를 11자로 제한하는 함수
   const limitText = (text: string) => {
-    if (text.length > 11) {
-      return text.substring(0, 11) + "...";
+    if (text.length > 30) {
+      return text.substring(0, 30);
     }
     return text;
   };
@@ -33,9 +34,10 @@ function Mypage() {
   useEffect(() => {
     // 데이터를 limitText 함수를 통해 제한합니다.
     setUserData({
+      email: limitText(userData.email),
       studentId: limitText(userData.studentId),
-      department: limitText(userData.department),
-      chapel: limitText(userData.chapel),
+      //department: limitText(userData.department),
+      // chapel: limitText(userData.chapel),
       seat: limitText(userData.seat),
     });
   }, []);
@@ -58,14 +60,18 @@ function Mypage() {
                 <FixedText>학번 | </FixedText>
                 {userData.studentId}
               </BoxBMaininformation1>
-              <BoxBMaininformation2>
+              {/* <BoxBMaininformation2>
                 <FixedText>학과 | </FixedText>
                 {userData.department}
+              </BoxBMaininformation2> */}
+              <BoxBMaininformation2>
+                <FixedText>이메일 | </FixedText>
+                {userData.email}
               </BoxBMaininformation2>
-              <BoxBMaininformation3>
+              {/* <BoxBMaininformation3>
                 <FixedText>채플 | </FixedText>
                 {userData.chapel}
-              </BoxBMaininformation3>
+              </BoxBMaininformation3> */}
               <BoxBMaininformation4>
                 <FixedText>좌석 | </FixedText>
                 {userData.seat}
@@ -187,7 +193,7 @@ const BoxBMaininformation = styled.div`
 
 const BoxBMaininformation1 = styled.div`
   display: flex;
-  align-items: center;
+  align-items: baseline;
   flex-direction: row;
   width: 100%;
   font-weight: bold;
@@ -222,7 +228,9 @@ const BoxBMaininformation4 = styled.div`
 `;
 
 const FixedText = styled.span`
-  flex: 0 0 40px; /* 고정된 너비를 설정 */
+  //flex: 0 0 40px; /* 고정된 너비를 설정 */
+  display: inline;
+  margin-right: 5px;
 `;
 
 const BoXBProfilchangeBox = styled.div`
