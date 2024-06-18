@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import Hansei from "../../Image/hansei.png";
+import Hansei from "../../image/hansei.png";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 import { useState } from "react";
 import axios from "axios";
@@ -21,47 +21,105 @@ const LoginPage = () => {
       studentId: data.studentId,
       password: data.password,
     };
-
     if (data.studentId === "admin" && data.password === "admin") {
-      signup("/admin");
-      // if (data.studentId === "admin") {
-      //   signup("/admin");
-    }
-    try {
-      const response = await axios.post(
-        "http://isaacnas.duckdns.org:8083/user/login",
-        loginData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+      try {
+        const adminResponse = await axios.post(
+          "http://isaacnas.duckdns.org:8083/admin/login",
+          loginData
+        );
+
+        console.log("서버 응답 (admin):", adminResponse); // 디버깅을 위해 콘솔에 출력
+
+        if (adminResponse.status === 200 || adminResponse.data.success) {
+          alert("관리자 로그인 되었습니다!");
+          signup("/admin");
+        } else {
+          alert("관리자 로그인에 실패했습니다. 다시 시도해주세요.");
         }
-      );
-
-      console.log("서버 응답:", response); // 디버깅을 위해 콘솔에 출력
-
-      if (response.status === 200 || response.data.success) {
-        alert("로그인 되었습니다!");
-        signup("/main");
-      } else {
-        alert("로그인에 실패했습니다. 다시 시도해주세요.");
+      } catch (error: any) {
+        if (error.response) {
+          // 요청이 이루어졌고 서버가 2xx 범위 외의 상태 코드로 응답함
+          console.error("Error response (admin):", error.response.data);
+          alert(`관리자 로그인에 실패했습니다: ${error.response.data.message}`);
+        } else if (error.request) {
+          // 요청이 이루어졌지만 응답을 받지 못함
+          console.error("Error request (admin):", error.request);
+          alert(
+            "관리자 로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요."
+          );
+        } else {
+          // 요청 설정 중 오류가 발생함
+          console.error("Error message (admin):", error.message);
+          alert("관리자 로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
       }
-    } catch (error: any) {
-      if (error.response) {
-        // 요청이 이루어졌고 서버가 2xx 범위 외의 상태 코드로 응답함
-        console.error("Error response:", error.response.data);
-        alert(`로그인에 실패했습니다: ${error.response.data.message}`);
-      } else if (error.request) {
-        // 요청이 이루어졌지만 응답을 받지 못함
-        console.error("Error request:", error.request);
-        alert("로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요.");
-      } else {
-        // 요청 설정 중 오류가 발생함
-        console.error("Error message:", error.message);
-        alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+    } else {
+      try {
+        const response = await axios.post(
+          "http://isaacnas.duckdns.org:8083/user/login",
+          loginData
+        );
+
+        console.log("서버 응답:", response); // 디버깅을 위해 콘솔에 출력
+
+        if (response.status === 200 || response.data.success) {
+          alert("로그인 되었습니다!");
+          signup("/main");
+        } else {
+          alert("로그인에 실패했습니다. 다시 시도해주세요.");
+        }
+      } catch (error: any) {
+        if (error.response) {
+          // 요청이 이루어졌고 서버가 2xx 범위 외의 상태 코드로 응답함
+          console.error("Error response:", error.response.data);
+          alert(`로그인에 실패했습니다: ${error.response.data.message}`);
+        } else if (error.request) {
+          // 요청이 이루어졌지만 응답을 받지 못함
+          console.error("Error request:", error.request);
+          alert("로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요.");
+        } else {
+          // 요청 설정 중 오류가 발생함
+          console.error("Error message:", error.message);
+          alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
       }
     }
   };
+  //   if (data.studentId === "admin" && data.password === "admin") {
+  //     signup("/admin");
+  //     // if (data.studentId === "admin") {
+  //     //   signup("/admin");
+  //   }
+  //   try {
+  //     const response = await axios.post(
+  //       "http://isaacnas.duckdns.org:8083/user/login",
+  //       loginData
+  //     );
+
+  //     console.log("서버 응답:", response); // 디버깅을 위해 콘솔에 출력
+
+  //     if (response.status === 200 || response.data.success) {
+  //       alert("로그인 되었습니다!");
+  //       signup("/main");
+  //     } else {
+  //       alert("로그인에 실패했습니다. 다시 시도해주세요.");
+  //     }
+  //   } catch (error: any) {
+  //     if (error.response) {
+  //       // 요청이 이루어졌고 서버가 2xx 범위 외의 상태 코드로 응답함
+  //       console.error("Error response:", error.response.data);
+  //       alert(`로그인에 실패했습니다: ${error.response.data.message}`);
+  //     } else if (error.request) {
+  //       // 요청이 이루어졌지만 응답을 받지 못함
+  //       console.error("Error request:", error.request);
+  //       alert("로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요.");
+  //     } else {
+  //       // 요청 설정 중 오류가 발생함
+  //       console.error("Error message:", error.message);
+  //       alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+  //     }
+  //   }
+  // };
 
   return (
     <div>
