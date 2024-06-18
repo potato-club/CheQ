@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
-import QRImage from "../../Image/qr -1004.png";
+import QRImage from "../../image/qr -1004.png";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
 
 function Mypage() {
