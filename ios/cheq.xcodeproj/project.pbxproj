@@ -15,7 +15,6 @@
 		161EA0142BC79BF40071CA9A /* DLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161EA0132BC79BF40071CA9A /* DLog.swift */; };
 		161EA0162BC79C240071CA9A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161EA0152BC79C240071CA9A /* Extensions.swift */; };
 		16581A5E2BC924A100F96F97 /* ResponsePreLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16581A5D2BC924A100F96F97 /* ResponsePreLogin.swift */; };
-		16586C2F2BC51DC1001B7EA0 /* ReadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16586C2E2BC51DC1001B7EA0 /* ReadViewController.swift */; };
 		16736E032BCCFD680052A782 /* RequestConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16736E022BCCFD680052A782 /* RequestConstant.swift */; };
 		16736E052BCD09DF0052A782 /* ResponseCheckID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16736E042BCD09DF0052A782 /* ResponseCheckID.swift */; };
 		16736E072BCD11F70052A782 /* ResponseUserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16736E062BCD11F70052A782 /* ResponseUserStatus.swift */; };
@@ -31,6 +30,15 @@
 		16736E1B2BCE344A0052A782 /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16736E1A2BCE344A0052A782 /* RequestManager.swift */; };
 		167F901D2BE0C06B00FCCE89 /* BridgeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167F901C2BE0C06B00FCCE89 /* BridgeList.swift */; };
 		167F90202BE0C56100FCCE89 /* WebBridgeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167F901F2BE0C56100FCCE89 /* WebBridgeExtension.swift */; };
+		1689135C2C1820A000E08258 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD4542BF3304A00A763D2 /* WidgetKit.framework */; };
+		1689135D2C1820A000E08258 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD4562BF3304A00A763D2 /* SwiftUI.framework */; };
+		168913602C1820A000E08258 /* CheqDynamicWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1689135F2C1820A000E08258 /* CheqDynamicWidgetBundle.swift */; };
+		168913622C1820A000E08258 /* CheqDynamicWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168913612C1820A000E08258 /* CheqDynamicWidgetLiveActivity.swift */; };
+		168913642C1820A000E08258 /* CheqDynamicWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168913632C1820A000E08258 /* CheqDynamicWidget.swift */; };
+		168913662C1820A000E08258 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168913652C1820A000E08258 /* AppIntent.swift */; };
+		168913682C1820A100E08258 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 168913672C1820A100E08258 /* Assets.xcassets */; };
+		1689136C2C1820A100E08258 /* CheqDynamicWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1689135B2C1820A000E08258 /* CheqDynamicWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		168913702C18264C00E08258 /* CheqDynamicWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168913612C1820A000E08258 /* CheqDynamicWidgetLiveActivity.swift */; };
 		16962DA92BEC97A10030EC8B /* JDID in Frameworks */ = {isa = PBXBuildFile; productRef = 16962DA82BEC97A10030EC8B /* JDID */; };
 		16978A992BDA4EF5007F8B61 /* menu.json in Resources */ = {isa = PBXBuildFile; fileRef = 16978A982BDA4EF5007F8B61 /* menu.json */; };
 		16BAD44A2BF3211C00A763D2 /* BTExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BAD4492BF3211C00A763D2 /* BTExtension.swift */; };
@@ -46,9 +54,9 @@
 		16DBE9692BC5037D00AA0EE9 /* cheq.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 16DBE9672BC5037D00AA0EE9 /* cheq.xcdatamodeld */; };
 		16DBE96B2BC5037D00AA0EE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16DBE96A2BC5037D00AA0EE9 /* Assets.xcassets */; };
 		16DBE96E2BC5037D00AA0EE9 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 16DBE96D2BC5037D00AA0EE9 /* Base */; };
-		16DBE9762BC504EE00AA0EE9 /* NFCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DBE9752BC504EE00AA0EE9 /* NFCManager.swift */; };
-		16DBE9782BC5050800AA0EE9 /* NFCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DBE9772BC5050800AA0EE9 /* NFCError.swift */; };
 		16DBE97C2BC5071300AA0EE9 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 16DBE97B2BC5071300AA0EE9 /* Then */; };
+		16E771072C33C6B1003492E8 /* ResponseBeacon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E771062C33C6B1003492E8 /* ResponseBeacon.swift */; };
+		16E771092C33D994003492E8 /* DMUUIDModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E771082C33D994003492E8 /* DMUUIDModel.swift */; };
 		16EC83B92BE4D927006C620D /* DMSetBgColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83B82BE4D927006C620D /* DMSetBgColor.swift */; };
 		16EC83BC2BE4D9A2006C620D /* DMEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83BB2BE4D9A2006C620D /* DMEnums.swift */; };
 		16EC83BE2BE4DA07006C620D /* BaseResultDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83BD2BE4DA07006C620D /* BaseResultDomain.swift */; };
@@ -61,6 +69,16 @@
 		16EC83CF2BE4DF2D006C620D /* FloatingBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC83CE2BE4DF2D006C620D /* FloatingBtn.swift */; };
 		16EE68C92BD218990092D098 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EE68C82BD218990092D098 /* Constant.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1689136A2C1820A100E08258 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 16DBE9532BC5037D00AA0EE9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1689135A2C1820A000E08258;
+			remoteInfo = CheqDynamicWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		167B575C2BD0B462007F44BE /* Embed Frameworks */ = {
@@ -79,6 +97,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				1689136C2C1820A100E08258 /* CheqDynamicWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,7 +113,6 @@
 		161EA0132BC79BF40071CA9A /* DLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DLog.swift; sourceTree = "<group>"; };
 		161EA0152BC79C240071CA9A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		16581A5D2BC924A100F96F97 /* ResponsePreLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponsePreLogin.swift; sourceTree = "<group>"; };
-		16586C2E2BC51DC1001B7EA0 /* ReadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadViewController.swift; sourceTree = "<group>"; };
 		16736E022BCCFD680052A782 /* RequestConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestConstant.swift; sourceTree = "<group>"; };
 		16736E042BCD09DF0052A782 /* ResponseCheckID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCheckID.swift; sourceTree = "<group>"; };
 		16736E062BCD11F70052A782 /* ResponseUserStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseUserStatus.swift; sourceTree = "<group>"; };
@@ -110,6 +128,13 @@
 		16736E1A2BCE344A0052A782 /* RequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
 		167F901C2BE0C06B00FCCE89 /* BridgeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeList.swift; sourceTree = "<group>"; };
 		167F901F2BE0C56100FCCE89 /* WebBridgeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBridgeExtension.swift; sourceTree = "<group>"; };
+		1689135B2C1820A000E08258 /* CheqDynamicWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CheqDynamicWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1689135F2C1820A000E08258 /* CheqDynamicWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheqDynamicWidgetBundle.swift; sourceTree = "<group>"; };
+		168913612C1820A000E08258 /* CheqDynamicWidgetLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheqDynamicWidgetLiveActivity.swift; sourceTree = "<group>"; };
+		168913632C1820A000E08258 /* CheqDynamicWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheqDynamicWidget.swift; sourceTree = "<group>"; };
+		168913652C1820A000E08258 /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
+		168913672C1820A100E08258 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		168913692C1820A100E08258 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16978A982BDA4EF5007F8B61 /* menu.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = menu.json; sourceTree = "<group>"; };
 		16BAD4492BF3211C00A763D2 /* BTExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTExtension.swift; sourceTree = "<group>"; };
 		16BAD44B2BF3261300A763D2 /* LocationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationExtension.swift; sourceTree = "<group>"; };
@@ -127,9 +152,9 @@
 		16DBE96A2BC5037D00AA0EE9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		16DBE96D2BC5037D00AA0EE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		16DBE96F2BC5037D00AA0EE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		16DBE9752BC504EE00AA0EE9 /* NFCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCManager.swift; sourceTree = "<group>"; };
-		16DBE9772BC5050800AA0EE9 /* NFCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCError.swift; sourceTree = "<group>"; };
 		16DBE97D2BC50AF000AA0EE9 /* cheq.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cheq.entitlements; sourceTree = "<group>"; };
+		16E771062C33C6B1003492E8 /* ResponseBeacon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseBeacon.swift; sourceTree = "<group>"; };
+		16E771082C33D994003492E8 /* DMUUIDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMUUIDModel.swift; sourceTree = "<group>"; };
 		16EC83B82BE4D927006C620D /* DMSetBgColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMSetBgColor.swift; sourceTree = "<group>"; };
 		16EC83BB2BE4D9A2006C620D /* DMEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMEnums.swift; sourceTree = "<group>"; };
 		16EC83BD2BE4DA07006C620D /* BaseResultDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseResultDomain.swift; sourceTree = "<group>"; };
@@ -144,6 +169,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		168913582C1820A000E08258 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1689135D2C1820A000E08258 /* SwiftUI.framework in Frameworks */,
+				1689135C2C1820A000E08258 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		16DBE9582BC5037D00AA0EE9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -209,6 +243,7 @@
 				16736E122BCD4E9C0052A782 /* ResponseSearch.swift */,
 				16D092912BCE3E5600E941C9 /* ResponseMenuInfo.swift */,
 				16BAD46C2BF3449400A763D2 /* ResponseJSONTest.swift */,
+				16E771062C33C6B1003492E8 /* ResponseBeacon.swift */,
 			);
 			path = domain;
 			sourceTree = "<group>";
@@ -235,8 +270,22 @@
 				16EC83C52BE4DAAD006C620D /* DMUrl.swift */,
 				16EC83C72BE4DB1D006C620D /* DMDataMapResult.swift */,
 				16EC83CB2BE4DE07006C620D /* DMUserId.swift */,
+				16E771082C33D994003492E8 /* DMUUIDModel.swift */,
 			);
 			path = bridgeDomains;
+			sourceTree = "<group>";
+		};
+		1689135E2C1820A000E08258 /* CheqDynamicWidget */ = {
+			isa = PBXGroup;
+			children = (
+				1689135F2C1820A000E08258 /* CheqDynamicWidgetBundle.swift */,
+				168913612C1820A000E08258 /* CheqDynamicWidgetLiveActivity.swift */,
+				168913632C1820A000E08258 /* CheqDynamicWidget.swift */,
+				168913652C1820A000E08258 /* AppIntent.swift */,
+				168913672C1820A100E08258 /* Assets.xcassets */,
+				168913692C1820A100E08258 /* Info.plist */,
+			);
+			path = CheqDynamicWidget;
 			sourceTree = "<group>";
 		};
 		16978A952BDA4ED8007F8B61 /* lottie */ = {
@@ -260,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				16DBE95D2BC5037D00AA0EE9 /* cheq */,
+				1689135E2C1820A000E08258 /* CheqDynamicWidget */,
 				16BAD4532BF3304A00A763D2 /* Frameworks */,
 				16DBE95C2BC5037D00AA0EE9 /* Products */,
 			);
@@ -269,6 +319,7 @@
 			isa = PBXGroup;
 			children = (
 				16DBE95B2BC5037D00AA0EE9 /* cheq.app */,
+				1689135B2C1820A000E08258 /* CheqDynamicWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -285,7 +336,6 @@
 				161EA00E2BC79B8D0071CA9A /* base */,
 				161EA00A2BC79B3A0071CA9A /* vcs */,
 				16DBE97D2BC50AF000AA0EE9 /* cheq.entitlements */,
-				16DBE9792BC5051400AA0EE9 /* NFC */,
 				16DBE95E2BC5037D00AA0EE9 /* AppDelegate.swift */,
 				16DBE9642BC5037D00AA0EE9 /* Main.storyboard */,
 				16DBE96A2BC5037D00AA0EE9 /* Assets.xcassets */,
@@ -294,16 +344,6 @@
 				16DBE9672BC5037D00AA0EE9 /* cheq.xcdatamodeld */,
 			);
 			path = cheq;
-			sourceTree = "<group>";
-		};
-		16DBE9792BC5051400AA0EE9 /* NFC */ = {
-			isa = PBXGroup;
-			children = (
-				16DBE9752BC504EE00AA0EE9 /* NFCManager.swift */,
-				16DBE9772BC5050800AA0EE9 /* NFCError.swift */,
-				16586C2E2BC51DC1001B7EA0 /* ReadViewController.swift */,
-			);
-			path = NFC;
 			sourceTree = "<group>";
 		};
 		16EC83CD2BE4DF19006C620D /* components */ = {
@@ -317,6 +357,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1689135A2C1820A000E08258 /* CheqDynamicWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1689136F2C1820A100E08258 /* Build configuration list for PBXNativeTarget "CheqDynamicWidgetExtension" */;
+			buildPhases = (
+				168913572C1820A000E08258 /* Sources */,
+				168913582C1820A000E08258 /* Frameworks */,
+				168913592C1820A000E08258 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CheqDynamicWidgetExtension;
+			productName = CheqDynamicWidgetExtension;
+			productReference = 1689135B2C1820A000E08258 /* CheqDynamicWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		16DBE95A2BC5037D00AA0EE9 /* cheq */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16DBE9722BC5037D00AA0EE9 /* Build configuration list for PBXNativeTarget "cheq" */;
@@ -330,6 +387,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1689136B2C1820A100E08258 /* PBXTargetDependency */,
 			);
 			name = cheq;
 			packageProductDependencies = (
@@ -351,6 +409,9 @@
 				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1530;
 				TargetAttributes = {
+					1689135A2C1820A000E08258 = {
+						CreatedOnToolsVersion = 15.3;
+					};
 					16DBE95A2BC5037D00AA0EE9 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -375,11 +436,20 @@
 			projectRoot = "";
 			targets = (
 				16DBE95A2BC5037D00AA0EE9 /* cheq */,
+				1689135A2C1820A000E08258 /* CheqDynamicWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		168913592C1820A000E08258 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168913682C1820A100E08258 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		16DBE9592BC5037D00AA0EE9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -394,6 +464,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		168913572C1820A000E08258 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				168913602C1820A000E08258 /* CheqDynamicWidgetBundle.swift in Sources */,
+				168913662C1820A000E08258 /* AppIntent.swift in Sources */,
+				168913622C1820A000E08258 /* CheqDynamicWidgetLiveActivity.swift in Sources */,
+				168913642C1820A000E08258 /* CheqDynamicWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		16DBE9572BC5037D00AA0EE9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -404,6 +485,7 @@
 				16BAD44C2BF3261400A763D2 /* LocationExtension.swift in Sources */,
 				16736E132BCD4E9C0052A782 /* ResponseSearch.swift in Sources */,
 				16EC83B92BE4D927006C620D /* DMSetBgColor.swift in Sources */,
+				16E771072C33C6B1003492E8 /* ResponseBeacon.swift in Sources */,
 				167F90202BE0C56100FCCE89 /* WebBridgeExtension.swift in Sources */,
 				161EA00C2BC79B420071CA9A /* WebController.swift in Sources */,
 				16EC83BC2BE4D9A2006C620D /* DMEnums.swift in Sources */,
@@ -414,14 +496,13 @@
 				161EA0142BC79BF40071CA9A /* DLog.swift in Sources */,
 				161EA0112BC79B9C0071CA9A /* DEFINE.swift in Sources */,
 				16D0929C2BCE614800E941C9 /* IdCardViewController.swift in Sources */,
+				168913702C18264C00E08258 /* CheqDynamicWidgetLiveActivity.swift in Sources */,
 				16D0929A2BCE5E6400E941C9 /* QRViewController.swift in Sources */,
 				16736E1B2BCE344A0052A782 /* RequestManager.swift in Sources */,
 				16736E172BCE2CCB0052A782 /* MainNavVC.swift in Sources */,
 				16D092922BCE3E5600E941C9 /* ResponseMenuInfo.swift in Sources */,
-				16DBE9762BC504EE00AA0EE9 /* NFCManager.swift in Sources */,
 				16EC83BE2BE4DA07006C620D /* BaseResultDomain.swift in Sources */,
 				16736E032BCCFD680052A782 /* RequestConstant.swift in Sources */,
-				16DBE9782BC5050800AA0EE9 /* NFCError.swift in Sources */,
 				16EC83C02BE4DA1B006C620D /* DMDataResult.swift in Sources */,
 				16736E092BCD13AA0052A782 /* ResponsePushNoti.swift in Sources */,
 				16BAD46D2BF3449400A763D2 /* ResponseJSONTest.swift in Sources */,
@@ -429,8 +510,8 @@
 				167F901D2BE0C06B00FCCE89 /* BridgeList.swift in Sources */,
 				16EC83C62BE4DAAD006C620D /* DMUrl.swift in Sources */,
 				16DBE95F2BC5037D00AA0EE9 /* AppDelegate.swift in Sources */,
+				16E771092C33D994003492E8 /* DMUUIDModel.swift in Sources */,
 				161EA0162BC79C240071CA9A /* Extensions.swift in Sources */,
-				16586C2F2BC51DC1001B7EA0 /* ReadViewController.swift in Sources */,
 				16BAD44A2BF3211C00A763D2 /* BTExtension.swift in Sources */,
 				16EC83CF2BE4DF2D006C620D /* FloatingBtn.swift in Sources */,
 				16736E152BCD58950052A782 /* DataSession.swift in Sources */,
@@ -448,6 +529,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1689136B2C1820A100E08258 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1689135A2C1820A000E08258 /* CheqDynamicWidgetExtension */;
+			targetProxy = 1689136A2C1820A100E08258 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		16DBE9642BC5037D00AA0EE9 /* Main.storyboard */ = {
@@ -469,6 +558,70 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1689136D2C1820A100E08258 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X922N7WM69;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CheqDynamicWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CheqDynamicWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.oth.cheq.CheqDynamicWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1689136E2C1820A100E08258 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X922N7WM69;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CheqDynamicWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CheqDynamicWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.oth.cheq.CheqDynamicWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		16DBE9702BC5037D00AA0EE9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -591,6 +744,7 @@
 		16DBE9732BC5037D00AA0EE9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = cheq/cheq.entitlements;
@@ -618,6 +772,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.oth.cheq;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -627,6 +785,7 @@
 		16DBE9742BC5037D00AA0EE9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = cheq/cheq.entitlements;
@@ -654,6 +813,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.oth.cheq;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -663,6 +826,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1689136F2C1820A100E08258 /* Build configuration list for PBXNativeTarget "CheqDynamicWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1689136D2C1820A100E08258 /* Debug */,
+				1689136E2C1820A100E08258 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		16DBE9562BC5037D00AA0EE9 /* Build configuration list for PBXProject "cheq" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

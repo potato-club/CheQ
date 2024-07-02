@@ -29,6 +29,7 @@ class JVC : UIViewController {
     //location
     lazy var locationManager = CLLocationManager.init()              // locationManager 초기화.
     var lastBeacon : CLBeacon? = nil
+    var lastUUID : String? = nil
     
     func baseUserAgent() -> String {
         return "##CheQApp/\(Bundle.main.versionName)"

@@ -28,8 +28,6 @@ extension JVC: CLLocationManagerDelegate {
         
 
         locationManager.startMonitoring(for: getBeaconRegion())
-        
-        
     }
     
     // 위치 서비스에 대한 권한이 받아들여지면 MonitorBeacons() 함수 호출
@@ -81,9 +79,9 @@ extension JVC: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
         DLog.p("didRangeBeacons : \(beacons.count)")
-        for item in beacons {
-            DLog.p("beacon : \(item.uuid)")
-        }
+//        for item in beacons {
+//            DLog.p("beacon : \(item.uuid)")
+//        }
         // 연결할 수 있는 비콘이 있는 경우
         if beacons.count > 0 {
 //            for item in beacons {
@@ -105,6 +103,9 @@ extension JVC: CLLocationManagerDelegate {
             case .unknown:
                 break
             }
+        }
+        else {
+            lastBeacon = nil
         }
     }
     

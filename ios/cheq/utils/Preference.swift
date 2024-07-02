@@ -17,6 +17,8 @@ class Preference {
     public static let KEY_LAST_COOKIE = "KEY_LAST_COOKIE"
     public static let KEY_USER_INFO = "KEY_USER_INFO"
     public static let KEY_USER_PHOTO = "KEY_USER_PHOTO"
+    
+    public static let KEY_LAST_URL = "KEY_LAST_URL"
 
 
     public static let KEY_USER_UUID = "KEY_USER_UUID"

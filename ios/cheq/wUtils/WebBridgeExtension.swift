@@ -76,17 +76,37 @@ extension WebController : WKScriptMessageHandler {
             runBridgeCode("uploadDataResult", BaseResultDomain(resultMessage: "decode error", resultBoolean: false))
             return
         }
-//
-//
-//        if message.name == BridgeList.reqPermission.rawValue {
-//            if let domain = try? JSONDecoder().decode(DMTypeModel.self, from: bodyData) as DMTypeModel {
-//                requestPermission(domain.type)
-//                return
-//            }
-//
-//            runBridgeCode("reqPermissionResult", BaseResultDomain(resultMessage: "decode error", resultBoolean: false))
-//            return
-//        }
+        
+        if message.name == BridgeList.scanNFC.rawValue {
+            scanNFC()
+            return
+        }
+        if message.name == BridgeList.beaconControl.rawValue {
+            guard let domain = try? JSONDecoder().decode(DMUUIDModel.self, from: bodyData) as DMUUIDModel else {
+                let _ = try! JSONDecoder().decode(DMUUIDModel.self, from: bodyData) as DMUUIDModel
+                DLog.p("\(message.name) error parsing ::")
+                runBridgeCode("beaconControlResult", BaseResultDomain(resultMessage: "decode error", resultBoolean: false))
+                return
+            }
+            self.lastUUID = domain.uuid
+            
+            if OnOffTypes.ON.name.lowercased() == domain.type.lowercased() {
+                self.startLocaion()
+                self.startTimer()
+                runBridgeCode("beaconControlResult", BaseResultDomain(resultMessage: "started", resultBoolean: true))
+                return
+            }
+            
+            if OnOffTypes.OFF.name.lowercased() == domain.type.lowercased() {
+                self.locationManager.stopUpdatingLocation()
+                self.stopTimer()
+                runBridgeCode("beaconControlResult", BaseResultDomain(resultMessage: "stopped", resultBoolean: true))
+                return
+            }
+            
+            runBridgeCode("beaconControlResult", BaseResultDomain(resultMessage: "invalid type", resultBoolean: false))
+            return
+        }
 
         if message.name == BridgeList.openBrowser.rawValue {
             guard let domain = try? JSONDecoder().decode(DMUrl.self, from: bodyData) as DMUrl else {

@@ -10,11 +10,15 @@ import UIKit
 import WebKit
 import ActivityKit
 
+import CheqDynamicWidgetExtension
+
 
 import JDID
+import CoreNFC
 
 
 class WebController: JVC {
+
 
     let refreshControl : UIRefreshControl = {
         let v = UIRefreshControl()
@@ -136,41 +140,112 @@ class WebController: JVC {
 //                navi.pushViewController(QRViewController(), animated: true)
 //            }
 //            self.centralManager.scanForPeripherals(withServices: nil) // 스캔 시작
-            self.startLocaion() //beacon
-            self.startTimer()
+            let alert = UIAlertController(title: "alert", message: "(test)bluetooth 동작을 실행?", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .default) { ok in
+                self.startLocaion() //beacon
+                self.startTimer()
+            }
+            let cancel = UIAlertAction(title: "cancel", style: .cancel) { (cancel) in
+                alert.dismiss(animated: true)
+            }
+            alert.addAction(cancel)
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
         }))
         floatingBtn.addChild(item: FloatingBtn.FloatingChildModel(indexId: 2, iconName: "id_card", clickEvent: {
             self.floatingBtn.floatingActive(setActive: false)
             DLog.p("onClick Id Card 2")
 //            self.present(IdCardViewController(), animated: true)
 //            self.centralManager.stopScan()
+            self.scanNFC()
+            
+        }))
+        floatingBtn.addChild(item: FloatingBtn.FloatingChildModel(indexId: 3, iconName: "id_card", clickEvent: {
+            self.floatingBtn.floatingActive(setActive: false)
+            DLog.p("onClick Id Card 3")
+//            self.present(IdCardViewController(), animated: true)
+//            self.centralManager.stopScan()
+            let alert = UIAlertController(title: "alert", message: "url redirect", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .default) { ok in
+                DLog.p("ok : \(alert.textFields?.first?.text)")
+                if let url = URL(string: alert.textFields?.first?.text ?? "") {
+                    DispatchQueue.main.async {
+                        self.pref.save(value: alert.textFields?.first?.text ?? "", key: Preference.KEY_LAST_URL)
+                        self.curWebView.load(URLRequest(url: url))
+                    }
+                }
+                alert.dismiss(animated: true)
+            }
+            let cancel = UIAlertAction(title: "cancel", style: .cancel) { (cancel) in
+                DLog.p("cancle")
+                alert.dismiss(animated: true)
+            }
+            alert.addTextField { tf in
+                tf.placeholder = "https://isaacnas.duckdns.org:8083"
+                tf.keyboardType = .URL
+            }
+            alert.addAction(cancel)
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
         }))
         floatingBtn.build()
     }
     
     var timer : Timer? = nil
     
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
     
     func startTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(looperBody), userInfo: nil, repeats: true)
+        DLog.p("startTimer")
+        if #available(iOS 17, *) {
+            DLog.p("17 above")
+//            let cheqWidgetAttributes = CheqDynamicWidgetAttributes()
+            let cheqWidgetAttributes = CheqDynamicWidgetAttributes()
+            let contentState = CheqDynamicWidgetAttributes.ContentState(statusStr: "initScan")
+            
+            do {
+                let activity = try Activity<CheqDynamicWidgetAttributes>.request(
+                    attributes: cheqWidgetAttributes,
+                    contentState: contentState
+                )
+                print(activity)
+            }
+            catch {
+                print(error)
+            }
+        }
+        timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(looperBody), userInfo: nil, repeats: true)
     }
     
     @objc func looperBody() {
         Task {
             let reqHelper = RequestConstant.shared
             let parameters = ""
-            await reqHelper.request(headers: [:],
-                                 url: "http://date.jsontest.com/",
+            let result = await reqHelper.request(headers: [:],
+                                 url: "http://isaacnas.duckdns.org:8083/attendance/beacon",
                                  parameters: parameters,
-                                 of: ResponseJSONTest.self)
+                                 of: ResponseBeacon.self)
             
+            DLog.p("result : \(result)")
             DLog.p("request done // \(lastBeacon)")
-            self.sendPush()
+            
+            if #available(iOS 17, *) {
+             
+                return
+            }
+            
+//            if disConnected {
+//                self.sendPush()
+//            }
         }
     }
     
     func islandLanding() {
-        if #available(iOS 16.2, *) {
+        if #available(iOS 17, *) {
 //            if ActivityAuthorizationInfo().areActivitiesEnabled {
 //                let future = Calendar.current.date(byAdding: .second, value: self.times.timer, to: Date())!
 //                let date = Date.now...future
@@ -231,6 +306,9 @@ class WebController: JVC {
 //        let newProcessPool = WKProcessPool()
 //        curWebView.configuration.processPool = newProcessPool
 //
+        if !pref.isEmpty(key: Preference.KEY_LAST_URL) {
+            defUrl = pref.get(key: Preference.KEY_LAST_URL)
+        }
         guard let url = URL(string: defUrl) else {
             DLog.p("url is error")
             return
@@ -603,7 +681,6 @@ extension WebController : WKUIDelegate, WKNavigationDelegate {
 
 //MARK: Message Call Functions
 extension WebController {
-    
     func setBackgroundColor(color:String, isLight: Bool) {
         DLog.p("setBackgroundColor :: \(color) / \(isLight)")
         if #available(iOS 13.0, *) {
@@ -677,6 +754,35 @@ extension WebController {
         runBridgeCode("uploadDataResult", resultModel)
     }
     
+    func scanNFC() {
+//        let manager = NFCManager()
+//
+//        manager.read { manager, res in
+//            do {
+//                self.runBridgeCode("scanNFCResult", BaseResultDomain(resultMessage: "\(try res.get()!.records)", resultBoolean: true))
+//                DLog.p("success")
+//            } catch {
+//                DLog.p("catch")
+//                self.runBridgeCode("scanNFCResult", BaseResultDomain(resultMessage: error.localizedDescription, resultBoolean: false))
+//            }
+//        }
+        guard NFCNDEFReaderSession.readingAvailable else {
+            let alertController = UIAlertController(
+                title: "지원하지 않습니다".localized,
+                message: "이 장치는 스캔을 지원하지 않습니다.".localized,
+                preferredStyle: .alert
+            )
+            alertController.addAction(UIAlertAction(title: "확인".localized, style: .default, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+            self.runBridgeCode("scanNFCResult", BaseResultDomain(resultMessage: "not support device", resultBoolean: false))
+            return
+        }
+
+        let session = NFCNDEFReaderSession(delegate: self, queue: nil, invalidateAfterFirstRead: false)
+        session.alertMessage = "태그하기 위해 가까히 대주세요".localized
+        session.begin()
+    }
+    
     func getDataForUpload(type: String) -> DMDataResult {
         switch type.lowercased() {
         case UploadDataTypes.fcmToken.name :
@@ -719,3 +825,81 @@ extension WebController : UIScrollViewDelegate {
 //        }
 //    }
 }
+
+extension WebController : NFCNDEFReaderSessionDelegate {
+    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: any Error) {
+        DLog.p("error")
+        if let readerError = error as? NFCReaderError {
+            if (readerError.code != .readerSessionInvalidationErrorFirstNDEFTagRead)
+                && (readerError.code != .readerSessionInvalidationErrorUserCanceled) {
+                let alertController = UIAlertController(
+                    title: "유효하지 않은 세션".localized,
+                    message: error.localizedDescription,
+                    preferredStyle: .alert
+                )
+                alertController.addAction(UIAlertAction(title: "확인".localized, style: .default, handler: nil))
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+    
+    func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
+        DLog.p("didDetect : \(messages.count)")
+        session.invalidate()
+        
+        
+        if messages.count > 1 {
+                // Restart polling in 500ms
+            self.runBridgeCode("scanNFCResult", BaseResultDomain(resultMessage: "multiple tag", resultBoolean: false))
+            session.invalidate(errorMessage: "하나 이상의 태그가 감지되었으므로, 모든 태그를 제거하고 다시 시도하세요.")
+        } else {
+            guard let message = messages.first else { return }
+            
+            if let data = message.records.first?.payload {
+    //            DLog.p("messages.first?.records : \(String(data: data, encoding: .utf8))")
+                self.runBridgeCode("scanNFCResult", DMDataResult(result: BaseResultDomain(resultMessage: "success", resultBoolean: true), data: parseURINFC(data)))
+            }
+            else {
+                self.runBridgeCode("scanNFCResult", BaseResultDomain(resultMessage: "invalid nfc", resultBoolean: false))
+            }
+        }
+    }
+    func parseURINFC(_ data: Data) -> String? {
+        let prefix = data.prefix(1)
+        let rest = data.dropFirst(1)
+
+        switch prefix {
+        case Data(bytes: [0x00]):
+            return nil
+        case Data(bytes: [0x01]):
+            guard let restString = String(data: rest, encoding: .utf8) else { return nil }
+            return "http://www." + restString
+        case Data(bytes: [0x02]):
+            guard let restString = String(data: rest, encoding: .utf8) else { return nil }
+            return "https://www." + restString
+        case Data(bytes: [0x03]):
+            guard let restString = String(data: rest, encoding: .utf8) else { return nil }
+            return "http://" + restString
+        case Data(bytes: [0x04]):
+            guard let restString = String(data: rest, encoding: .utf8) else { return nil }
+            return "https://" + restString
+        case Data(bytes: [0x05]):
+            guard let restString = String(data: rest, encoding: .utf8) else { return nil }
+            return "tel://" + restString
+        case Data(bytes: [0x06]):
+            guard let restString = String(data: rest, encoding: .utf8) else { return nil }
+            return "mailto://" + restString
+        case Data(bytes: [0x07]):
+            guard let restString = String(data: rest, encoding: .utf8) else { return nil }
+            return "ftp://anonymous:anonymous@" + restString
+        case Data(bytes: [0x08]):
+            guard let restString = String(data: rest, encoding: .utf8) else { return nil }
+            return "ftp://ftp." + restString
+        default:
+            return nil
+        }
+    }
+}
+    

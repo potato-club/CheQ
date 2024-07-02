@@ -18,6 +18,9 @@ enum BridgeList: String, CaseIterable {
     case swipeAble = "swipeAble"
     case uploadData = "uploadData"
     case saveUser = "saveUser"
+    
+    case scanNFC = "scanNFC"
+    case beaconControl = "beaconControl"
 
     case devTest = "devTest"
 }
