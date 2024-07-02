@@ -1,9 +1,6 @@
 server:
   port: 8083
 spring:
-  redis:
-    host: localhost # 서버 배포시에는 redis로 변경해야함
-    port: 6379
   datasource:
     url: ENC(Kbgx6qWF/+Hxv5MzqaCOld/b+Ajf60FoAtGJjKVpXWut3oepIictqqThpFBmM4+6fFg/cm75yJ0=)
     username: ENC(2owR9H1qxy/4weyq+CnKfw==)
@@ -18,6 +15,10 @@ spring:
         show_sql: false
         format_sql: true
     open-in-view: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
   secretKey: ENC(tPEWKhtCjc1Nh87m8lNHDXkWNd8j+ZWGLuzY4+wxP6Y5Dljp7EHiikR88LGmx/5kOr8lSASksuVBxC4Qplpjr+/J/bWycoStp0ZiHk9afA9KCBZv6j8TZ93x5cYWdH9XEcR23AJ20K21GaGroHfrW6OKVSJj9sKs)
