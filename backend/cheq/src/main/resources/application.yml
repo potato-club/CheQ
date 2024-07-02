@@ -1,3 +1,7 @@
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+
 server:
   port: 8083
 spring:
@@ -19,6 +23,8 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+
 
 jwt:
   secretKey: ENC(tPEWKhtCjc1Nh87m8lNHDXkWNd8j+ZWGLuzY4+wxP6Y5Dljp7EHiikR88LGmx/5kOr8lSASksuVBxC4Qplpjr+/J/bWycoStp0ZiHk9afA9KCBZv6j8TZ93x5cYWdH9XEcR23AJ20K21GaGroHfrW6OKVSJj9sKs)
