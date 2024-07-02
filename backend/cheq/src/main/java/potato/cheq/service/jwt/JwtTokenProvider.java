@@ -39,7 +39,6 @@ import java.util.Optional;
 @Slf4j
 public class JwtTokenProvider {
 
-    private final RedisService redisService;
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
 
@@ -141,12 +140,6 @@ public class JwtTokenProvider {
     }
 
     public String extractMemberId(String token) throws Exception {
-//        Long id = extractId(token);
-//        Optional<String> studentIdOptional = userRepository.findStudentIdById(id);
-//        if (studentIdOptional.isEmpty()) {
-//            throw new NotFoundException("사용자를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
-//        }
-//        return studentIdOptional.get();
         Long id = extractId(token);
         String role = extractRole(token); // 토큰에서 역할 추출
 
@@ -215,15 +208,16 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public UsernamePasswordAuthenticationToken getAuthentication(String token) throws Exception {
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(extractMemberId(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
-
     public String resolveRefreshToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("refreshToken");
         if (request.getHeader("refreshToken") != null)
             return request.getHeader("refreshToken").substring(7);
         return null;
+    }
+
+    public UsernamePasswordAuthenticationToken getAuthentication(String token) throws Exception {
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(extractMemberId(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public boolean validateRefreshToken(String refreshToken) {
@@ -259,44 +253,29 @@ public class JwtTokenProvider {
         }
     }
 
-    public String reissueAccessToken(String accessToken, HttpServletResponse response) {
+    public String reissueAccessToken(String refreshToken, HttpServletResponse response) {
         try {
-            Long id = redisService.getValues(accessToken);
+            this.validateRefreshToken(refreshToken);
+            Long id = findUserIdByToken(refreshToken);
             Optional<UserEntity> user = userRepository.findById(id);
             return createAccessToken(id, String.valueOf(user.get().getUserRole()));
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ErrorCode.EXPIRED_ACCESS_TOKEN.getMessage();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public String reissueRefreshToken(String refreshToken, HttpServletResponse response) {
-        try {
-            Long id = redisService.getValues(refreshToken);
-            Optional<UserEntity> user = userRepository.findById(id);
-
-            String newRefreshToken = createRefreshToken(id, String.valueOf(user.get().getUserRole()));
-
-            redisService.delValues(refreshToken);
-            redisService.setValues(id, newRefreshToken);
-
-            return newRefreshToken;
-        } catch (ExpiredJwtException e) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return ErrorCode.EXPIRED_REFRESH_TOKEN.getMessage();
-        }
-    }
-
-    public UserEntity findUserIdByToken(HttpServletRequest request) throws Exception {
-        String token = resolveAccessToken(request);
+    public Long findUserIdByToken(String token) throws Exception {
         String accessTokenType = extractTokenType(token);
 
-        if ("refresh".equals(accessTokenType)) {
-            throw new UnAuthorizedException("RefeshToken은 사용 할 수 없습니다.", ErrorCode.ACCESS_DENIED_EXCEPTION);
+        if ("access".equals(accessTokenType)) {
+            throw new UnAuthorizedException("AccessToken은 사용 할 수 없습니다.", ErrorCode.ACCESS_DENIED_EXCEPTION);
         }
 
         return token == null ? null : userRepository.findById(extractId(token))
-                .orElseThrow(() -> new NotFoundException("토큰에 해당하는 ID값을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION));
+                .orElseThrow(() -> new NotFoundException("토큰에 해당하는 ID값을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION)).getId();
     }
 
     public Optional<UserEntity> extractIdByRequest(HttpServletRequest request) throws Exception {

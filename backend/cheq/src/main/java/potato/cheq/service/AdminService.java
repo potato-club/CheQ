@@ -16,14 +16,12 @@ import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.AdminRepository;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
-import potato.cheq.service.jwt.RedisService;
 import potato.cheq.error.security.ErrorCode;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
@@ -87,13 +85,12 @@ public class AdminService {
     }
 
 
-    private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) throws Exception {
+    private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) {
         String accessToken = jwtTokenProvider.createAccessToken(id, role);
         String refreshToken = jwtTokenProvider.createRefreshToken(id, role);
 
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
 
-        redisService.setValues(id, refreshToken);
     }
 }

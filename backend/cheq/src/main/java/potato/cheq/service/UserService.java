@@ -20,7 +20,6 @@ import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.repository.UuidRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
-import potato.cheq.service.jwt.RedisService;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -33,7 +32,6 @@ import static potato.cheq.error.security.ErrorCode.NOT_FOUND_EXCEPTION;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final UuidRepository uuidRepository;
@@ -48,7 +46,6 @@ public class UserService {
     }
 
     public void setUserDevice(HttpServletRequest request, Long id, RequestUpdateUserDto dto) throws Exception {
-        // 그 토큰이 어떻게 그사용자꺼인지?
         if (uuidRepository.existsByDeviceUuid(dto.getUuid())) {
             throw new Exception("이미 존재하는 기기입니다.");
         }
@@ -81,7 +78,6 @@ public class UserService {
 
         jwtTokenProvider.setHeaderAccessToken(response, accessToken);
         jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
-        redisService.setValues(id, refreshToken);
 
     }
 
@@ -91,10 +87,10 @@ public class UserService {
         jwtTokenProvider.validateRefreshToken(refreshToken);
 
         String newAccessToken = jwtTokenProvider.reissueAccessToken(refreshToken, response);
-        String newRefreshToken = jwtTokenProvider.reissueRefreshToken(refreshToken, response);
+//        String newRefreshToken = jwtTokenProvider.reissueRefreshToken(refreshToken, response);
 
         jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
-        jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
+//        jwtTokenProvider.setHeaderRefreshToken(response, newRefreshToken);
 
     }
 
