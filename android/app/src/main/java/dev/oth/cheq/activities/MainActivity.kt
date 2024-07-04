@@ -4,12 +4,16 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.app.PendingIntent
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
@@ -19,6 +23,7 @@ import android.nfc.tech.NfcF
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.IBinder
 import android.provider.Settings
 import android.view.View
 import android.view.WindowManager
@@ -26,6 +31,7 @@ import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebSettings
 import android.webkit.WebView.setWebContentsDebuggingEnabled
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -49,6 +55,7 @@ import dev.oth.cheq.domains.OnOffTypes
 import dev.oth.cheq.domains.PermissionCheckModel
 import dev.oth.cheq.domains.PermissionTypes
 import dev.oth.cheq.domains.UploadTypes
+import dev.oth.cheq.services.NotiService
 import dev.oth.cheq.utils.DLog
 import dev.oth.cheq.utils.Preference
 import dev.oth.cheq.wutils.CheqChromeClient
@@ -75,7 +82,8 @@ class MainActivity : BaseActivity() {
     private var nfcAdapter: NfcAdapter? = null
 
     private val gson = GsonBuilder().serializeNulls().create()
-
+    var myService: NotiService? = null
+    var isService = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -174,7 +182,11 @@ class MainActivity : BaseActivity() {
             }
             return
         }
-        Snackbar.make(binding.root, "잘못된 TAG 입니다.", Snackbar.LENGTH_LONG).show()
+        try {
+            Snackbar.make(binding.root, "잘못된 TAG 입니다.", Snackbar.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
@@ -185,32 +197,57 @@ class MainActivity : BaseActivity() {
 
     // 알림 권한 요청
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun askNotificationPermission() {
+    private fun askNotificationPermission(completion: (Boolean) -> Unit) {
         permissionCodeCompletionMap[pushPermissionRequestCode] = push@{
-            if (it.grant) {
-                initFcm()
-            }
+            completion.invoke(it.grant)
+//            if (it.grant) {
+//                initFcm()
+//            }
         }
         requestPermission(
             pushPermissionRequestCode,
-            arrayListOf(Manifest.permission.POST_NOTIFICATIONS)
+            arrayListOf(
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.FOREGROUND_SERVICE,
+                Manifest.permission.FOREGROUND_SERVICE_LOCATION,
+            )
         )
     }
     // bluetooth
     private fun askBlueToothPermission(type: String) {
+        DLog.w()
         permissionCodeCompletionMap[bluetoothPermissionRequestCode] = result@{
+            DLog.w("${it.grant}")
             if (it.grant) {
-                beaconSwitch(type)
+                val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
+                val btAdapter = bluetoothManager.adapter
+
+                runOnUiThread ui@{
+                    if (btAdapter == null || !btAdapter.isEnabled) {
+                        DLog.w()
+                        Snackbar.make(binding.root, "블루투스 기능을 확인해주세요", Snackbar.LENGTH_LONG).show()
+                        val bleIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                        startActivity(bleIntent)
+                        return@ui
+                    }
+                    DLog.w()
+                    beaconSwitch(type)
+                }
                 return@result
             }
 
             permissionDenied("beaconControlResult", PermissionTypes.bluetooth.getName())
         }
+
         requestPermission(
             bluetoothPermissionRequestCode,
-            arrayListOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.BLUETOOTH_ADMIN)
+            arrayListOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_ADVERTISE,
+                Manifest.permission.BLUETOOTH_CONNECT)
         )
     }
 
@@ -369,11 +406,16 @@ class MainActivity : BaseActivity() {
             }
 
             beaconControl = beaconControl@{//todo
+                DLog.w()
                 try {
                     val domain = gson.fromJson(it, DMTypeModel::class.java)
                     runOnUiThread {
-                        askBlueToothPermission(domain.type)
-//                        beaconSwitch(domain.type)
+                        askNotificationPermission { pushNotiResult ->
+                            if (pushNotiResult) {
+                                askBlueToothPermission(domain.type)
+                            }
+                        }
+
                     }
                 } catch (e: Exception) {
                     DLog.printException(e)
@@ -398,6 +440,46 @@ class MainActivity : BaseActivity() {
 
             }
         }
+    }
+
+    private fun startService(completion: (Boolean) -> Unit) {
+        DLog.w("isService : $isService")
+        if (isService) {
+            completion.invoke(false)
+            return
+        }
+        val intent = Intent(this@MainActivity, NotiService::class.java)
+        bindService(intent, conn, Context.BIND_AUTO_CREATE)
+        completion.invoke(true)
+    }
+
+    private fun turnOffService() {
+        try {
+            myService?.stopScan()
+            myService?.onDestroy()
+            unbindService(conn)
+            isService = false
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        myService = null
+    }
+
+    private val conn = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val mb = service as NotiService.LocalBinder
+            myService = mb.service
+            isService = true
+            val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+
+            mb.service.startScan(bluetoothManager.adapter)
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isService = false
+            myService = null
+        }
+
     }
 
     // webview client initialize
@@ -851,10 +933,19 @@ class MainActivity : BaseActivity() {
     }
 
     //refreshLayout enable, disable
-    private fun beaconSwitch(type: String) { //todo
-        val switch = OnOffTypes.ON.name.lowercase() == type.lowercase()
+    private fun beaconSwitch(type: String) {
 
-        runBridgeCode("beaconControlResult", BaseResultDomain("success", true))
+        val switch = OnOffTypes.ON.name.lowercase() == type.lowercase()
+        DLog.w(switch.toString())
+        if (switch) {
+            startService {
+                runBridgeCode("beaconControlResult", BaseResultDomain(if (it){"success : turn on"}else{"failed : service start failed"}, it))
+            }
+            return
+        }
+
+        turnOffService()
+        runBridgeCode("beaconControlResult", BaseResultDomain("success : turn off", true))
     }
 
     // endregion
@@ -980,5 +1071,12 @@ class MainActivity : BaseActivity() {
 //        Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
 //        else -> @Suppress("DEPRECATION") getParcelable(key) as? T
 //    }
+
+    override fun onDestroy() {
+        if (isService) {
+            turnOffService()
+        }
+        super.onDestroy()
+    }
 
 }
