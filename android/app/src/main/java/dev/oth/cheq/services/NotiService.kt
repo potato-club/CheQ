@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
@@ -19,6 +20,7 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.google.gson.Gson
 import dev.oth.cheq.BuildConfig
 import dev.oth.cheq.R
 import dev.oth.cheq.utils.DLog
@@ -117,12 +119,74 @@ class NotiService : Service() {
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             super.onScanResult(callbackType, result)
-            DLog.i("[type=$callbackType] $result")
+//            DLog.i("[type=$callbackType] $result")
+            if (result == null) {
+                return
+            }
+//            DLog.w(gson.toJson(result.scanRecord))
+//            DLog.w(result.scanRecord?.advertiseFlags)
+            if (result.scanRecord != null) {
+                onLeScan(result.device, result.rssi, result.scanRecord!!.bytes)
+            }
+            else {
+                DLog.w("scanData is null")
+            }
         }
 
         override fun onScanFailed(errorCode: Int) {
             super.onScanFailed(errorCode)
         }
+
+        fun onLeScan(device: BluetoothDevice, rssi: Int, scanRecord: ByteArray) {
+            var startByte = 2
+            var patternFound = false
+            while (startByte <= 5) {
+                if (scanRecord[startByte + 2].toInt() and 0xff == 0x02 &&
+                    scanRecord[startByte + 3].toInt() and 0xff == 0x15) {
+                    patternFound = true
+                    break
+                }
+                startByte++
+            }
+
+            if (patternFound) {
+                // Convert to hex String
+                val uuidBytes = ByteArray(16)
+                System.arraycopy(scanRecord, startByte + 4, uuidBytes, 0, 16)
+                val hexString = bytesToHex(uuidBytes)
+
+                // Here is your UUID
+                val uuid = "${hexString.substring(0, 8)}-${hexString.substring(8, 12)}-${hexString.substring(12, 16)}-${hexString.substring(16, 20)}-${hexString.substring(20, 32)}"
+
+                // Here is your Major value
+                val major = (scanRecord[startByte + 20].toInt() and 0xff) * 0x100 + (scanRecord[startByte + 21].toInt() and 0xff)
+
+                // Here is your Minor value
+                val minor = (scanRecord[startByte + 22].toInt() and 0xff) * 0x100 + (scanRecord[startByte + 23].toInt() and 0xff)
+
+                DLog.w("parsing device : [$uuid][$major][$minor][$rssi]")
+            }
+            else {
+                DLog.d("wrong pattern : ${device.name}")
+            }
+        }
+
+        /**
+         * bytesToHex method
+         * Found on the internet
+         * http://stackoverflow.com/a/9855338
+         */
+        private val hexArray = "0123456789ABCDEF".toCharArray()
+        private fun bytesToHex(bytes: ByteArray): String {
+            val hexChars = CharArray(bytes.size * 2)
+            for (j in bytes.indices) {
+                val v = bytes[j].toInt() and 0xFF
+                hexChars[j * 2] = hexArray[v ushr 4]
+                hexChars[j * 2 + 1] = hexArray[v and 0x0F]
+            }
+            return String(hexChars)
+        }
+
     }
 
     public fun stopScan() {
