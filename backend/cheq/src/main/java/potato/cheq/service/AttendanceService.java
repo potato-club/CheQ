@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import potato.cheq.dto.request.BeaconRequestDto;
 import potato.cheq.dto.request.NFCRequestDto;
+import potato.cheq.dto.response.AttendanceDto;
 import potato.cheq.entity.AttendanceEntity;
 import potato.cheq.entity.BeaconEntity;
 import potato.cheq.entity.NFCEntity;
@@ -24,8 +25,12 @@ import potato.cheq.service.jwt.JwtTokenProvider;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -106,10 +111,10 @@ public class AttendanceService {
         boolean isAttendanceValid = nfcEntities.size() >= 2 && beaconEntities.size() >= 3;
 
         AttendanceEntity attendanceEntity = AttendanceEntity.builder()
-                .NFC_id(nfcEntities.size() > 0 ? nfcEntities.get(0).getId() : null)
-                .beacon_id(beaconEntities.size() > 0 ? beaconEntities.get(0).getId() : null)
-                .user_id(user.get().getId())
-                .check_inout(isAttendanceValid)
+                .NFCid(nfcEntities.size() > 0 ? nfcEntities.get(0).getId() : null)
+                .beaconId(beaconEntities.size() > 0 ? beaconEntities.get(0).getId() : null)
+                .userId(user.get().getId())
+                .checkInout(isAttendanceValid)
                 .build();
 
         if (isAttendanceValid) {
@@ -118,38 +123,78 @@ public class AttendanceService {
         return isAttendanceValid;
     }
 
-    public Long determineAttendanceStatus(HttpServletRequest request) throws Exception {
-        Optional<UserEntity> id = jwtTokenProvider.extractIdByRequest(request);
+    public List<AttendanceDto> getAttendanceByDate(HttpServletRequest request) throws Exception {
+        Optional<UserEntity> userOptional = jwtTokenProvider.extractIdByRequest(request);
 
-        if (id.isEmpty()) {
+        if(userOptional.isEmpty()) {
             throw new NotFoundException("해당하는 회원을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
         }
 
-        UserEntity user = id.get();
-        ChapelKind chapelKind = user.getChapelKind();
+        UserEntity user = userOptional.get();
+        List<AttendanceEntity> attendanceEntities = attendanceRepository.findByUserId(user.getId());
 
-        List<NFCEntity> nfcEntities = nfcRepository.findByUuid(user.getStUuid());
 
-        if (nfcEntities.isEmpty()) {
+        // 이런식으로 map함수를 써서 날짜별로 그룹화할 수 있고 람다식을 사용
+        Map<LocalDate, List<AttendanceEntity>> groupedByDate = attendanceEntities.stream()
+                .collect(Collectors.groupingBy(attendance -> attendance.getAttendanceTime().toLocalDate()));
+
+        List<AttendanceDto> attendanceDtoList = new ArrayList<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
+
+        for(Map.Entry<LocalDate, List<AttendanceEntity>> entry : groupedByDate.entrySet()) {
+            LocalDate date = entry.getKey();
+            List<AttendanceEntity> records = entry.getValue();
+
+            Long status = determineAttendanceStatus(records, user.getChapelKind());
+            String formattedDate = date.format(formatter);
+            attendanceDtoList.add(new AttendanceDto(formattedDate, status));
+        }
+        return attendanceDtoList;
+    }
+
+    public Long determineAttendanceStatus(List<AttendanceEntity> records, ChapelKind chapelKind) throws Exception {
+//        Optional<UserEntity> id = jwtTokenProvider.extractIdByRequest(request);
+//
+//        if (id.isEmpty()) {
+//            throw new NotFoundException("해당하는 회원을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
+//        }
+        if(records.isEmpty()) {
             return 0L;
         }
 
-        NFCEntity firstNFC = nfcEntities.get(0);
-        NFCEntity endNFC = nfcEntities.get(nfcEntities.size() - 1);
+//        UserEntity user = id.get();
+//        ChapelKind chapelKind = user.getChapelKind();
+//
+//        List<NFCEntity> nfcEntities = nfcRepository.findByUuid(user.getStUuid());
+//
+//        if (nfcEntities.isEmpty()) {
+//            return 0L;
+//        }
+//
+//        NFCEntity firstNFC = nfcEntities.get(0);
+//        NFCEntity endNFC = nfcEntities.get(nfcEntities.size() - 1);
+//
+//        LocalTime firstAttendanceTime = LocalTime.from(firstNFC.getAttendanceTime());
+//        LocalTime endAttendanceTime = LocalTime.from(endNFC.getAttendanceTime());
+//
+//        LocalTime chapelStartTime = LocalTime.parse(chapelKind.getStartTime());
+//        LocalTime chapelEndTime = LocalTime.parse(chapelKind.getEndTime());
+//        LocalTime chapelTardyTime = LocalTime.parse(chapelKind.getTardyTime());
 
-        LocalTime firstAttendanceTime = LocalTime.from(firstNFC.getAttendanceTime());
-        LocalTime endAttendanceTime = LocalTime.from(endNFC.getAttendanceTime());
+//        log.info(String.valueOf(firstAttendanceTime)); // 해당 유저의 첫번쨰 태그 시간
+//        log.info(String.valueOf(endAttendanceTime)); // 해당 유저의 마지막 태그 시간
+//        log.info(String.valueOf(chapelStartTime)); // 해당 유저가 참가하고있는 채플종류의 시작시간
+//        log.info(String.valueOf(chapelEndTime)); // 해당 유저가 참가하고있는 채플종류의 종료시간
+//        log.info(String.valueOf(chapelTardyTime)); // 해당 유저가 참가하고있는 채플종류의 지각 마감시간
+
+
+        LocalTime firstAttendanceTime = records.get(0).getAttendanceTime().toLocalTime();
+        LocalTime endAttendanceTime = records.get(records.size()-1).getAttendanceTime().toLocalTime();
 
         LocalTime chapelStartTime = LocalTime.parse(chapelKind.getStartTime());
         LocalTime chapelEndTime = LocalTime.parse(chapelKind.getEndTime());
         LocalTime chapelTardyTime = LocalTime.parse(chapelKind.getTardyTime());
-
-        log.info(String.valueOf(firstAttendanceTime)); // 해당 유저의 첫번쨰 태그 시간
-        log.info(String.valueOf(endAttendanceTime)); // 해당 유저의 마지막 태그 시간
-        log.info(String.valueOf(chapelStartTime)); // 해당 유저가 참가하고있는 채플종류의 시작시간
-        log.info(String.valueOf(chapelEndTime)); // 해당 유저가 참가하고있는 채플종류의 종료시간
-        log.info(String.valueOf(chapelTardyTime)); // 해당 유저가 참가하고있는 채플종류의 지각 마감시간
-
         if (firstAttendanceTime.isBefore(chapelStartTime) && endAttendanceTime.isAfter(chapelEndTime)) {
             return 1L; // 출석
         } else if (firstAttendanceTime.isBefore(chapelTardyTime) && endAttendanceTime.isAfter(chapelEndTime)) {
