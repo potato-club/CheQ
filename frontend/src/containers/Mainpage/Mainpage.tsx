@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
@@ -15,7 +14,7 @@ const images = [
 
 const Mainpage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [NFC, setNFC] = useState(null); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
+  const [NFC, setNFC] = useState(false); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,8 +26,37 @@ const Mainpage = () => {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
+  const onSubmit = async (data: any) => {
+    if (NFC) {
+      return;
+    }
 
-  const attendanceStatuses = ['present', 'absent', 'late']; // Updated to 3 statuses
+    try {
+      const nfc = await axios.post(
+        "http://isaacnas.duckdns.org:8083/attendance/nfc",
+        {
+          mac_address: data.address,
+          nfc_position: data.position,
+          attendanceTime: new Date().toISOString(), // or any appropriate time format
+        },
+        {
+          headers: {
+            Authorization: "Bearer your-auth-token", // Include your token here
+          },
+        }
+      );
+    } catch (error) {
+      alert("오류가 발생했습니다");
+    }
+  };
+
+  const attendanceStatuses = [
+    "present",
+    "absent",
+    "late",
+    "present",
+    "present",
+  ];
 
   const getColor = (status: string): string => {
     switch (status) {
@@ -45,68 +73,11 @@ const Mainpage = () => {
 
   // Example data for buttons from the backend
   const buttonsData = [
-    { label: 'NFC', image: NFCImage },
-    { label: 'Beacon', image: BeaconImage },
-    { label: 'Menu 3' },
-    { label: 'Menu 4' },
+    { label: "Menu 1" },
+    { label: "Menu 2" },
+    { label: "Menu 3" },
+    { label: "Menu 4" },
   ];
-
-  // function Register(){
-  //   const handleMenu1Click = () => {
-  //     alert("Menu 1 clicked")
-  //   }
-  // }
-
-  const handleMenu1Click = () => {
-    axios.post("http://isaacnas.duckdns.org:8083/attendance/nfc", {
-      uuid: "",
-      nfc_position: "",
-      attendanceTime: ""
-    }, {
-       headers: {
-         'Authorization': 'Bearer YOUR_TOKEN_HERE', // Include your token here if required
-      //   //'Content-Type': 'application/json'
-       }
-    })
-    .then(response => {
-      alert("성공했습니다");
-    })
-    .catch(error => {
-      if (error.response) {
-        alert(`오류가 발생했습니다: ${error.response.status}`);
-      } else if (error.request) {
-        alert("서버로부터 응답이 없습니다. 서버 상태를 확인하세요.");
-      } else {
-        alert(`요청 중 오류가 발생했습니다: ${error.message}`);
-      }
-    });
-  };
-  
-  //beacon은 연동 안해도된다.
-  // const handleMenu2Click = () => {
-  //   axios.post("http://isaacnas.duckdns.org:8083/attendance/beacon", {
-  //     uuid: "",
-  //     beacon_position: "",
-  //     attendanceTime: ""
-  //   }, {
-  //     // headers: {
-  //     //   'Authorization': 'Bearer YOUR_TOKEN_HERE', // Include your token here if required
-  //     //   //'Content-Type': 'application/json'
-  //     // }
-  //   })
-  //   .then(response => {
-  //     alert("성공했습니다");
-  //   })
-  //   .catch(error => {
-  //     if (error.response) {
-  //       alert(`오류가 발생했습니다: ${error.response.status}`);
-  //     } else if (error.request) {
-  //       alert("서버로부터 응답이 없습니다. 서버 상태를 확인하세요.");
-  //     } else {
-  //       alert(`요청 중 오류가 발생했습니다: ${error.message}`);
-  //     }
-  //   });
-  // };
 
   return (
     <div>
@@ -125,9 +96,9 @@ const Mainpage = () => {
           </Box2Advertisement>
         </Box2>
         <Box3A>
-        <Box3Atext>
-          <Box3AtextTitle>채플현황</Box3AtextTitle>
-        </Box3Atext>
+          <Box3Atext>
+            <Box3AtextTitle>현재 출결 현황</Box3AtextTitle>
+          </Box3Atext>
         </Box3A>
         <Box3B>
           <Box3BCircle>
@@ -137,16 +108,25 @@ const Mainpage = () => {
           </Box3BCircle>
         </Box3B>
         <Box4>
-  <Box4MainA>
-    {buttonsData.map((button, index) => (
-      <Box4MainAButton key={index} onClick={index === 0 ? handleMenu1Click : undefined}>
-        {button.image ? (
-          <Box4MainAButtonImage src={button.image} alt={button.label} />
-        ): (button.label)}
-      </Box4MainAButton>
-    ))}
-  </Box4MainA>
-</Box4>
+          <Box4MainA>
+            {buttonsData.map((button, index) => (
+              <Box4MainAButton
+                key={index}
+                onClick={
+                  index === 0
+                    ? () =>
+                        onSubmit({
+                          address: "exampleAddress",
+                          position: "examplePosition",
+                        })
+                    : undefined
+                }
+              >
+                {button.label}
+              </Box4MainAButton>
+            ))}
+          </Box4MainA>
+        </Box4>
       </BigBox>
       <Nav />
     </div>
@@ -189,6 +169,7 @@ const Box2 = styled.div`
   justify-content: center;
   align-items: center;
   height: 250px;
+  //flex-direction: column;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
 `;
@@ -205,6 +186,7 @@ const Box2Advertisement = styled.div`
 const AdvertisementImage = styled.img`
   width: 100%;
   height: 100%;
+  //object-fit: cover;
 `;
 
 const Box3A = styled.div`
@@ -245,7 +227,7 @@ const Box3BCircle = styled.div`
   width: 70%;
 `;
 
-const Circle = styled.div<{ color: string }>`
+const Circle = styled.div`
   display: flex;
   background-color: ${(props) => props.color};
   width: 15px;
@@ -268,6 +250,7 @@ const Box4MainA = styled.div`
   gap: 20px;
   width: 100%;
   box-sizing: border-box;
+  //max-width: 100%; /* 이 속성은 필요한 경우에 추가합니다. */
 `;
 
 const Box4MainAButton = styled.div`
@@ -276,27 +259,11 @@ const Box4MainAButton = styled.div`
   justify-content: center;
   width: 100%;
   aspect-ratio: 1 / 1;
-  background-color: white;
-  overflow: hidden;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(76, 76, 76, 0), 0 -2px 4px rgba(76, 76, 76, 0.1),
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
-  text-align: center;
+  //background-color: #f0f0f0;
   cursor: pointer;
-  &:hover {
-    background-color: #f0f0f0;
-  }
+  box-sizing: border-box;
+  //margin: auto;
 `;
-
-const Box4MainAButtonImage = styled.img`
-  width:100%;
-  height:100%;
-
-`
-
-
-
-
-
-
-
