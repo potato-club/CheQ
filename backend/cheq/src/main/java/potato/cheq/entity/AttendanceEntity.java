@@ -21,14 +21,14 @@ public class AttendanceEntity extends BaseTime {
     private Long id;
 
     @Column(nullable = false)
-    private Long NFC_id;
+    private Long NFCid;
 
     @Column(nullable = false)
-    private Long beacon_id;
+    private Long beaconId;
 
     @Column(nullable = false)
-    private Long user_id;
+    private Long userId;
 
     @Column(nullable = false)
-    private boolean check_inout; // checkIn = 1, checkOut = 0
+    private boolean checkInout; // checkIn = 1, checkOut = 0
 }

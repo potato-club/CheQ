@@ -8,10 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import potato.cheq.dto.request.BeaconRequestDto;
 import potato.cheq.dto.request.NFCRequestDto;
+import potato.cheq.dto.response.AttendanceDto;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.UnAuthorizedException;
 import potato.cheq.service.AttendanceService;
 import potato.cheq.service.jwt.JwtTokenProvider;
+
+import java.util.List;
 
 
 @RestController
@@ -55,11 +58,10 @@ public class AttendanceController {
         return ResponseEntity.ok().body(studentId + "학생 미출결");
     }
 
-    @GetMapping("/tardy")
-    @Operation(summary = "지각 정보")
-    public Long checkStatus(HttpServletRequest request) throws Exception {
-        return attendanceService.determineAttendanceStatus(request);
+    @GetMapping("/all")
+    public ResponseEntity<List<AttendanceDto>> getAttendanceByDate(HttpServletRequest request) throws Exception {
+        List<AttendanceDto> attendanceByDate = attendanceService.getAttendanceByDate(request);
+        return ResponseEntity.ok(attendanceByDate);
     }
-
 
 }
