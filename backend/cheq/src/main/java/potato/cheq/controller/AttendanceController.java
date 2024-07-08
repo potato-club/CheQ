@@ -59,6 +59,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/all")
+    @Operation(summary = "모든 출결 정보")
     public ResponseEntity<List<AttendanceDto>> getAttendanceByDate(HttpServletRequest request) throws Exception {
         List<AttendanceDto> attendanceByDate = attendanceService.getAttendanceByDate(request);
         return ResponseEntity.ok(attendanceByDate);
