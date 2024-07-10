@@ -1,13 +1,12 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Hansei from "../../image/hansei.png";
-import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
 const LoginPage = () => {
-  // const [error, setError] = useState("");
-  const signup = useNavigate(); // useNavigate 훅 사용
+  const signup = useNavigate();
   const {
     register,
     handleSubmit,
@@ -15,111 +14,42 @@ const LoginPage = () => {
     watch,
   } = useForm();
 
-  // 정보를 출력하는 코드
   const onSubmit = async (data: any) => {
     const loginData = {
       studentId: data.studentId,
       password: data.password,
     };
-    if (data.studentId === "admin" && data.password === "admin") {
-      try {
-        const adminResponse = await axios.post(
-          "http://isaacnas.duckdns.org:8083/admin/login",
-          loginData
-        );
+    const url =
+      data.studentId === "admin" && data.password === "admin"
+        ? "http://isaacnas.duckdns.org:8083/admin/login"
+        : "http://isaacnas.duckdns.org:8083/user/login";
 
-        console.log("서버 응답 (admin):", adminResponse); // 디버깅을 위해 콘솔에 출력
+    try {
+      const response = await axios.post(url, loginData);
+      console.log("서버 응답:", response);
 
-        if (adminResponse.status === 200 || adminResponse.data.success) {
-          alert("관리자 로그인 되었습니다!");
-          signup("/admin");
-        } else {
-          alert("관리자 로그인에 실패했습니다. 다시 시도해주세요.");
-        }
-      } catch (error: any) {
-        if (error.response) {
-          // 요청이 이루어졌고 서버가 2xx 범위 외의 상태 코드로 응답함
-          console.error("Error response (admin):", error.response.data);
-          alert(`관리자 로그인에 실패했습니다: ${error.response.data.message}`);
-        } else if (error.request) {
-          // 요청이 이루어졌지만 응답을 받지 못함
-          console.error("Error request (admin):", error.request);
-          alert(
-            "관리자 로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요."
-          );
-        } else {
-          // 요청 설정 중 오류가 발생함
-          console.error("Error message (admin):", error.message);
-          alert("관리자 로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
-        }
+      if (response.status === 200 || response.data.success) {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        alert("로그인 되었습니다!");
+        const redirectUrl = data.studentId === "admin" ? "/admin" : "/main";
+        signup(redirectUrl);
+      } else {
+        alert("로그인에 실패했습니다. 다시 시도해주세요.");
       }
-    } else {
-      try {
-        const response = await axios.post(
-          "http://isaacnas.duckdns.org:8083/user/login",
-          loginData
-        );
-
-        console.log("서버 응답:", response); // 디버깅을 위해 콘솔에 출력
-
-        if (response.status === 200 || response.data.success) {
-          alert("로그인 되었습니다!");
-          signup("/main");
-        } else {
-          alert("로그인에 실패했습니다. 다시 시도해주세요.");
-        }
-      } catch (error: any) {
-        if (error.response) {
-          // 요청이 이루어졌고 서버가 2xx 범위 외의 상태 코드로 응답함
-          console.error("Error response:", error.response.data);
-          alert(`로그인에 실패했습니다: ${error.response.data.message}`);
-        } else if (error.request) {
-          // 요청이 이루어졌지만 응답을 받지 못함
-          console.error("Error request:", error.request);
-          alert("로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요.");
-        } else {
-          // 요청 설정 중 오류가 발생함
-          console.error("Error message:", error.message);
-          alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
-        }
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        alert(`로그인에 실패했습니다: ${error.response.data.message}`);
+      } else if (error.request) {
+        console.error("Error request:", error.request);
+        alert("로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요.");
+      } else {
+        console.error("Error message:", error.message);
+        alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
   };
-  //   if (data.studentId === "admin" && data.password === "admin") {
-  //     signup("/admin");
-  //     // if (data.studentId === "admin") {
-  //     //   signup("/admin");
-  //   }
-  //   try {
-  //     const response = await axios.post(
-  //       "http://isaacnas.duckdns.org:8083/user/login",
-  //       loginData
-  //     );
-
-  //     console.log("서버 응답:", response); // 디버깅을 위해 콘솔에 출력
-
-  //     if (response.status === 200 || response.data.success) {
-  //       alert("로그인 되었습니다!");
-  //       signup("/main");
-  //     } else {
-  //       alert("로그인에 실패했습니다. 다시 시도해주세요.");
-  //     }
-  //   } catch (error: any) {
-  //     if (error.response) {
-  //       // 요청이 이루어졌고 서버가 2xx 범위 외의 상태 코드로 응답함
-  //       console.error("Error response:", error.response.data);
-  //       alert(`로그인에 실패했습니다: ${error.response.data.message}`);
-  //     } else if (error.request) {
-  //       // 요청이 이루어졌지만 응답을 받지 못함
-  //       console.error("Error request:", error.request);
-  //       alert("로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요.");
-  //     } else {
-  //       // 요청 설정 중 오류가 발생함
-  //       console.error("Error message:", error.message);
-  //       alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
-  //     }
-  //   }
-  // };
 
   return (
     <div>
@@ -132,7 +62,7 @@ const LoginPage = () => {
           <FormRow>
             <label htmlFor="studentId">아이디</label>
             <input
-              id="studentId" // studentid로 변경
+              id="studentId"
               type="text"
               placeholder="학번을 입력해주세요."
               {...register("studentId", {
@@ -161,7 +91,6 @@ const LoginPage = () => {
                   value === watch("studentId") ||
                   /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(value) ||
                   "비밀번호를 제대로 입력해주세요.",
-                // "영문+숫자 조합 8자 이상 입력해주세요.",
               })}
             />
             {errors.password && (
@@ -170,7 +99,6 @@ const LoginPage = () => {
           </FormRow>
           <LoginBtn>
             <SubmitButton type="submit">로그인</SubmitButton>
-            {/* <SignUpButton>회원가입</SignUpButton> */}
           </LoginBtn>
         </LoginForm>
       </StyleLoginPage>
@@ -179,6 +107,7 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -202,7 +131,6 @@ const FormRow = styled.div`
     border: 1px solid #375cde;
     border-radius: 20px;
     &::placeholder {
-      /* font-weight: bold; */
       color: #375cde;
     }
   }
@@ -212,7 +140,6 @@ const StyleLoginPage = styled.div`
   display: flex;
   flex-direction: column;
   margin: auto;
-  /* width: 580px; */
   width: 100vw;
   min-width: 200px;
   max-width: 580px;
@@ -225,6 +152,7 @@ const LoginTitle = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
 const MainTitle = styled.h1`
   color: #375cde;
 `;
@@ -237,7 +165,7 @@ const LoginBtn = styled.div`
   min-width: 200px;
   max-width: 580px;
   position: fixed;
-  bottom: 3%;
+  bottom: 1%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
@@ -251,7 +179,6 @@ const SubmitButton = styled.button`
   font-weight: bold;
   border: none;
   border-radius: 10px;
-  /* width: 580px; */
   cursor: pointer;
   margin-bottom: 15px;
   margin-top: 20px;
