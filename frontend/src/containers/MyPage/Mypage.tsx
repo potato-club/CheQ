@@ -2,45 +2,58 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
 import QRImage from "../../Image/qr -1004.png";
-import { useNavigate } from "react-router-dom"; // useNavigate 훅 임포트
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Mypage() {
   const [userData, setUserData] = useState({
-    studentId: "202110034",
-    //department: "컴퓨터공학과",
-    // chapel: "3",
-    seat: "H3",
-    email: "songtj2743@naver.com"
+    email: "songsj2743@naver.com",
+    studentId: "202110228",
+    seat: "H13",
   });
-
-  // 텍스트 길이를 11자로 제한하는 함수
-  const limitText = (text: string) => {
-    if (text.length > 30) {
-      return text.substring(0, 30);
-    }
-    return text;
-  };
 
   const images = [
     "https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg",
   ];
-  const changeinfo = useNavigate(); // useNavigate 훅 사용
+
+  const changeinfo = useNavigate();
 
   const ChangeInfo = () => {
     changeinfo("/change");
   };
 
-  const [currentImageIndex] = useState(0);
   useEffect(() => {
-    // 데이터를 limitText 함수를 통해 제한합니다.
-    setUserData({
-      email: limitText(userData.email),
-      studentId: limitText(userData.studentId),
-      //department: limitText(userData.department),
-      // chapel: limitText(userData.chapel),
-      seat: limitText(userData.seat),
-    });
-  }, []);
+    // Fetch user data when the component mounts
+    const UserData = async () => {
+      try {
+        const response = await axios.get("http://isaacnas.duckdns.org:8083/user/viewinfo");
+        const { email, studentId, seat } = response.data;
+        setUserData({ email, studentId, seat});
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
+    };
+
+    UserData();
+  }, [])
+  
+
+  // const [currentImageIndex] = useState(0);
+
+  // const handleSubmit = async () => {
+  //   try {
+  //     /*const data =*/ await axios.get("http://isaacnas.duckdns.org:8083/admin/update", {
+  //       // studentId: userData.studentId,
+  //       // seat: userData.seat,
+  //       // chapelKind: userData.chapelKind
+  //     });
+  //     // console.log("Data updated successfully", data);
+  //     alert("정보가 성공적으로 업데이트되었습니다.");
+  //   } catch (error) {
+  //     // console.error("Error updating data", error);
+  //     alert("정보 업데이트 중 오류가 발생했습니다.");
+  //   }
+  // };
 
   return (
     <div>
@@ -53,29 +66,21 @@ function Mypage() {
         <BoxB>
           <BoxBMain>
             <BoxBMainProfil>
-              <BoxBMainProfilimg src={images[currentImageIndex]} alt="profil" />
+              <BoxBMainProfilimg src={images[0]} alt="profil" />
             </BoxBMainProfil>
             <BoxBMaininformation>
               <BoxBMaininformation1>
-                <FixedText>학번 | </FixedText>
-                {userData.studentId}
+                <FixedText>이메일 | {userData.email}</FixedText>
+                
               </BoxBMaininformation1>
-              {/* <BoxBMaininformation2>
-                <FixedText>학과 | </FixedText>
-                {userData.department}
-              </BoxBMaininformation2> */}
               <BoxBMaininformation2>
-                <FixedText>이메일 | </FixedText>
-                {userData.email}
-              </BoxBMaininformation2>
-              {/* <BoxBMaininformation3>
-                <FixedText>채플 | </FixedText>
-                {userData.chapel}
-              </BoxBMaininformation3> */}
-              <BoxBMaininformation4>
-                <FixedText>좌석 | </FixedText>
-                {userData.seat}
-              </BoxBMaininformation4>
+                <FixedText>학번 | {userData.studentId}</FixedText>
+                
+              </BoxBMaininformation2>           
+              <BoxBMaininformation3>
+               <FixedText>좌석 | {userData.seat}</FixedText>
+               
+              </BoxBMaininformation3>
             </BoxBMaininformation>
             <BoXBProfilchangeBox>
               <BoxBProfilchangeButton>
@@ -185,7 +190,7 @@ const BoxBMaininformation = styled.div`
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
-  width: 250px;
+  width: 300px;
   height: 125px;
   margin-left: 10px;
   margin-right: 10px;
@@ -218,14 +223,14 @@ const BoxBMaininformation3 = styled.div`
   font-size: 12px;
 `;
 
-const BoxBMaininformation4 = styled.div`
-  display: flex;
-  align-items: baseline;
-  flex-direction: row;
-  width: 100%;
-  font-weight: bold;
-  font-size: 12px;
-`;
+// const BoxBMaininformation4 = styled.div`
+//   display: flex;
+//   align-items: baseline;
+//   flex-direction: row;
+//   width: 100%;
+//   font-weight: bold;
+//   font-size: 12px;
+// `;
 
 const FixedText = styled.span`
   //flex: 0 0 40px; /* 고정된 너비를 설정 */

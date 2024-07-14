@@ -12,6 +12,21 @@ const images = [
   "https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png",
 ];
 
+// declare global {
+//   interface Window {
+//     cheq: {
+//       scanNFC: () => void; // 안드로이드
+//     };
+//     webkit: { // iOS
+//       messageHandlers: {
+//         scanNFC: {
+//           postMessage: (message: string) => void;
+//         };
+//       };
+//     };
+//   }
+// }
+
 const Mainpage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [NFC, setNFC] = useState(false); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
@@ -25,6 +40,22 @@ const Mainpage = () => {
 
     return () => clearInterval(interval); // Cleanup function
   }, []);
+
+  // const handleNFCScan = () => {
+  //   // Android
+  //   if (window.cheq && typeof window.cheq.scanNFC === "function") {
+  //     window.cheq.scanNFC();
+  //   } else {
+  //     console.error("window.cheq.scanNFC is not available");
+  //   }
+
+  //   // iOS
+  //   if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.scanNFC) {
+  //     window.webkit.messageHandlers.scanNFC.postMessage("");
+  //   } else {
+  //     console.error("window.webkit.messageHandlers.scanNFC.postMessage is not available");
+  //   }
+  // };
 
   const onSubmit = async (data: any) => {
     if (NFC) {
@@ -71,10 +102,9 @@ const Mainpage = () => {
     }
   };
 
-  // Example data for buttons from the backend
   const buttonsData = [
-    { label: "Menu 1" },
-    { label: "Menu 2" },
+    { image: NFCImage },
+    { image: BeaconImage },
     { label: "Menu 3" },
     { label: "Menu 4" },
   ];
@@ -89,10 +119,7 @@ const Mainpage = () => {
         </Box1>
         <Box2>
           <Box2Advertisement>
-            <AdvertisementImage
-              src={images[currentImageIndex]}
-              alt="Advertisement"
-            />
+            <AdvertisementImage src={images[currentImageIndex]} alt="Advertisement" />
           </Box2Advertisement>
         </Box2>
         <Box3A>
@@ -112,6 +139,8 @@ const Mainpage = () => {
             {buttonsData.map((button, index) => (
               <Box4MainAButton
                 key={index}
+                //onClick={index === 0 ? handleNFCScan : undefined}
+                
                 onClick={
                   index === 0
                     ? () =>
@@ -122,7 +151,8 @@ const Mainpage = () => {
                     : undefined
                 }
               >
-                {button.label}
+              
+                {button.image && <ButtonImage src={button.image} alt={button.label} />}
               </Box4MainAButton>
             ))}
           </Box4MainA>
@@ -134,6 +164,8 @@ const Mainpage = () => {
 };
 
 export default Mainpage;
+
+
 
 const BigBox = styled.div`
   display: flex;
@@ -264,6 +296,13 @@ const Box4MainAButton = styled.div`
     2px 0 4px rgba(76, 76, 76, 0.1), -2px 0 4px rgba(76, 76, 76, 0.1);
   //background-color: #f0f0f0;
   cursor: pointer;
+  overflow: hidden;
   box-sizing: border-box;
   //margin: auto;
+`;
+
+const ButtonImage = styled.img`
+width: 100%; 
+height: 100%; 
+/* object-fit: cover; */
 `;

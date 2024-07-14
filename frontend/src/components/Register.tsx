@@ -30,7 +30,7 @@ const RegisterBar = styled.div`
   display: flex;
   justify-content: center;
   background-color: #375cde;
-  height: 80px;
+  height: 65px;
   border-radius: 14px;
   width: 100vw;
   min-width: 200px;
