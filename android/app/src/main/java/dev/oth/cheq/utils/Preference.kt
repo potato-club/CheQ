@@ -24,6 +24,7 @@ public class Preference {
         const val KEY_IS_FIRST_LOADING = "KEY_IS_FIRST_LOADING"
 
         const val KEY_FCM_TOKEN = "KEY_FCM_TOKEN"
+        const val KEY_URL = "KEY_URL"
 
         const val NULL_STRING = "NIL"
         const val NULL_DOUBLE = 3.1415926535897932111

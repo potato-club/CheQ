@@ -31,7 +31,7 @@ import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebSettings
 import android.webkit.WebView.setWebContentsDebuggingEnabled
-import android.widget.Toast
+import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -101,15 +101,15 @@ class MainActivity : BaseActivity() {
 //        }
 
         // 기본 url 로드
-        val url = DEFINE.getCheqUrl()
+//        val url = DEFINE.getCheqUrl()
+
 
         //js interface, webview client, chrome client 초기화
         initDrsInterface()
         initDrsWebViewClient()
         initDrsChromeClient()
 
-        //webview 초기화
-        initWebView(url)
+
 
         // refresh layout init
         initRefreshLayout()
@@ -142,6 +142,34 @@ class MainActivity : BaseActivity() {
             )
         )
         nfcAdapter?.enableForegroundDispatch(this, pendingIntent, filters, techList)
+
+
+        //webview 초기화
+        val txtEdit = EditText(this)
+
+
+        val clsBuilder = AlertDialog.Builder(this)
+        if (!getPreference().isNull(Preference.KEY_URL)) {
+            txtEdit.hint = "http://192.168.0.1:3000"
+            txtEdit.setText(getPreference().getString(Preference.KEY_URL))
+        }
+        clsBuilder.setTitle("서버 URL")
+        clsBuilder.setView(txtEdit)
+        clsBuilder.setPositiveButton(
+            "확인"
+        ) { dialog, which ->
+            val strText = txtEdit.text.toString()
+            dialog.dismiss()
+            getPreference().put(Preference.KEY_URL, strText)
+            initWebView(strText)
+        }
+        clsBuilder.setNegativeButton(
+            "취소"
+        ) { dialog, which ->
+            dialog.dismiss()
+        }
+        clsBuilder.show()
+//        initWebView(url)
     }
 
 

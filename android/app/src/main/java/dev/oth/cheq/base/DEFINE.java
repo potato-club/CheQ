@@ -28,14 +28,6 @@ public class DEFINE {
         return "document.getElementsByClassName('"+ DEFINE.ROUTER_BACK_BTN_CLASS + "')[0].click();";
     }
 
-    public static List<String> getMainMenuList() {
-        List<String> list = new ArrayList<>();
-        list.add(DEFINE.getCheqUrl() + "/dreams/ad/jnAd");
-        list.add(DEFINE.getCheqUrl() + "/dreams/tcls/tdyTcls/atndnBk");
-        list.add(DEFINE.getCheqUrl() + "/dreams/srch");
-        return list;
-    }
-    public static final String MAIN_HOME_URL_SIMPLE = DEFINE.getCheqUrl() + "/dreams/home";
 
     public static final String REFRESH_BY_DIALOG_JS_CODE =
             "var app_value_body_element = document.getElementsByTagName('body')[0];\n" +
