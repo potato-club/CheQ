@@ -12,6 +12,8 @@ import potato.cheq.dto.admin.RequestAdminLoginDto;
 import potato.cheq.dto.admin.RequestUpdateStudentDto;
 import potato.cheq.service.AdminService;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -22,8 +24,9 @@ public class AdminController {
 
     @PostMapping("/login")
     @Operation(summary = "관리자 로그인")
-    public ResponseEntity<String> adminLogin(@RequestBody RequestAdminLoginDto requestDto, HttpServletResponse response) throws Exception {
-        return adminService.adminLogin(requestDto, response);
+    public ResponseEntity<Map<String, String>> adminLogin(@RequestBody RequestAdminLoginDto requestDto, HttpServletResponse response) throws Exception {
+        Map<String, String> tokens = adminService.adminLogin(requestDto, response);
+        return ResponseEntity.ok(tokens);
     }
 
     @PutMapping("/update/{userId}")

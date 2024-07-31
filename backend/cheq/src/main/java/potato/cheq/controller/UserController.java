@@ -14,6 +14,8 @@ import potato.cheq.dto.response.UserMyPageDto;
 import potato.cheq.dto.request.UserUpdateRequestDto;
 import potato.cheq.service.UserService;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -30,8 +32,9 @@ public class UserController {
 
     @PostMapping("/login") // 학번만 입력시 토큰 발급 완료
     @Operation(summary = "사용자 로그인 (학번만 입력)")
-    public ResponseEntity<String> login(@RequestBody RequestLoginDto dto, HttpServletResponse response) throws Exception {
-        return userService.login(dto, response);
+    public ResponseEntity<Map<String,String>> login(@RequestBody RequestLoginDto dto, HttpServletResponse response) throws Exception {
+        Map<String, String> tokens = userService.login(dto, response);
+        return ResponseEntity.ok(tokens);
     }
 
     @PutMapping("/device/{id}")

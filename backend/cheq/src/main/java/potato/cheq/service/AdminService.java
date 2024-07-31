@@ -10,6 +10,7 @@ import potato.cheq.dto.admin.RequestAdminLoginDto;
 import potato.cheq.dto.admin.RequestUpdateStudentDto;
 import potato.cheq.entity.AdminEntity;
 import potato.cheq.entity.UserEntity;
+import potato.cheq.enums.UserRole;
 import potato.cheq.error.security.requestError.BadRequestException;
 import potato.cheq.error.security.requestError.NotFoundException;
 import potato.cheq.error.security.requestError.UnAuthorizedException;
@@ -17,6 +18,10 @@ import potato.cheq.repository.AdminRepository;
 import potato.cheq.repository.UserRepository;
 import potato.cheq.service.jwt.JwtTokenProvider;
 import potato.cheq.error.security.ErrorCode;
+
+import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +33,38 @@ public class AdminService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<String> adminLogin(RequestAdminLoginDto requestDto, HttpServletResponse response) throws Exception {
+    public Map<String, String>  adminLogin(RequestAdminLoginDto requestDto, HttpServletResponse response) throws Exception {
         AdminEntity admin = adminRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new NotFoundException("Admin not found", ErrorCode.NOT_FOUND_EXCEPTION));
 
-        if (!passwordEncoder.matches(requestDto.getPassword(), admin.getPassword())) {
-            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Invalid password");
-        }
+//        if (!passwordEncoder.matches(requestDto.getPassword(), admin.getPassword())) { // 이부분에서 오류
+//            throw new UnAuthorizedException("401", ErrorCode.ACCESS_DENIED_EXCEPTION);
+//        }
 
-        this.setJwtTokenInHeader(admin.getId(), String.valueOf(admin.getUserRole()), response);
-        return ResponseEntity.ok("Admin 로그인 성공");
+        String at = setBodyAtToken(requestDto.getEmail(), response);
+        String rt = setBodyRtToken(requestDto.getEmail(), response);
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("at", "Bearer " + at);
+        tokens.put("rt", "Bearer " + rt);
+
+        return tokens;
+    }
+
+    public String setBodyAtToken(String email, HttpServletResponse response) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+
+        UserRole role = user.getUserRole();
+
+        return jwtTokenProvider.createAccessToken(user.getId(), role);
+    }
+
+    public String setBodyRtToken(String email, HttpServletResponse response) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+
+        UserRole role = user.getUserRole();
+
+        return jwtTokenProvider.createRefreshToken(user.getId(), role);
     }
 
     public void updateStudent(RequestUpdateStudentDto requestDto, HttpServletRequest request, Long userId) throws Exception {
@@ -85,12 +112,12 @@ public class AdminService {
     }
 
 
-    private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) {
-        String accessToken = jwtTokenProvider.createAccessToken(id, role);
-        String refreshToken = jwtTokenProvider.createRefreshToken(id, role);
-
-        jwtTokenProvider.setHeaderAccessToken(response, accessToken);
-        jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
-
-    }
+//    private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) {
+//        String accessToken = jwtTokenProvider.createAccessToken(id, role);
+//        String refreshToken = jwtTokenProvider.createRefreshToken(id, role);
+//
+//        jwtTokenProvider.setHeaderAccessToken(response, accessToken);
+//        jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
+//
+//    }
 }

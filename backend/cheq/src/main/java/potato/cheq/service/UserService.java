@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import potato.cheq.dto.request.RequestLoginDto;
@@ -13,6 +14,7 @@ import potato.cheq.dto.request.RequestUserDto;
 import potato.cheq.dto.request.UserUpdateRequestDto;
 import potato.cheq.dto.response.UserMyPageDto;
 import potato.cheq.entity.UserEntity;
+import potato.cheq.enums.UserRole;
 import potato.cheq.error.security.ErrorCode;
 import potato.cheq.error.security.requestError.DuplicateException;
 import potato.cheq.error.security.requestError.NotFoundException;
@@ -23,6 +25,8 @@ import potato.cheq.service.jwt.JwtTokenProvider;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static potato.cheq.error.security.ErrorCode.NOT_FOUND_EXCEPTION;
@@ -35,6 +39,8 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
     private final UuidRepository uuidRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     public Long setUserData(RequestUserDto dto) { // 관리자 기능
         if (userRepository.existsByStudentId(dto.getStudentId())) {
@@ -59,27 +65,52 @@ public class UserService {
 
     }
 
-    public ResponseEntity<String> login(RequestLoginDto dto, HttpServletResponse response) throws Exception {
+    public Map<String, String> login(RequestLoginDto dto, HttpServletResponse response) throws Exception {
         UserEntity user = userRepository.findByStudentId(dto.getStudentId());
 
         if (user == null) {
             throw new NotFoundException("유저 정보를 찾을 수 없습니다.", NOT_FOUND_EXCEPTION);
         }
+//
+//        if (!passwordEncoder.matches(dto.getPassword(), admin.getPassword())) {
+//            throw new UnAuthorizedException("401", ErrorCode.ACCESS_DENIED_EXCEPTION);
+//        }
 
-        this.setJwtTokenInHeader(user.getId(), String.valueOf(user.getUserRole()), response);
+        String at = setBodyAtToken(dto.getStudentId(), response);
+        String rt = setBodyRtToken(dto.getStudentId(), response);
 
-        return ResponseEntity.ok("로그인 성공");
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("at", "Bearer " + at);
+        tokens.put("rt", "Bearer " + rt);
+
+        return tokens;
+    }
+
+    public String setBodyAtToken(String studentId, HttpServletResponse response) {
+        UserEntity user = userRepository.findByStudentId(studentId);
+
+        UserRole role = user.getUserRole();
+
+        return jwtTokenProvider.createAccessToken(user.getId(), role);
+    }
+
+    public String setBodyRtToken(String studentId, HttpServletResponse response) {
+        UserEntity user = userRepository.findByStudentId(studentId);
+
+        UserRole role = user.getUserRole();
+
+        return jwtTokenProvider.createRefreshToken(user.getId(), role);
     }
 
 
-    private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) throws Exception {
-        String accessToken = jwtTokenProvider.createAccessToken(id, role);
-        String refreshToken = jwtTokenProvider.createRefreshToken(id, role);
-
-        jwtTokenProvider.setHeaderAccessToken(response, accessToken);
-        jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
-
-    }
+//    private void setJwtTokenInHeader(Long id, String role, HttpServletResponse response) throws Exception {
+//        String accessToken = jwtTokenProvider.createAccessToken(id, role);
+//        String refreshToken = jwtTokenProvider.createRefreshToken(id, role);
+//
+//        jwtTokenProvider.setHeaderAccessToken(response, accessToken);
+//        jwtTokenProvider.setHeaderRefreshToken(response, refreshToken);
+//
+//    }
 
     public void reissueToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);

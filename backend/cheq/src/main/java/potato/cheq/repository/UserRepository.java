@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u.lastUpdated FROM UserEntity u WHERE u.id = :userId")
     LocalDateTime findLastUpdatedByUserId(@Param("userId") Long userId);
 
+    Optional<UserEntity> findByEmail(String email);
+
 //    UserEntity findByUuid(String uuid);
 
     UserEntity findUuidById(Long id);
