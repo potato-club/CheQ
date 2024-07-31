@@ -66,19 +66,19 @@ public class AdminService {
     }
 
     public String setBodyAtToken(String email, HttpServletResponse response) {
-        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+        AdminEntity admin = adminRepository.findByEmail(email).orElseThrow();
 
-        UserRole role = user.getUserRole();
+        UserRole role = admin.getUserRole();
 
-        return jwtTokenProvider.createAccessToken(user.getId(), role);
+        return jwtTokenProvider.createAccessToken(admin.getId(), role);
     }
 
     public String setBodyRtToken(String email, HttpServletResponse response) {
-        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+        AdminEntity admin = adminRepository.findByEmail(email).orElseThrow();
 
-        UserRole role = user.getUserRole();
+        UserRole role = admin.getUserRole();
 
-        return jwtTokenProvider.createRefreshToken(user.getId(), role);
+        return jwtTokenProvider.createRefreshToken(admin.getId(), role);
     }
 
     public void updateStudent(RequestUpdateStudentDto requestDto, HttpServletRequest request, Long userId) throws Exception {
