@@ -5,11 +5,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import potato.cheq.dto.admin.RequestAdminLoginDto;
 
 import potato.cheq.dto.admin.RequestUpdateStudentDto;
+import potato.cheq.dto.admin.StudentListResponseDto;
 import potato.cheq.service.AdminService;
 
 import java.util.Map;
@@ -41,5 +43,14 @@ public class AdminController {
     public ResponseEntity<String> deleteStudent(HttpServletRequest request, @PathVariable("studentId") String studentId) throws Exception {
         adminService.deleteStudent(request, studentId);
         return ResponseEntity.ok().body("학생 정보 삭제 완료");
+    }
+
+    @GetMapping("/view")
+    @Operation(summary = "학생 정보 조회")
+    public ResponseEntity<Page<StudentListResponseDto>> viewStudent(
+            @RequestParam(value = "page", required = false) int page,
+            HttpServletRequest request) throws Exception {
+        Page<StudentListResponseDto> result = adminService.viewStudent(page, request);  // 서비스 호출
+        return ResponseEntity.ok(result);
     }
 }
