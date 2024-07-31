@@ -61,7 +61,7 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createAccessToken(Long id, String role) {
+    public String createAccessToken(Long id, UserRole role) {
         try {
             return this.createToken(id, role, accessTokenValidTime, "access");
         } catch (Exception e) {
@@ -69,7 +69,7 @@ public class JwtTokenProvider {
         }
     }
 
-    public String createRefreshToken(Long id, String role) {
+    public String createRefreshToken(Long id, UserRole role) {
         try {
             return this.createToken(id, role, refreshTokenValidTime, "refresh");
         } catch (Exception e) {
@@ -77,10 +77,10 @@ public class JwtTokenProvider {
         }
     }
 
-    public String createToken(Long id, String role, long tokenValid, String tokenType) throws Exception {
+    public String createToken(Long id, UserRole role, long tokenValid, String tokenType) throws Exception {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("pk", id);
-        jsonObject.addProperty("role", role);
+        jsonObject.addProperty("role", role.ordinal());
         jsonObject.addProperty("tokenType", tokenType);
 
 
@@ -258,7 +258,7 @@ public class JwtTokenProvider {
             this.validateRefreshToken(refreshToken);
             Long id = findUserIdByToken(refreshToken);
             Optional<UserEntity> user = userRepository.findById(id);
-            return createAccessToken(id, String.valueOf(user.get().getUserRole()));
+            return createAccessToken(id, user.get().getUserRole());
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ErrorCode.EXPIRED_ACCESS_TOKEN.getMessage();
