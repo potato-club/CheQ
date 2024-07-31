@@ -1,14 +1,21 @@
 package potato.cheq.service;
 
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import potato.cheq.dto.admin.RequestAdminLoginDto;
 import potato.cheq.dto.admin.RequestUpdateStudentDto;
+import potato.cheq.dto.admin.StudentListResponseDto;
 import potato.cheq.entity.AdminEntity;
+import potato.cheq.entity.QUserEntity;
 import potato.cheq.entity.UserEntity;
 import potato.cheq.enums.UserRole;
 import potato.cheq.error.security.requestError.BadRequestException;
@@ -21,7 +28,9 @@ import potato.cheq.error.security.ErrorCode;
 
 import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +39,13 @@ public class AdminService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
+    private final JPAQueryFactory jpaQueryFactory;
+
 
     private final PasswordEncoder passwordEncoder;
+
+    QUserEntity qUserEntity =  QUserEntity.userEntity;
+
 
     public Map<String, String>  adminLogin(RequestAdminLoginDto requestDto, HttpServletResponse response) throws Exception {
         AdminEntity admin = adminRepository.findByEmail(requestDto.getEmail())
@@ -52,19 +66,19 @@ public class AdminService {
     }
 
     public String setBodyAtToken(String email, HttpServletResponse response) {
-        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+        AdminEntity admin = adminRepository.findByEmail(email).orElseThrow();
 
-        UserRole role = user.getUserRole();
+        UserRole role = admin.getUserRole();
 
-        return jwtTokenProvider.createAccessToken(user.getId(), role);
+        return jwtTokenProvider.createAccessToken(admin.getId(), role);
     }
 
     public String setBodyRtToken(String email, HttpServletResponse response) {
-        UserEntity user = userRepository.findByEmail(email).orElseThrow();
+        AdminEntity admin = adminRepository.findByEmail(email).orElseThrow();
 
-        UserRole role = user.getUserRole();
+        UserRole role = admin.getUserRole();
 
-        return jwtTokenProvider.createRefreshToken(user.getId(), role);
+        return jwtTokenProvider.createRefreshToken(admin.getId(), role);
     }
 
     public void updateStudent(RequestUpdateStudentDto requestDto, HttpServletRequest request, Long userId) throws Exception {
@@ -84,6 +98,50 @@ public class AdminService {
 
         user.Adminupdate(requestDto);
         userRepository.save(user);
+    }
+
+
+
+    public Page<StudentListResponseDto> viewStudent(int page, HttpServletRequest request) throws Exception {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+        if (token == null || !jwtTokenProvider.validateAccessToken(token)) {
+            throw new UnAuthorizedException("토큰 오류", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
+
+        String userRole = jwtTokenProvider.extractRole(token);
+
+        if (!userRole.equals("ADMIN")) {
+            throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
+
+        Sort.Direction direction = Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(direction, "createdDate"));
+
+
+        return executeQuery(pageable, direction);
+    }
+
+    private Page<StudentListResponseDto> executeQuery(Pageable pageable, Sort.Direction direction) {
+        QueryResults<UserEntity> queryResults = jpaQueryFactory
+                .selectFrom(qUserEntity)
+                .orderBy(new OrderSpecifier<>(direction.isAscending() ? Order.ASC : Order.DESC, qUserEntity.studentId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<StudentListResponseDto> dtoList = queryResults.getResults().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtoList, pageable, queryResults.getTotal());
+    }
+
+    private StudentListResponseDto convertToDto(UserEntity entity) {
+        return StudentListResponseDto.builder()
+                .studentId(entity.getStudentId())
+                .chapelKind(String.valueOf(entity.getChapelKind()))
+                .seat(entity.getSeat())
+                .build();
     }
 
 
