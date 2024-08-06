@@ -6,10 +6,10 @@ server:
   port: 8083
 spring:
   datasource:
-    url: ENC(Kbgx6qWF/+Hxv5MzqaCOld/b+Ajf60FoAtGJjKVpXWut3oepIictqqThpFBmM4+6fFg/cm75yJ0=)
-    username: ENC(2owR9H1qxy/4weyq+CnKfw==)
-    password: ENC(jVHS3BWt65xtqJpTS/RtdiI7quxBFmfsdulH9GjyI48=)
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: ENC(KaeuHZTcgDyqcNnhKPyRAqZ8cJGm1tS+k3ClA08Oxc+/sVKd0rRutWoL96uVY7xB42IiYgoUxEICpoNIH/Me4SOLOQvHRyzKmNiJXqq4srbgISS+eKlYTg==)
+    username: ENC(ZlbLRskNYJqZsAKon58r2A==)
+    password: ENC(KJ/JA/Um8aQq/RAfl6CAG5p0eFCDxfP4)
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
