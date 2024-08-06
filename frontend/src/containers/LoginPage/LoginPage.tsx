@@ -2,50 +2,50 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import Hansei from "../../image/hansei.png";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import axios from "axios";
 
 const LoginPage = () => {
-  const signup = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm();
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
     const loginData = {
       studentId: data.studentId,
       password: data.password,
     };
-    const url =
-      data.studentId === "admin" && data.password === "admin"
-        ? "http://isaacnas.duckdns.org:8083/admin/login"
-        : "http://isaacnas.duckdns.org:8083/user/login";
+    const adminData = {
+      email: data.studentId,
+      password: data.password,
+    };
+
+    const adminUrl = "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/admin/login";
+    const userUrl = "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/login";
 
     try {
-      const response = await axios.post(url, loginData);
-      console.log("서버 응답:", response);
+      const response = await axios.post(userUrl, loginData);
 
-      if (response.status === 200 || response.data.success) {
+      if (response.status === 200) {
         const token = response.data.token;
         localStorage.setItem("token", token);
-        alert("로그인 되었습니다!");
-        const redirectUrl = data.studentId === "admin" ? "/admin" : "/main";
-        signup(redirectUrl);
-      } else {
-        alert("로그인에 실패했습니다. 다시 시도해주세요.");
+        alert("사용자로 로그인 되었습니다!");
+        navigate("/main");
       }
-    } catch (error: any) {
-      if (error.response) {
-        console.error("Error response:", error.response.data);
-        alert(`로그인에 실패했습니다: ${error.response.data.message}`);
-      } else if (error.request) {
-        console.error("Error request:", error.request);
-        alert("로그인 서버로부터 응답이 없습니다. 나중에 다시 시도해주세요.");
-      } else {
-        console.error("Error message:", error.message);
+    } catch (userError) {
+      console.error("User login failed:", userError);
+
+      try {
+        const adminResponse = await axios.post(adminUrl, adminData);
+
+        if (adminResponse.status === 200) {
+          const adminToken = adminResponse.data.token;
+          localStorage.setItem("token", adminToken);
+          alert("관리자로 로그인 되었습니다!");
+          navigate("/admin");
+        } else {
+          alert("로그인에 실패했습니다. 다시 시도해주세요.");
+        }
+      } catch (adminError) {
+        console.error("Admin login failed:", adminError);
         alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
@@ -65,17 +65,8 @@ const LoginPage = () => {
               id="studentId"
               type="text"
               placeholder="학번을 입력해주세요."
-              {...register("studentId", {
-                required: "학번은 필수 입력입니다.",
-                validate: (value) =>
-                  value === "admin" ||
-                  /^\d{9}$/.test(value) ||
-                  "자신의 학번을 입력해주세요.",
-              })}
+              {...register("studentId")}
             />
-            {errors.studentId && (
-              <ErrorMessage>{errors.studentId.message as string}</ErrorMessage>
-            )}
           </FormRow>
 
           <FormRow>
@@ -84,18 +75,8 @@ const LoginPage = () => {
               id="password"
               type="password"
               placeholder="비밀번호를 입력하세요."
-              {...register("password", {
-                required: "비밀번호는 필수 입력입니다.",
-                validate: (value) =>
-                  value === "admin" ||
-                  value === watch("studentId") ||
-                  /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(value) ||
-                  "비밀번호를 제대로 입력해주세요.",
-              })}
+              {...register("password")}
             />
-            {errors.password && (
-              <ErrorMessage>{errors.password.message as string}</ErrorMessage>
-            )}
           </FormRow>
           <LoginBtn>
             <SubmitButton type="submit">로그인</SubmitButton>
@@ -182,12 +163,6 @@ const SubmitButton = styled.button`
   cursor: pointer;
   margin-bottom: 15px;
   margin-top: 20px;
-`;
-
-const ErrorMessage = styled.small`
-  margin-top: 5px;
-  color: red;
-  margin-left: 16px;
 `;
 
 const HanseiIcon = styled.img`
