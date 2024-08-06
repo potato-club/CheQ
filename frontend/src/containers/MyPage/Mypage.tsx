@@ -5,58 +5,91 @@ import QRImage from "../../Image/qr -1004.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function Mypage() {
-  const [userData, setUserData] = useState({
-    email: "songsj2743@naver.com",
-    studentId: "202110228",
-    seat: "H13",
-  });
+// interface UserData {
+//   email: string;
+//   studentId: string;
+//   seat: string;
+// }
+
+
+function MyPage() {
+  const navigate = useNavigate();
+  //const [userData, setUserData] = useState<UserData | null>(null); // Use appropriate type
+  const [responseData, setResponseData] = useState(null);
+  const [email, setEmail] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [seat, setSeat] = useState('');
 
   const images = [
     "https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg",
   ];
+  
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const accesstoken = localStorage.getItem("token");
+  //       if (!accesstoken) {
+  //         console.error("No token found in localStorage");
+  //         return;
+  //       }
 
-  const changeinfo = useNavigate();
+  //       const response = await axios.get('http://isaacnas.duckdns.org:8083/user/viewinfo', {
+  //         headers: {
+  //           Authorization: `Bearer ${accesstoken}`,
+  //         },
+  //       });
 
-  const ChangeInfo = () => {
-    changeinfo("/change");
-  };
+  //       setUserData(response.data);
+  //     } catch (error) {
+  //       if (axios.isAxiosError(error)) {
+  //         console.error("Failed to fetch user information", error.message);
+  //         if (error.response) {
+  //           console.error("Response data:", error.response.data);
+  //           console.error("Response status:", error.response.status);
+  //           console.error("Response headers:", error.response.headers);
+  //         }
+  //       } else {
+  //         console.error("An unexpected error occurred:", error);
+  //       }
+  //       alert("정보 불러오기 실패했습니다."); // Adjust message as needed
+  //     }
+  //   };
+
+  //   fetchUserData();
+  // }, []); // Empty dependency array to run only once
 
   useEffect(() => {
-    // Fetch user data when the component mounts
-    const UserData = async () => {
+    const fetchUserInfo = async () => {
       try {
-        const response = await axios.get("http://isaacnas.duckdns.org:8083/user/viewinfo");
+        const token = 'your_token_here'; // 실제 토큰 값으로 대체해야 합니다.
+
+        const response = await axios.get('https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/viewinfo', {
+          params: { token },
+        });
+
+        // 응답 데이터에서 필요한 정보 추출
         const { email, studentId, seat } = response.data;
-        setUserData({ email, studentId, seat});
+
+        // 상태에 데이터 설정
+        setEmail(email);
+        setStudentId(studentId);
+        setSeat(seat);
       } catch (error) {
-        console.error("Error fetching user data", error);
+        alert("문제 발생");
+        console.error("Error fetching user info:", error);
       }
     };
 
-    UserData();
-  }, [])
-  
+    fetchUserInfo();
+  }, []); // 빈 배열을 의존성 배열로 전달하여 컴포넌트가 마운트될 때만 호출되도록 합니다.
 
-  // const [currentImageIndex] = useState(0);
-
-  // const handleSubmit = async () => {
-  //   try {
-  //     /*const data =*/ await axios.get("http://isaacnas.duckdns.org:8083/admin/update", {
-  //       // studentId: userData.studentId,
-  //       // seat: userData.seat,
-  //       // chapelKind: userData.chapelKind
-  //     });
-  //     // console.log("Data updated successfully", data);
-  //     alert("정보가 성공적으로 업데이트되었습니다.");
-  //   } catch (error) {
-  //     // console.error("Error updating data", error);
-  //     alert("정보 업데이트 중 오류가 발생했습니다.");
-  //   }
-  // };
+  const ChangeInfo = () => {
+    navigate("/change");
+  };
 
   return (
     <div>
+      <Nav />
       <BigBox>
         <AttendanceTitle>
           <MainTitle>CheQ</MainTitle>
@@ -66,22 +99,24 @@ function Mypage() {
         <BoxB>
           <BoxBMain>
             <BoxBMainProfil>
-              <BoxBMainProfilimg src={images[0]} alt="profil" />
+              <BoxBMainProfilimg src={images[0]} alt="profile" />
             </BoxBMainProfil>
+            
             <BoxBMaininformation>
-              <BoxBMaininformation1>
-                <FixedText>이메일 | {userData.email}</FixedText>
-                
-              </BoxBMaininformation1>
-              <BoxBMaininformation2>
-                <FixedText>학번 | {userData.studentId}</FixedText>
-                
-              </BoxBMaininformation2>           
-              <BoxBMaininformation3>
-               <FixedText>좌석 | {userData.seat}</FixedText>
-               
-              </BoxBMaininformation3>
-            </BoxBMaininformation>
+        <BoxBMaininformation1>
+          <FixedText>이메일 | </FixedText>
+          <span>{email}</span>
+        </BoxBMaininformation1>
+        <BoxBMaininformation2>
+          <FixedText>학번 | </FixedText>
+          <span>{studentId}</span>
+        </BoxBMaininformation2>
+        <BoxBMaininformation3>
+          <FixedText>좌석 | </FixedText>
+          <span>{seat}</span>
+        </BoxBMaininformation3>
+      </BoxBMaininformation>
+
             <BoXBProfilchangeBox>
               <BoxBProfilchangeButton>
                 <BoxBProfilchangeButtontext onClick={ChangeInfo}>
@@ -121,9 +156,9 @@ function Mypage() {
       <Nav />
     </div>
   );
-}
+};
 
-export default Mypage;
+export default MyPage;
 
 const BigBox = styled.div`
   display: flex;
@@ -222,15 +257,6 @@ const BoxBMaininformation3 = styled.div`
   font-weight: bold;
   font-size: 12px;
 `;
-
-// const BoxBMaininformation4 = styled.div`
-//   display: flex;
-//   align-items: baseline;
-//   flex-direction: row;
-//   width: 100%;
-//   font-weight: bold;
-//   font-size: 12px;
-// `;
 
 const FixedText = styled.span`
   //flex: 0 0 40px; /* 고정된 너비를 설정 */

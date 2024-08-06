@@ -12,24 +12,12 @@ const images = [
   "https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png",
 ];
 
-// declare global {
-//   interface Window {
-//     cheq: {
-//       scanNFC: () => void; // 안드로이드
-//     };
-//     webkit: { // iOS
-//       messageHandlers: {
-//         scanNFC: {
-//           postMessage: (message: string) => void;
-//         };
-//       };
-//     };
-//   }
-// }
 
 const Mainpage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [NFC, setNFC] = useState(false); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
+  const [NFC, setNFC] = useState(null); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
+  const [responseData, setResponseData] = useState(null);
+  const [token, setToken] = useState(null); // 토큰 상태 관리
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,42 +29,40 @@ const Mainpage = () => {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
-  // const handleNFCScan = () => {
-  //   // Android
-  //   if (window.cheq && typeof window.cheq.scanNFC === "function") {
-  //     window.cheq.scanNFC();
-  //   } else {
-  //     console.error("window.cheq.scanNFC is not available");
-  //   }
 
-  //   // iOS
-  //   if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.scanNFC) {
-  //     window.webkit.messageHandlers.scanNFC.postMessage("");
-  //   } else {
-  //     console.error("window.webkit.messageHandlers.scanNFC.postMessage is not available");
-  //   }
-  // };
+  useEffect(() => {
+    // 백엔드에서 토큰을 받아오는 로직
+    const fetchToken = async () => {
+      try {
+        const response = await axios.post('http://isaacnas.duckdns.org:8083/attendance/nfc'); // 여기에 토큰을 받아오는 엔드포인트를 입력
+        const receivedToken = response.data.token;
+        setToken(receivedToken);
+        localStorage.setItem('token', receivedToken); // 토큰을 로컬 스토리지에 저장
+      } catch (error) {
+        console.error('토큰을 받아오는 중 오류가 발생했습니다:', error);
+      }
+    };
 
-  const onSubmit = async (data: any) => {
-    if (NFC) {
-      return;
-    }
+    fetchToken(); // 컴포넌트가 마운트될 때 토큰을 받아옴
+  }, []);
 
+  const onSubmit = async (address: string, position: string) => {
     try {
-      const nfc = await axios.post(
-        "http://isaacnas.duckdns.org:8083/attendance/nfc",
-        {
-          mac_address: data.address,
-          nfc_position: data.position,
-          attendanceTime: new Date().toISOString(), // or any appropriate time format
-        },
-        {
-          headers: {
-            Authorization: "Bearer your-auth-token", // Include your token here
-          },
-        }
-      );
+      const storedToken = token || localStorage.getItem('token');
+
+      const requestBody = {
+        uuid: address,
+        nfc_position: position,
+        attendanceTime: new Date().toISOString(),
+        token: storedToken || "", // 만약 상태나 로컬스토리지에 토큰이 없으면 빈 문자열로 대체
+      };
+
+      const response = await axios.post('https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/nfc', requestBody);
+
+      // 성공적으로 응답 받았을 때의 처리
+      setResponseData(response.data);
     } catch (error) {
+      // 에러 발생 시 알람
       alert("오류가 발생했습니다");
     }
   };
@@ -139,19 +125,14 @@ const Mainpage = () => {
             {buttonsData.map((button, index) => (
               <Box4MainAButton
                 key={index}
-                //onClick={index === 0 ? handleNFCScan : undefined}
-                
+                //onClick={index === 0 ? handleNFCScan : undefined 
                 onClick={
                   index === 0
                     ? () =>
-                        onSubmit({
-                          address: "exampleAddress",
-                          position: "examplePosition",
-                        })
+                        onSubmit("string", "string")
                     : undefined
                 }
               >
-              
                 {button.image && <ButtonImage src={button.image} alt={button.label} />}
               </Box4MainAButton>
             ))}
