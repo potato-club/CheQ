@@ -9,6 +9,109 @@ interface AttendanceData {
   status: "출석" | "지각" | "조퇴" | "결석" | "미출결";
 }
 
+const AttendancePage = () => {
+  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
+  const [attendanceCount, setAttendanceCount] = useState(0);
+  const [lateAndEarlyLeaveCount, setLateAndEarlyLeaveCount] = useState(0);
+  const [absenceCount, setAbsenceCount] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          "http://isaacnas.duckdns.org:8083/attendance/all",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data;
+
+        setAttendanceData(data);
+
+        const attendance = data.filter(
+          (item: AttendanceData) => item.status === "출석"
+        ).length;
+        const lateAndEarlyLeave = data.filter(
+          (item: AttendanceData) =>
+            item.status === "지각" || item.status === "조퇴"
+        ).length;
+        const absence = data.filter(
+          (item: AttendanceData) => item.status === "결석"
+        ).length;
+
+        setAttendanceCount(attendance);
+        setLateAndEarlyLeaveCount(lateAndEarlyLeave);
+        setAbsenceCount(absence);
+      } catch (error) {
+        console.error("Error fetching attendance data:", error);
+        alert("출결 데이터를 가져오는데 실패했습니다.");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      <StyleAttendancePage>
+        <AttendanceTitle>
+          <MainTitle>CheQ</MainTitle>
+          <SubTitle>내 출결 정보 확인</SubTitle>
+        </AttendanceTitle>
+        <AttendanceIcon>
+          <IconBox>
+            <GreenIcon />
+            <IconTitle>출석</IconTitle>
+          </IconBox>
+          <IconBox>
+            <OrangeIcon />
+            <IconTitle>지각, 조퇴</IconTitle>
+          </IconBox>
+          <IconBox>
+            <RedIcon />
+            <IconTitle>결석</IconTitle>
+          </IconBox>
+          <IconBox>
+            <GrayIcon />
+            <IconTitle>미출결</IconTitle>
+          </IconBox>
+        </AttendanceIcon>
+        <AttendanceCurrent>
+          <CurrentBox>
+            출석: {attendanceCount} | 지각,조퇴: {lateAndEarlyLeaveCount} |
+            결석: {absenceCount}
+          </CurrentBox>
+        </AttendanceCurrent>
+        <AttendanceInfo>
+          {attendanceData.map((item, index) => (
+            <WeekInfo key={index}>
+              <InfoBox>
+                <div>{item.week}주차</div>
+                <HowWeek status={item.status}>{item.status}</HowWeek>
+              </InfoBox>
+              <InfoBox>
+                <CurrentDate status={item.status}>{item.date}</CurrentDate>
+                <CurrentInfo status={item.status}>{item.status}</CurrentInfo>
+                <IconColor status={item.status} />
+              </InfoBox>
+            </WeekInfo>
+          ))}
+        </AttendanceInfo>
+        <NavBar />
+      </StyleAttendancePage>
+    </div>
+  );
+};
+
+export default AttendancePage;
 const IconColor = styled.div<{ status: string }>`
   width: 13px;
   height: 13px;
@@ -148,107 +251,3 @@ const CurrentInfo = styled.div<{ status: string }>`
   font-weight: bold;
   color: ${({ status }) => (status === "미출결" ? "#c9c9c9" : "black")};
 `;
-
-const AttendancePage = () => {
-  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
-  const [attendanceCount, setAttendanceCount] = useState(0);
-  const [lateAndEarlyLeaveCount, setLateAndEarlyLeaveCount] = useState(0);
-  const [absenceCount, setAbsenceCount] = useState(0);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("로그인이 필요합니다.");
-        return;
-      }
-
-      try {
-        const response = await axios.get(
-          "http://isaacnas.duckdns.org:8083/attendance/all",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = response.data;
-
-        setAttendanceData(data);
-
-        const attendance = data.filter(
-          (item: AttendanceData) => item.status === "출석"
-        ).length;
-        const lateAndEarlyLeave = data.filter(
-          (item: AttendanceData) =>
-            item.status === "지각" || item.status === "조퇴"
-        ).length;
-        const absence = data.filter(
-          (item: AttendanceData) => item.status === "결석"
-        ).length;
-
-        setAttendanceCount(attendance);
-        setLateAndEarlyLeaveCount(lateAndEarlyLeave);
-        setAbsenceCount(absence);
-      } catch (error) {
-        console.error("Error fetching attendance data:", error);
-        alert("출결 데이터를 가져오는데 실패했습니다.");
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <div>
-      <StyleAttendancePage>
-        <AttendanceTitle>
-          <MainTitle>CheQ</MainTitle>
-          <SubTitle>내 출결 정보 확인</SubTitle>
-        </AttendanceTitle>
-        <AttendanceIcon>
-          <IconBox>
-            <GreenIcon />
-            <IconTitle>출석</IconTitle>
-          </IconBox>
-          <IconBox>
-            <OrangeIcon />
-            <IconTitle>지각, 조퇴</IconTitle>
-          </IconBox>
-          <IconBox>
-            <RedIcon />
-            <IconTitle>결석</IconTitle>
-          </IconBox>
-          <IconBox>
-            <GrayIcon />
-            <IconTitle>미출결</IconTitle>
-          </IconBox>
-        </AttendanceIcon>
-        <AttendanceCurrent>
-          <CurrentBox>
-            출석: {attendanceCount} | 지각,조퇴: {lateAndEarlyLeaveCount} |
-            결석: {absenceCount}
-          </CurrentBox>
-        </AttendanceCurrent>
-        <AttendanceInfo>
-          {attendanceData.map((item, index) => (
-            <WeekInfo key={index}>
-              <InfoBox>
-                <div>{item.week}주차</div>
-                <HowWeek status={item.status}>{item.status}</HowWeek>
-              </InfoBox>
-              <InfoBox>
-                <CurrentDate status={item.status}>{item.date}</CurrentDate>
-                <CurrentInfo status={item.status}>{item.status}</CurrentInfo>
-                <IconColor status={item.status} />
-              </InfoBox>
-            </WeekInfo>
-          ))}
-        </AttendanceInfo>
-        <NavBar />
-      </StyleAttendancePage>
-    </div>
-  );
-};
-
-export default AttendancePage;

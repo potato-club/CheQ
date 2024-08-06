@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
-function Register (){
-    return(
-        <div>
-            <RegisterBar>
-                <ResgisterBtn>등록</ResgisterBtn>
-            </RegisterBar>
-        </div>
-    )
+function Register() {
+  return (
+    <div>
+      <RegisterBar>
+        <ResgisterBtn>등록</ResgisterBtn>
+      </RegisterBar>
+    </div>
+  );
 }
 
 export default Register;

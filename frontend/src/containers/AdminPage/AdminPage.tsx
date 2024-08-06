@@ -59,7 +59,7 @@ const AdminPage = () => {
     {
       checkbox: false,
       name: "남궁지수",
-      studentid: 202110651,
+      studentid: 201910052,
       studentclass: "미디어영상광고학",
       chapel: 7,
       chapelseat: "E56",
@@ -95,11 +95,22 @@ const AdminPage = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    const newData = adminData.filter((item) => !item.checkbox);
-    setAdminData(newData);
-    setFilteredData(newData);
-    setShowDeleteModal(false);
+  const handleConfirmDelete = async () => {
+    const studentsToDelete = adminData.filter((item) => item.checkbox);
+
+    try {
+      for (const student of studentsToDelete) {
+        await axios.delete(
+          `http://isaacnas.duckdns.org:8083/admin/delete/${student.studentid}`
+        );
+      }
+      const newData = adminData.filter((item) => !item.checkbox);
+      setAdminData(newData);
+      setFilteredData(newData);
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error("Error deleting student data:", error);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -124,7 +135,7 @@ const AdminPage = () => {
     setFilteredData(filtered);
   };
 
-  const handleRegistration = (data: any) => {
+  const handleRegistration = async (data: any) => {
     const existingStudent = adminData.some(
       (student) =>
         student.name === data.name ||
@@ -134,24 +145,39 @@ const AdminPage = () => {
     if (existingStudent) {
       alert("이미 등록된 데이터입니다.");
     } else {
-      const newAdminData = [
-        ...adminData,
-        {
-          checkbox: false,
-          name: data.name,
-          studentid: parseInt(data.studentid),
-          studentclass: data.studentclass,
-          chapel: parseInt(data.chapel),
-          chapelseat: data.chapelseat,
-        },
-      ];
-      setAdminData(newAdminData);
-      setFilteredData(newAdminData);
-      setShowRegistrationModal(false);
+      const newStudent = {
+        checkbox: false,
+        name: data.name,
+        studentid: parseInt(data.studentid),
+        studentclass: data.studentclass,
+        chapel: parseInt(data.chapel),
+        chapelseat: data.chapelseat,
+      };
+
+      const studentData = {
+        email: data.name,
+        studentId: data.studentid.toString(),
+        seat: data.chapelseat,
+        uuid: data.studentclass,
+        chapelKind: `CHAPEL${data.chapel}`,
+      };
+
+      try {
+        await axios.post(
+          "http://isaacnas.duckdns.org:8083/user/join",
+          studentData
+        );
+        const newAdminData = [...adminData, newStudent];
+        setAdminData(newAdminData);
+        setFilteredData(newAdminData);
+        setShowRegistrationModal(false);
+      } catch (error) {
+        console.error("Error registering student data:", error);
+      }
     }
   };
 
-  const handleEdit = (data: any) => {
+  const handleEdit = async (data: any) => {
     const editedData: AdminData = {
       checkbox: false,
       name: data.name,
@@ -164,20 +190,17 @@ const AdminPage = () => {
     const updatedData = [...adminData];
     updatedData[editIndex!] = editedData;
 
-    axios
-      .put(
-        `http://isaacnas.duckdns.org:8083/user/
-${editedData.studentid}`,
+    try {
+      await axios.put(
+        `http://isaacnas.duckdns.org:8083/user/${editedData.studentid}`,
         editedData
-      )
-      .then((response) => {
-        setAdminData(updatedData);
-        setFilteredData(updatedData);
-        setShowEditModal(false);
-      })
-      .catch((error) => {
-        console.error("Error editing student data:", error);
-      });
+      );
+      setAdminData(updatedData);
+      setFilteredData(updatedData);
+      setShowEditModal(false);
+    } catch (error) {
+      console.error("Error editing student data:", error);
+    }
   };
 
   const handleCheckboxChange = (index: number) => {
@@ -202,7 +225,6 @@ ${editedData.studentid}`,
           <RegistrationBtn onClick={() => setShowRegistrationModal(true)}>
             등록
           </RegistrationBtn>
-          {/* <CorrectionBtn>수정</CorrectionBtn> */}
           <DeleteBtn onClick={handleDelete}>삭제</DeleteBtn>
           <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
         </AdminMangementBtnBox>
@@ -253,116 +275,128 @@ ${editedData.studentid}`,
         <RegistrationModal>
           <ModalContent>
             <ModalTitle>학생 등록</ModalTitle>
-            <InputContainer>
-              <InputLabel>이름:</InputLabel>
-              <InputField {...register("name")} />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>학번:</InputLabel>
-              <InputField type="number" {...register("studentid")} />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>학과:</InputLabel>
-              <InputField {...register("studentclass")} />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>채플:</InputLabel>
-              <InputField type="number" {...register("chapel")} />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>좌석:</InputLabel>
-              <InputField {...register("chapelseat")} />
-            </InputContainer>
-            <ModulButtonBox>
-              <ModalButton onClick={handleSubmit(handleRegistration)}>
-                등록
-              </ModalButton>
-              <ModalButtonCancel
+            <form onSubmit={handleSubmit(handleRegistration)}>
+              <ModalInputBox>
+                <ModalLabel>이름</ModalLabel>
+                <ModalInput
+                  type="text"
+                  {...register("name", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalInputBox>
+                <ModalLabel>학번</ModalLabel>
+                <ModalInput
+                  type="number"
+                  {...register("studentid", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalInputBox>
+                <ModalLabel>학과</ModalLabel>
+                <ModalInput
+                  type="text"
+                  {...register("studentclass", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalInputBox>
+                <ModalLabel>채플</ModalLabel>
+                <ModalInput
+                  type="number"
+                  {...register("chapel", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalInputBox>
+                <ModalLabel>좌석</ModalLabel>
+                <ModalInput
+                  type="text"
+                  {...register("chapelseat", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalButton type="submit">등록</ModalButton>
+              <ModalButton
+                type="button"
                 onClick={() => setShowRegistrationModal(false)}
               >
                 취소
-              </ModalButtonCancel>
-            </ModulButtonBox>
+              </ModalButton>
+            </form>
           </ModalContent>
         </RegistrationModal>
       )}
-      {showEditModal && (
+      {showEditModal && editIndex !== null && (
         <EditModal>
           <ModalContent>
             <ModalTitle>학생 정보 수정</ModalTitle>
-            <InputContainer>
-              <InputLabel>이름:</InputLabel>
-              <InputField
-                defaultValue={adminData[editIndex!].name}
-                {...register("name")}
-              />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>학번:</InputLabel>
-              <InputField
-                defaultValue={adminData[editIndex!].studentid}
-                type="number"
-                {...register("studentid")}
-              />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>학과:</InputLabel>
-              <InputField
-                defaultValue={adminData[editIndex!].studentclass}
-                {...register("studentclass")}
-              />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>채플:</InputLabel>
-              <InputField
-                defaultValue={adminData[editIndex!].chapel}
-                type="number"
-                {...register("chapel")}
-              />
-            </InputContainer>
-            <InputContainer>
-              <InputLabel>좌석:</InputLabel>
-              <InputField
-                defaultValue={adminData[editIndex!].chapelseat}
-                {...register("chapelseat")}
-              />
-            </InputContainer>
-            <ModulButtonBox>
-              <ModalButton onClick={handleSubmit(handleEdit)}>수정</ModalButton>
-              <ModalButtonCancel onClick={() => setShowEditModal(false)}>
+            <form onSubmit={handleSubmit(handleEdit)}>
+              <ModalInputBox>
+                <ModalLabel>이름</ModalLabel>
+                <ModalInput
+                  type="text"
+                  defaultValue={adminData[editIndex].name}
+                  {...register("name", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalInputBox>
+                <ModalLabel>학번</ModalLabel>
+                <ModalInput
+                  type="number"
+                  defaultValue={adminData[editIndex].studentid}
+                  {...register("studentid", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalInputBox>
+                <ModalLabel>학과</ModalLabel>
+                <ModalInput
+                  type="text"
+                  defaultValue={adminData[editIndex].studentclass}
+                  {...register("studentclass", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalInputBox>
+                <ModalLabel>채플</ModalLabel>
+                <ModalInput
+                  type="number"
+                  defaultValue={adminData[editIndex].chapel}
+                  {...register("chapel", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalInputBox>
+                <ModalLabel>좌석</ModalLabel>
+                <ModalInput
+                  type="text"
+                  defaultValue={adminData[editIndex].chapelseat}
+                  {...register("chapelseat", { required: true })}
+                />
+              </ModalInputBox>
+              <ModalButton type="submit">수정</ModalButton>
+              <ModalButton
+                type="button"
+                onClick={() => setShowEditModal(false)}
+              >
                 취소
-              </ModalButtonCancel>
-            </ModulButtonBox>
+              </ModalButton>
+            </form>
           </ModalContent>
         </EditModal>
-      )}
-      {showDeleteModal && (
-        <DeleteModal>
-          <ModalContent>
-            <ModalTitle>학생 삭제</ModalTitle>
-            <DeleteModalText>선택된 학생을 삭제하시겠습니까?</DeleteModalText>
-            <ModulButtonBox>
-              <ModalButton onClick={handleConfirmDelete}>확인</ModalButton>
-              <ModalButtonCancel onClick={handleCancelDelete}>
-                취소
-              </ModalButtonCancel>
-            </ModulButtonBox>
-          </ModalContent>
-        </DeleteModal>
       )}
       {showLogoutModal && (
         <LogoutModal>
           <ModalContent>
             <ModalTitle>로그아웃</ModalTitle>
-            <LogoutModalText>로그아웃 하시겠습니까?</LogoutModalText>
-            <ModulButtonBox>
-              <ModalButton onClick={handleConfirmLogout}>확인</ModalButton>
-              <ModalButtonCancel onClick={handleCancelLogout}>
-                취소
-              </ModalButtonCancel>
-            </ModulButtonBox>
+            <ModalMessage>정말 로그아웃 하시겠습니까?</ModalMessage>
+            <ModalButton onClick={handleConfirmLogout}>예</ModalButton>
+            <ModalButton onClick={handleCancelLogout}>아니오</ModalButton>
           </ModalContent>
         </LogoutModal>
+      )}
+      {showDeleteModal && (
+        <DeleteModal>
+          <ModalContent>
+            <ModalTitle>삭제 확인</ModalTitle>
+            <ModalMessage>선택한 학생들을 삭제하시겠습니까?</ModalMessage>
+            <ModalButton onClick={handleConfirmDelete}>예</ModalButton>
+            <ModalButton onClick={handleCancelDelete}>아니오</ModalButton>
+          </ModalContent>
+        </DeleteModal>
       )}
     </StyleAdminPage>
   );
@@ -370,35 +404,35 @@ ${editedData.studentid}`,
 
 export default AdminPage;
 
+// 스타일 컴포넌트들...
 const StyleAdminPage = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  width: 100%;
+  padding: 20px;
 `;
 
 const AdminTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
 `;
 
 const MainTitle = styled.h1`
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-size: 36px;
+  margin: 0;
 `;
 
 const SubTitle = styled.h2`
-  font-size: 20px;
-  color: #777;
+  font-size: 24px;
+  margin: 0;
 `;
 
 const AdminManagementBox = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 70%;
-  margin-top: 20px;
+  width: 100%;
+  margin-bottom: 20px;
 `;
 
 const AdminMangementBtnBox = styled.div`
@@ -406,239 +440,185 @@ const AdminMangementBtnBox = styled.div`
   gap: 10px;
 `;
 
+const RegistrationBtn = styled.button`
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+`;
+
+const DeleteBtn = styled.button`
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  cursor: pointer;
+`;
+
+const LogoutBtn = styled.button`
+  padding: 10px 20px;
+  background-color: #008cba;
+  color: white;
+  border: none;
+  cursor: pointer;
+`;
+
 const AdminMangementSearchBox = styled.div`
-  width: 30%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const SearchBar = styled.div`
   display: flex;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 5px;
 `;
 
 const SearchInput = styled.input`
-  flex: 1;
-  border: none;
-  outline: none;
-  padding: 5px;
+  padding: 10px;
+  font-size: 16px;
 `;
 
 const SearchButton = styled.button`
-  padding: 5px 13px;
-  border-radius: 10px;
-  font-size: 12px;
-  border: none;
+  padding: 10px;
+  background-color: #4caf50;
   color: white;
-  background-color: #375cde;
-  margin-right: 10px;
+  border: none;
   cursor: pointer;
 `;
 
 const AdminInfo = styled.div`
-  width: 70%;
-  margin-top: 20px;
+  width: 100%;
 `;
 
 const StudentTitleBox = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #f0f0f0;
-  padding: 10px 0;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 10px;
 `;
 
 const StdTitleBox1 = styled.div`
   display: flex;
-  flex: 1;
-  justify-content: center;
+  justify-content: space-between;
 `;
 
-const StdTitleBox2 = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: center;
-`;
-
-const StudentInfoTitle = styled.div`
-  font-size: 16px;
-  font-weight: bold;
+const StudentInfoTitle = styled.span`
   flex: 1;
   text-align: center;
 `;
 
-const StudentInfoTitle2 = styled(StudentInfoTitle)`
+const StudentInfoTitle2 = styled.span`
   flex: 1;
+  text-align: center;
 `;
 
-const StudentInfoTitle3 = styled(StudentInfoTitle)`
+const StudentInfoTitle3 = styled.span`
   flex: 1;
+  text-align: center;
 `;
 
 const StudentInfo = styled.div`
-  border: 1px solid #ccc;
-  border-top: none;
+  width: 100%;
 `;
 
 const StudentInfoRow = styled.div`
   display: flex;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #ccc;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 `;
 
 const ClickBox = styled.input`
   margin-right: 10px;
 `;
 
-const StudentName = styled.div`
+const StudentName = styled.span`
   flex: 1;
   text-align: center;
 `;
 
-const StudentId = styled.div`
+const StudentId = styled.span`
   flex: 1;
   text-align: center;
 `;
 
-const StudentClass = styled.div`
-  flex: 2;
-  text-align: center;
-`;
-
-const Chapel = styled.div`
+const StudentClass = styled.span`
   flex: 1;
   text-align: center;
 `;
 
-const ChapelSeat = styled.div`
+const Chapel = styled.span`
+  flex: 1;
+  text-align: center;
+`;
+
+const ChapelSeat = styled.span`
   flex: 1;
   text-align: center;
 `;
 
 const EditButton = styled.button`
-  padding: 5px 13px;
-  border-radius: 10px;
-  font-size: 12px;
-  border: none;
+  padding: 5px 10px;
+  background-color: #4caf50;
   color: white;
-  background-color: #375cde;
-  margin-right: 10px;
+  border: none;
   cursor: pointer;
 `;
 
-const ModulButtonBox = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-`;
-
-const ModalContent = styled.div`
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 20px;
-  width: 300px;
-`;
-
-const ModalTitle = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: center;
-`;
-
-const InputContainer = styled.div`
-  margin-bottom: 10px;
-`;
-
-const InputLabel = styled.label`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const InputField = styled.input`
-  width: 100%;
-  padding: 5px;
-  font-size: 16px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const ModalButton = styled.button`
-  background-color: #007bff;
-  color: white;
-  border: none;
-  outline: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  margin-right: 10px;
-`;
-
-const ModalButtonCancel = styled(ModalButton)`
-  background-color: #dc3545;
-`;
-
-const RegistrationModal = styled.div`
+const Modal = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-const EditModal = styled(RegistrationModal)``;
-
-const DeleteModal = styled(RegistrationModal)``;
-
-const LogoutModal = styled(RegistrationModal)``;
-
-const LogoutModalText = styled.p`
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
   text-align: center;
 `;
 
-const DeleteModalText = styled.p`
-  text-align: center;
+const ModalTitle = styled.h3`
+  margin: 0 0 20px 0;
 `;
 
-const CorrectionBtn = styled.button``;
+const ModalMessage = styled.p`
+  margin: 0 0 20px 0;
+`;
 
-const RegistrationBtn = styled.button`
-  padding: 5px 13px;
-  border-radius: 10px;
-  font-size: 12px;
-  border: none;
+const ModalInputBox = styled.div`
+  margin-bottom: 10px;
+`;
+
+const ModalLabel = styled.label`
+  display: block;
+  margin-bottom: 5px;
+`;
+
+const ModalInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+`;
+
+const ModalButton = styled.button`
+  padding: 10px 20px;
+  background-color: #4caf50;
   color: white;
-  background-color: #375cde;
-  margin-right: 10px;
+  border: none;
   cursor: pointer;
+  margin: 10px;
 `;
 
-const DeleteBtn = styled(RegistrationBtn)`
-  padding: 5px 13px;
-  border-radius: 10px;
-  font-size: 12px;
-  border: none;
-  color: white;
-  background-color: #375cde;
-  margin-right: 10px;
-  cursor: pointer;
-`;
+const RegistrationModal = styled(Modal)``;
 
-const LogoutBtn = styled(RegistrationBtn)`
-  padding: 5px 13px;
-  border-radius: 10px;
-  font-size: 12px;
-  border: none;
-  color: white;
-  background-color: #375cde;
-  margin-right: 10px;
-  cursor: pointer;
-`;
+const EditModal = styled(Modal)``;
+
+const LogoutModal = styled(Modal)``;
+
+const DeleteModal = styled(Modal)``;
