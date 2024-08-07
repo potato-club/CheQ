@@ -143,13 +143,13 @@ public class JwtTokenProvider {
         Long id = extractId(token);
         String role = extractRole(token); // 토큰에서 역할 추출
 
-        if ("USER".equals(role)) {
+        if ("1".equals(role)) {
             Optional<String> studentIdOptional = userRepository.findStudentIdById(id);
             if (studentIdOptional.isEmpty()) {
                 throw new NotFoundException("사용자를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
             }
             return studentIdOptional.get();
-        } else if ("ADMIN".equals(role)) {
+        } else if ("2".equals(role)) {
             Optional<AdminEntity> adminOptional = adminRepository.findById(id);
             if (adminOptional.isEmpty()) {
                 throw new NotFoundException("관리자를 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION);
@@ -201,9 +201,9 @@ public class JwtTokenProvider {
     }
 
     public String resolveAccessToken(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return request.getHeader("authorization").substring(7);
+        String authorizationHeader = request.getHeader("AT");
+        if (authorizationHeader != null && request.getHeader("RT") == null) {
+            return request.getHeader("AT");
         }
         return null;
     }
