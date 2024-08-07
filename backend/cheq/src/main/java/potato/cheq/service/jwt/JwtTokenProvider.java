@@ -172,7 +172,7 @@ public class JwtTokenProvider {
 
     public boolean isAdmin(String token) throws Exception {
         String role = extractRole(token);
-        return role.equals("admin");
+        return role.equals("2");
     }
 
     private Claims extraAllClaims(String token) {
