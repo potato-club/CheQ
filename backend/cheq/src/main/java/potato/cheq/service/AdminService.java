@@ -89,7 +89,7 @@ public class AdminService {
 
         String userRole = jwtTokenProvider.extractRole(token);
 
-        if (!userRole.equals("ADMIN")) {
+        if (!userRole.equals("2")) {
             throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
         }
 
@@ -110,7 +110,7 @@ public class AdminService {
 
         String userRole = jwtTokenProvider.extractRole(token);
 
-        if (!userRole.equals("ADMIN")) {
+        if (!userRole.equals("2")) {
             throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
         }
 
@@ -154,7 +154,7 @@ public class AdminService {
 
         String userRole = jwtTokenProvider.extractRole(token);
 
-        if (!userRole.equals("ADMIN")) {
+        if (!userRole.equals("2")) {
             throw new UnAuthorizedException("Admin 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
         }
 
