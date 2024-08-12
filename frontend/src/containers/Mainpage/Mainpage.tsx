@@ -30,43 +30,40 @@ const Mainpage = () => {
   }, []);
 
 
-  useEffect(() => {
-    // 백엔드에서 토큰을 받아오는 로직
-    const fetchToken = async () => {
-      try {
-        const response = await axios.post('http://isaacnas.duckdns.org:8083/attendance/nfc'); // 여기에 토큰을 받아오는 엔드포인트를 입력
-        const receivedToken = response.data.token;
-        setToken(receivedToken);
-        localStorage.setItem('token', receivedToken); // 토큰을 로컬 스토리지에 저장
-      } catch (error) {
-        console.error('토큰을 받아오는 중 오류가 발생했습니다:', error);
-      }
-    };
-
-    fetchToken(); // 컴포넌트가 마운트될 때 토큰을 받아옴
-  }, []);
-
-  const onSubmit = async (address: string, position: string) => {
+  const onSubmit = async (address: string, position: string) => { //string값이 달라서 발생하는 오류
     try {
-      const storedToken = token || localStorage.getItem('token');
-
+      // 주어진 토큰 값을 직접 설정합니다.
+      const storedToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxYzZlMzA3ZDc0MTFjOTFhZmI0MzU0NTE3MDM2YjJlMDBmNTY2OGEzNjQyYWNlZTNkMzdkOWQ4ZjdhMjBmMzM2ZjMxNGJkMjQwZTNlNGIyNmEyOWI5ZTdjN2ZmMWNmMjQiLCJpYXQiOjE3MjI5Njk1OTYsImV4cCI6MTcyMjk3MzE5Nn0.tUju_dhTd9rRDXne9ONHDrJa7RKgKmFlqAjHO9cA4uov8vD0MWAegRYIVSXLtsOwFB9SVtSh9MVr2dgXD_JISw";
+  
+      // 요청 바디를 정의합니다.
       const requestBody = {
         uuid: address,
         nfc_position: position,
         attendanceTime: new Date().toISOString(),
-        token: storedToken || "", // 만약 상태나 로컬스토리지에 토큰이 없으면 빈 문자열로 대체
+        token: storedToken, // 주어진 토큰 값을 포함합니다.
       };
-
-      const response = await axios.post('https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/nfc', requestBody);
-
-      // 성공적으로 응답 받았을 때의 처리
+  
+      // requestBody의 값을 확인합니다.
+      console.log("Request Body:", requestBody);
+  
+      // POST 요청을 보내고 응답을 처리합니다.
+      const response = await axios.post('https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/nfc', requestBody, {
+        headers: {
+          'Content-Type': 'application/json', // 바디를 JSON으로 전송
+        }
+      });
+  
+      // 응답 데이터를 상태에 저장합니다.
       setResponseData(response.data);
     } catch (error) {
-      // 에러 발생 시 알람
+      // 오류가 발생하면 사용자에게 알립니다.
+      console.error("Error:", error); // 에러를 콘솔에 출력
       alert("오류가 발생했습니다");
     }
   };
+  
 
+  
   const attendanceStatuses = [
     "present",
     "absent",

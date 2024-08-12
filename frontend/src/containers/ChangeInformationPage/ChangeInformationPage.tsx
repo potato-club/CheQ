@@ -37,7 +37,7 @@ function ChangeInformationPage() {
         <Box1>
           <Box1IdBox>
             <Box1IdBoxText>
-              <Box1IdBoxTextTag>아이디</Box1IdBoxTextTag>
+              <Box1IdBoxTextTag>이메일</Box1IdBoxTextTag>
             </Box1IdBoxText>
             <Box1IdLineText>
               <Box1IdLineTag>
@@ -53,13 +53,13 @@ function ChangeInformationPage() {
         <Box2>
           <Box2PasswordBox>
             <Box2PasswordText>
-              <Box2PasswordTextTag>비밀번호</Box2PasswordTextTag>
+              <Box2PasswordTextTag>채플</Box2PasswordTextTag>
             </Box2PasswordText>
             <Box2PasswordLineText>
               <Box2PasswordLineTag>
                 <input
                   type="text"
-                  placeholder="영문+숫자 조합 8자 이상 입력해주세요"
+                  placeholder="채플 교시 작성"
                   maxLength={25}
                 />
               </Box2PasswordLineTag>

@@ -5,6 +5,7 @@ import Attendance from "./page/Attendance";
 import Admin from "./page/Admin";
 import Login from "./page/Login";
 import Change from "./page/ChangeInformation";
+import Test from "./page/TestPages";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/attendance" element={<Attendance />} />
         <Route path="/change" element={<Change />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </Router>
   );

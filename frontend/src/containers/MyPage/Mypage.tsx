@@ -61,15 +61,18 @@ function MyPage() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = 'your_token_here'; // 실제 토큰 값으로 대체해야 합니다.
-
-        const response = await axios.get('https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/viewinfo', {
-          params: { token },
+        const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxYzZlMzA3ZDc0MTFjOTFhZmI0MzU0NTE3MDM2YjJlMDg3Y2RmOGM3OWY1NmIyZTk1ZGY5ZWNkNmE5ZGU0NDkzOTllMTNmM2E4ODM2MDRjYzgxMDdhMzY1ZDkyNDc4NWEiLCJpYXQiOjE3MjMwMDQ2NzYsImV4cCI6MTcyMzYwOTQ3Nn0.3lAHe4nrCx-BGyGWtmPB7j39066yBGD30oJvEMc-qSdQJbOKToNLZTq6AhSQWa_enfuEyQglxhfjk3RGMEU2dw";
+  
+        // Authorization 헤더에 토큰 추가
+        const response = await axios.get('https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/viewinfo', { //get형식은 바디로 불러올수없음
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
-
+  
         // 응답 데이터에서 필요한 정보 추출
         const { email, studentId, seat } = response.data;
-
+  
         // 상태에 데이터 설정
         setEmail(email);
         setStudentId(studentId);
@@ -79,10 +82,10 @@ function MyPage() {
         console.error("Error fetching user info:", error);
       }
     };
-
+  
     fetchUserInfo();
   }, []); // 빈 배열을 의존성 배열로 전달하여 컴포넌트가 마운트될 때만 호출되도록 합니다.
-
+  
   const ChangeInfo = () => {
     navigate("/change");
   };
@@ -167,7 +170,6 @@ const BigBox = styled.div`
   width: 100vw;
   min-width: 200px;
   max-width: 580px;
-
   padding: 0px 20px 73px 20px;
 `;
 
