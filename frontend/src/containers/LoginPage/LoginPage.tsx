@@ -25,8 +25,10 @@ const LoginPage = () => {
       const response = await axios.post(userUrl, loginData);
 
       if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
+        console.log("User response data:", response.data); // 응답 데이터 확인
+        const { at, rt } = response.data;
+        localStorage.setItem("at", at);
+        localStorage.setItem("rt", rt);
         alert("사용자로 로그인 되었습니다!");
         navigate("/main");
       }
@@ -37,8 +39,10 @@ const LoginPage = () => {
         const adminResponse = await axios.post(adminUrl, adminData);
 
         if (adminResponse.status === 200) {
-          const adminToken = adminResponse.data.token;
-          localStorage.setItem("token", adminToken);
+          console.log("Admin response data:", adminResponse.data); // 응답 데이터 확인
+          const { at, rt } = adminResponse.data;
+          localStorage.setItem("at", at);
+          localStorage.setItem("rt", rt);
           alert("관리자로 로그인 되었습니다!");
           navigate("/admin");
         } else {

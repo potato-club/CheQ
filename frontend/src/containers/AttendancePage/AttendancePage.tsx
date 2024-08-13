@@ -17,7 +17,7 @@ const AttendancePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("at");
       if (!token) {
         alert("로그인이 필요합니다.");
         return;
@@ -25,25 +25,26 @@ const AttendancePage = () => {
 
       try {
         const response = await axios.get(
-          "http://isaacnas.duckdns.org:8083/attendance/all",
+          "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/all",
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
+            data: {
+              Authorization: `${token}`,
             },
           }
         );
-        const data = response.data;
 
-        setAttendanceData(data);
+        const Data = response.data;
 
-        const attendance = data.filter(
+        setAttendanceData(Data);
+
+        const attendance = Data.filter(
           (item: AttendanceData) => item.status === "출석"
         ).length;
-        const lateAndEarlyLeave = data.filter(
+        const lateAndEarlyLeave = Data.filter(
           (item: AttendanceData) =>
             item.status === "지각" || item.status === "조퇴"
         ).length;
-        const absence = data.filter(
+        const absence = Data.filter(
           (item: AttendanceData) => item.status === "결석"
         ).length;
 
