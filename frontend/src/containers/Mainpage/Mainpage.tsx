@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
-import NFCImage from "../../Image/NFC.png";
-import BeaconImage from "../../Image/Beacon.png";
+import NFCImage from "../../image/NFC.png";
+import BeaconImage from "../../image/Beacon.png";
 import axios from "axios";
 
 const images = [
@@ -11,7 +11,6 @@ const images = [
   "https://cdn.autotribune.co.kr/news/photo/202312/11209_56884_5312.png",
   "https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png",
 ];
-
 
 const Mainpage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -29,12 +28,13 @@ const Mainpage = () => {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
-
-  const onSubmit = async (address: string, position: string) => { //string값이 달라서 발생하는 오류
+  const onSubmit = async (address: string, position: string) => {
+    //string값이 달라서 발생하는 오류
     try {
       // 주어진 토큰 값을 직접 설정합니다.
-      const storedToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxYzZlMzA3ZDc0MTFjOTFhZmI0MzU0NTE3MDM2YjJlMDBmNTY2OGEzNjQyYWNlZTNkMzdkOWQ4ZjdhMjBmMzM2ZjMxNGJkMjQwZTNlNGIyNmEyOWI5ZTdjN2ZmMWNmMjQiLCJpYXQiOjE3MjI5Njk1OTYsImV4cCI6MTcyMjk3MzE5Nn0.tUju_dhTd9rRDXne9ONHDrJa7RKgKmFlqAjHO9cA4uov8vD0MWAegRYIVSXLtsOwFB9SVtSh9MVr2dgXD_JISw";
-  
+      const storedToken =
+        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxYzZlMzA3ZDc0MTFjOTFhZmI0MzU0NTE3MDM2YjJlMDBmNTY2OGEzNjQyYWNlZTNkMzdkOWQ4ZjdhMjBmMzM2ZjMxNGJkMjQwZTNlNGIyNmEyOWI5ZTdjN2ZmMWNmMjQiLCJpYXQiOjE3MjI5Njk1OTYsImV4cCI6MTcyMjk3MzE5Nn0.tUju_dhTd9rRDXne9ONHDrJa7RKgKmFlqAjHO9cA4uov8vD0MWAegRYIVSXLtsOwFB9SVtSh9MVr2dgXD_JISw";
+
       // 요청 바디를 정의합니다.
       const requestBody = {
         uuid: address,
@@ -42,17 +42,21 @@ const Mainpage = () => {
         attendanceTime: new Date().toISOString(),
         token: storedToken, // 주어진 토큰 값을 포함합니다.
       };
-  
+
       // requestBody의 값을 확인합니다.
       console.log("Request Body:", requestBody);
-  
+
       // POST 요청을 보내고 응답을 처리합니다.
-      const response = await axios.post('https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/nfc', requestBody, {
-        headers: {
-          'Content-Type': 'application/json', // 바디를 JSON으로 전송
+      const response = await axios.post(
+        "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/nfc",
+        requestBody,
+        {
+          headers: {
+            "Content-Type": "application/json", // 바디를 JSON으로 전송
+          },
         }
-      });
-  
+      );
+
       // 응답 데이터를 상태에 저장합니다.
       setResponseData(response.data);
     } catch (error) {
@@ -61,9 +65,7 @@ const Mainpage = () => {
       alert("오류가 발생했습니다");
     }
   };
-  
 
-  
   const attendanceStatuses = [
     "present",
     "absent",
@@ -102,7 +104,10 @@ const Mainpage = () => {
         </Box1>
         <Box2>
           <Box2Advertisement>
-            <AdvertisementImage src={images[currentImageIndex]} alt="Advertisement" />
+            <AdvertisementImage
+              src={images[currentImageIndex]}
+              alt="Advertisement"
+            />
           </Box2Advertisement>
         </Box2>
         <Box3A>
@@ -122,15 +127,14 @@ const Mainpage = () => {
             {buttonsData.map((button, index) => (
               <Box4MainAButton
                 key={index}
-                //onClick={index === 0 ? handleNFCScan : undefined 
+                //onClick={index === 0 ? handleNFCScan : undefined
                 onClick={
-                  index === 0
-                    ? () =>
-                        onSubmit("string", "string")
-                    : undefined
+                  index === 0 ? () => onSubmit("string", "string") : undefined
                 }
               >
-                {button.image && <ButtonImage src={button.image} alt={button.label} />}
+                {button.image && (
+                  <ButtonImage src={button.image} alt={button.label} />
+                )}
               </Box4MainAButton>
             ))}
           </Box4MainA>
@@ -142,8 +146,6 @@ const Mainpage = () => {
 };
 
 export default Mainpage;
-
-
 
 const BigBox = styled.div`
   display: flex;
@@ -280,7 +282,7 @@ const Box4MainAButton = styled.div`
 `;
 
 const ButtonImage = styled.img`
-width: 100%; 
-height: 100%; 
-/* object-fit: cover; */
+  width: 100%;
+  height: 100%;
+  /* object-fit: cover; */
 `;
