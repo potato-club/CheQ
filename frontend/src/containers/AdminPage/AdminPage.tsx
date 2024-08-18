@@ -6,7 +6,7 @@ import axios from "axios";
 
 interface AdminData {
   checkbox: boolean;
-  name: string;
+  email: string;
   studentid: number;
   studentclass: string;
   chapel: number;
@@ -23,10 +23,19 @@ const AdminPage = () => {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const navigate = useNavigate();
 
+  const atToken = localStorage.getItem("at");
+
+  // const axiosInstance = axios.create({
+  //   baseURL: "https://dual-kayla-gamza-9d3cdf9c.koyeb.app",
+  //   headers: {
+  //     Authorization: `${atToken}`,
+  //   },
+  // });
+
   const TestData: AdminData[] = [
     {
       checkbox: false,
-      name: "정지호",
+      email: "정지호",
       studentid: 202110647,
       studentclass: "컴퓨터공학",
       chapel: 3,
@@ -34,7 +43,7 @@ const AdminPage = () => {
     },
     {
       checkbox: false,
-      name: "김철수",
+      email: "김철수",
       studentid: 202110648,
       studentclass: "전자공학",
       chapel: 3,
@@ -42,7 +51,7 @@ const AdminPage = () => {
     },
     {
       checkbox: false,
-      name: "박영희",
+      email: "박영희",
       studentid: 202110649,
       studentclass: "섬유패션디자인학",
       chapel: 3,
@@ -50,7 +59,7 @@ const AdminPage = () => {
     },
     {
       checkbox: false,
-      name: "강민",
+      email: "강민",
       studentid: 202110650,
       studentclass: "시각정보디자인학",
       chapel: 7,
@@ -58,7 +67,7 @@ const AdminPage = () => {
     },
     {
       checkbox: false,
-      name: "남궁지수",
+      email: "남궁지수",
       studentid: 201910052,
       studentclass: "미디어영상광고학",
       chapel: 7,
@@ -66,7 +75,7 @@ const AdminPage = () => {
     },
     {
       checkbox: false,
-      name: "송태진",
+      email: "송태진",
       studentid: 202110034,
       studentclass: "컴퓨터공학",
       chapel: 3,
@@ -101,7 +110,12 @@ const AdminPage = () => {
     try {
       for (const student of studentsToDelete) {
         await axios.delete(
-          `http://isaacnas.duckdns.org:8083/admin/delete/${student.studentid}`
+          `https://dual-kayla-gamza-9d3cdf9c.koyeb.app/admin/delete/${student.studentid}`,
+          {
+            data: {
+              Authorization: `${atToken}`,
+            },
+          }
         );
       }
       const newData = adminData.filter((item) => !item.checkbox);
@@ -124,7 +138,7 @@ const AdminPage = () => {
     const filtered = adminData.filter((student) => {
       const chapelWithSuffix = `${student.chapel}교시`;
       return (
-        student.name.toLowerCase().includes(searchQuery) ||
+        student.email.toLowerCase().includes(searchQuery) ||
         student.studentid.toString().includes(searchQuery) ||
         student.studentclass.toLowerCase().includes(searchQuery) ||
         student.chapel.toString().includes(searchQuery) ||
@@ -138,7 +152,7 @@ const AdminPage = () => {
   const handleRegistration = async (data: any) => {
     const existingStudent = adminData.some(
       (student) =>
-        student.name === data.name ||
+        student.email === data.name ||
         student.studentid === parseInt(data.studentid)
     );
 
@@ -147,7 +161,7 @@ const AdminPage = () => {
     } else {
       const newStudent = {
         checkbox: false,
-        name: data.name,
+        email: data.name,
         studentid: parseInt(data.studentid),
         studentclass: data.studentclass,
         chapel: parseInt(data.chapel),
@@ -164,7 +178,7 @@ const AdminPage = () => {
 
       try {
         await axios.post(
-          "http://isaacnas.duckdns.org:8083/user/join",
+          "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/join",
           studentData
         );
         const newAdminData = [...adminData, newStudent];
@@ -180,7 +194,7 @@ const AdminPage = () => {
   const handleEdit = async (data: any) => {
     const editedData: AdminData = {
       checkbox: false,
-      name: data.name,
+      email: data.name,
       studentid: parseInt(data.studentid),
       studentclass: data.studentclass,
       chapel: parseInt(data.chapel),
@@ -192,7 +206,7 @@ const AdminPage = () => {
 
     try {
       await axios.put(
-        `http://isaacnas.duckdns.org:8083/user/${editedData.studentid}`,
+        `https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/${editedData.studentid}`,
         editedData
       );
       setAdminData(updatedData);
@@ -259,7 +273,7 @@ const AdminPage = () => {
                 checked={data.checkbox}
                 onChange={() => handleCheckboxChange(index)}
               />
-              <StudentName>{data.name}</StudentName>
+              <StudentName>{data.email}</StudentName>
               <StudentId>{data.studentid}</StudentId>
               <StudentClass>{data.studentclass}</StudentClass>
               <Chapel>{data.chapel}교시</Chapel>
@@ -331,7 +345,7 @@ const AdminPage = () => {
                 <ModalLabel>이름</ModalLabel>
                 <ModalInput
                   type="text"
-                  defaultValue={adminData[editIndex].name}
+                  defaultValue={adminData[editIndex].email}
                   {...register("name", { required: true })}
                 />
               </ModalInputBox>
@@ -404,12 +418,13 @@ const AdminPage = () => {
 
 export default AdminPage;
 
-// 스타일 컴포넌트들...
 const StyleAdminPage = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
+  margin: auto;
+  width: 100vw;
+  min-width: 200px;
+  max-width: 580px;
   padding: 20px;
 `;
 
@@ -493,7 +508,7 @@ const AdminInfo = styled.div`
 
 const StudentTitleBox = styled.div`
   background-color: #f2f2f2;
-  padding: 10px;
+  padding: 10px 56px 10px 35px;
 `;
 
 const StdTitleBox1 = styled.div`
