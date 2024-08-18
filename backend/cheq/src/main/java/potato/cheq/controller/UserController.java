@@ -20,6 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 @Tag(name = "UserController", description = "User's API")
+@CrossOrigin(originPatterns = "http://localhost:3000, localhost:3000")
 public class UserController {
 
     private final UserService userService;

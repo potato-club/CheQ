@@ -20,6 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @Tag(name = "AdminController", description = "Admin's API")
+@CrossOrigin(originPatterns = "http://localhost:3000, localhost:3000")
 public class AdminController {
 
     private final AdminService adminService;

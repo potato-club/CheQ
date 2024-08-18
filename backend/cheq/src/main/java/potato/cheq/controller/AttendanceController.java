@@ -21,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/attendance")
 @Tag(name = "AttendanceController", description = "Attendance's API")
+@CrossOrigin(originPatterns = "http://localhost:3000, localhost:3000")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
