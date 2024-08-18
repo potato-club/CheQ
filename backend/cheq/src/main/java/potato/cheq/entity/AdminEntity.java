@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import potato.cheq.enums.UserRole;
-
 @Entity
 @Getter
 @NoArgsConstructor

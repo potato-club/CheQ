@@ -34,6 +34,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Optional;
 
+// join 회원가입이 되는데 -> uuid 없는채로
+// device -> uuid
+// login -> uuid X -> uuid 값이 없는 token  -> nfc / beacon
+// login -> uuid O -> uuid 값이 있는 token -> uuid && userToken uuid 비교를하거든요? -> 같으면? 출결 O 같지않으면 출결 X
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -141,7 +146,7 @@ public class JwtTokenProvider {
 
     public String extractMemberId(String token) throws Exception {
         Long id = extractId(token);
-        String role = extractRole(token); // 토큰에서 역할 추출
+        String role = extractRole(token); // 토큰에서 역할 추출 1 / 2
 
         if ("1".equals(role)) {
             Optional<String> studentIdOptional = userRepository.findStudentIdById(id);
