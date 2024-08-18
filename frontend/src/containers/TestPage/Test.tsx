@@ -1,36 +1,93 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from "styled-components";
 
 function TestPage() {
+  const [inputValue, setInputValue] = useState("");
+  const [token, setToken] = useState<string | null>(null); // 토큰 값을 저장할 상태 (토큰이 존재하면 setToken을 통해 상태를 저장하고 토큰이 없다면 로그인 요청메세지나오게하기)
+
+  // 컴포넌트가 마운트될 때 localStorage에서 토큰을 불러옴
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    console.log("Loaded token from localStorage:", savedToken); // 저장된 토큰을 확인하기 위한 로그
+    if (savedToken) {
+      setToken(savedToken);
+    } else {
+      alert("로그인 후 기기 등록을 진행해주세요.");
+    }
+  }, []);
+
+  // 입력 값 변경 시 호출되는 핸들러
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  // 폼 제출 시 호출되는 핸들러
+  const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // 페이지 새로고침 방지
+
+    // 토큰이 없는 경우, 처리 중단
+    if (!token) {
+      alert("유효한 토큰이 없습니다. 다시 로그인해주세요.");
+      return;
+    }
+
+    // PUT 요청을 통해 기기 ID 업데이트
+    axios
+      .put(
+        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device`, 
+        { uuId: inputValue },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 토큰을 Authorization 헤더에 포함
+          }
+        }
+      )
+      .then(response => {
+        console.log("Update successful:", response.data);
+        alert("기기 등록이 완료되었습니다!");
+      })
+      .catch(error => {
+        console.error("기기 업데이트 중 오류가 발생했습니다:", error);
+        alert("기기 등록 중 오류가 발생했습니다.");
+      })
+      .finally(() => {
+        console.log("Update request completed.");
+      });
+  };
+
   return (
     <div>
       <BigBox>
-          <AttendanceTitle>
-            <MainTitle>CheQ</MainTitle>
-            <SubTitle>기기등록</SubTitle>
-          </AttendanceTitle>
-        
-          <Box1>
+        <AttendanceTitle>
+          <MainTitle>CheQ</MainTitle>
+          <SubTitle>기기등록</SubTitle>
+        </AttendanceTitle>
+
+        <Box1>
           <Box1IdBox>
-            <Box1IdBoxText>
-              <Box1IdBoxTextTag>등록</Box1IdBoxTextTag>
-            </Box1IdBoxText>
-            <Box1IdLineText>
-              <Box1IdLineTag>
-                <input
-                  type="text"
-                  // placeholder="학교의 학번을 입력하세요"
-                  maxLength={25}
+            <form onSubmit={handleUpdate}>
+              <Box1IdBoxText>
+                <Box1IdBoxTextTag>등록</Box1IdBoxTextTag>
+              </Box1IdBoxText>
+              <Box1IdLineText>
+                <Box1IdLineTag>
+                <input 
+                  type="text" 
+                  value={inputValue} 
+                  onChange={handleInputChange} 
+                  placeholder="기기 ID 입력" 
                 />
-              </Box1IdLineTag>
-            </Box1IdLineText>
+                  <button type="submit">Update</button>
+                </Box1IdLineTag>
+              </Box1IdLineText>
+            </form>
           </Box1IdBox>
         </Box1>
       </BigBox>
     </div>
   );
 }
-
 export default TestPage;
 
 const BigBox = styled.div`
