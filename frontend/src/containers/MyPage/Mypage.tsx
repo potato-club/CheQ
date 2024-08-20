@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
-import QRImage from "../../Image/qr -1004.png";
+import QRImage from "../../image/qr -1004.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -11,19 +11,18 @@ import axios from "axios";
 //   seat: string;
 // }
 
-
 function MyPage() {
   const navigate = useNavigate();
   //const [userData, setUserData] = useState<UserData | null>(null); // Use appropriate type
   const [responseData, setResponseData] = useState(null);
-  const [email, setEmail] = useState('');
-  const [studentId, setStudentId] = useState('');
-  const [seat, setSeat] = useState('');
+  const [email, setEmail] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [seat, setSeat] = useState("");
 
   const images = [
     "https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg",
   ];
-  
+
   // useEffect(() => {
   //   const fetchUserData = async () => {
   //     try {
@@ -61,18 +60,23 @@ function MyPage() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxYzZlMzA3ZDc0MTFjOTFhZmI0MzU0NTE3MDM2YjJlMDg3Y2RmOGM3OWY1NmIyZTk1ZGY5ZWNkNmE5ZGU0NDkzOTllMTNmM2E4ODM2MDRjYzgxMDdhMzY1ZDkyNDc4NWEiLCJpYXQiOjE3MjMwMDQ2NzYsImV4cCI6MTcyMzYwOTQ3Nn0.3lAHe4nrCx-BGyGWtmPB7j39066yBGD30oJvEMc-qSdQJbOKToNLZTq6AhSQWa_enfuEyQglxhfjk3RGMEU2dw";
-  
+        const token =
+          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxYzZlMzA3ZDc0MTFjOTFhZmI0MzU0NTE3MDM2YjJlMDg3Y2RmOGM3OWY1NmIyZTk1ZGY5ZWNkNmE5ZGU0NDkzOTllMTNmM2E4ODM2MDRjYzgxMDdhMzY1ZDkyNDc4NWEiLCJpYXQiOjE3MjMwMDQ2NzYsImV4cCI6MTcyMzYwOTQ3Nn0.3lAHe4nrCx-BGyGWtmPB7j39066yBGD30oJvEMc-qSdQJbOKToNLZTq6AhSQWa_enfuEyQglxhfjk3RGMEU2dw";
+
         // Authorization 헤더에 토큰 추가
-        const response = await axios.get('https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/viewinfo', { //get형식은 바디로 불러올수없음
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
+        const response = await axios.get(
+          "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/viewinfo",
+          {
+            //get형식은 바디로 불러올수없음
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         // 응답 데이터에서 필요한 정보 추출
         const { email, studentId, seat } = response.data;
-  
+
         // 상태에 데이터 설정
         setEmail(email);
         setStudentId(studentId);
@@ -82,10 +86,10 @@ function MyPage() {
         console.error("Error fetching user info:", error);
       }
     };
-  
+
     fetchUserInfo();
   }, []); // 빈 배열을 의존성 배열로 전달하여 컴포넌트가 마운트될 때만 호출되도록 합니다.
-  
+
   const ChangeInfo = () => {
     navigate("/change");
   };
@@ -104,21 +108,21 @@ function MyPage() {
             <BoxBMainProfil>
               <BoxBMainProfilimg src={images[0]} alt="profile" />
             </BoxBMainProfil>
-            
+
             <BoxBMaininformation>
-        <BoxBMaininformation1>
-          <FixedText>이메일 | </FixedText>
-          <span>{email}</span>
-        </BoxBMaininformation1>
-        <BoxBMaininformation2>
-          <FixedText>학번 | </FixedText>
-          <span>{studentId}</span>
-        </BoxBMaininformation2>
-        <BoxBMaininformation3>
-          <FixedText>좌석 | </FixedText>
-          <span>{seat}</span>
-        </BoxBMaininformation3>
-      </BoxBMaininformation>
+              <BoxBMaininformation1>
+                <FixedText>이메일 | </FixedText>
+                <span>{email}</span>
+              </BoxBMaininformation1>
+              <BoxBMaininformation2>
+                <FixedText>학번 | </FixedText>
+                <span>{studentId}</span>
+              </BoxBMaininformation2>
+              <BoxBMaininformation3>
+                <FixedText>좌석 | </FixedText>
+                <span>{seat}</span>
+              </BoxBMaininformation3>
+            </BoxBMaininformation>
 
             <BoXBProfilchangeBox>
               <BoxBProfilchangeButton>
@@ -159,7 +163,7 @@ function MyPage() {
       <Nav />
     </div>
   );
-};
+}
 
 export default MyPage;
 
