@@ -113,7 +113,7 @@ const AdminPage = () => {
           `https://dual-kayla-gamza-9d3cdf9c.koyeb.app/admin/delete/${student.studentid}`,
           {
             data: {
-              Authorization: `${atToken}`,
+              AT: `${atToken}`,
             },
           }
         );
@@ -177,10 +177,16 @@ const AdminPage = () => {
       };
 
       try {
-        await axios.post(
+        // 학생 등록 요청
+        const response = await axios.post(
           "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/join",
           studentData
         );
+
+        // 백엔드에서 응답으로 받은 primary key를 로컬 스토리지에 저장
+        const primaryKey = response.data.PrimaryKey; // 이 부분이 백엔드 응답에 따라 다릅니다.
+        localStorage.setItem("primaryKey", primaryKey);
+
         const newAdminData = [...adminData, newStudent];
         setAdminData(newAdminData);
         setFilteredData(newAdminData);

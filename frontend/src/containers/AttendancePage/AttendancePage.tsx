@@ -28,7 +28,7 @@ const AttendancePage = () => {
           "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/all",
           {
             data: {
-              Authorization: `${token}`,
+              AT: `${token}`,
             },
           }
         );

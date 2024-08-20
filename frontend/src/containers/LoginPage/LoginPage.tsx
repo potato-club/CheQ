@@ -26,9 +26,9 @@ const LoginPage = () => {
 
       if (response.status === 200) {
         console.log("User response data:", response.data); // 응답 데이터 확인
-        const { at, rt } = response.data;
-        localStorage.setItem("at", at);
-        localStorage.setItem("rt", rt);
+        const { AT, RT } = response.data;
+        localStorage.setItem("AT", AT);
+        localStorage.setItem("RT", RT);
         alert("사용자로 로그인 되었습니다!");
         navigate("/main");
       }
@@ -40,9 +40,9 @@ const LoginPage = () => {
 
         if (adminResponse.status === 200) {
           console.log("Admin response data:", adminResponse.data); // 응답 데이터 확인
-          const { at, rt } = adminResponse.data;
-          localStorage.setItem("at", at);
-          localStorage.setItem("rt", rt);
+          const { AT, RT } = adminResponse.data;
+          localStorage.setItem("AT", AT);
+          localStorage.setItem("RT", RT);
           alert("관리자로 로그인 되었습니다!");
           navigate("/admin");
         } else {
