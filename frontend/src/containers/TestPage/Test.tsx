@@ -4,58 +4,57 @@ import styled from "styled-components";
 
 function TestPage() {
   const [inputValue, setInputValue] = useState("");
-  const [token, setToken] = useState<string | null>(null); // 토큰 값을 저장할 상태 (토큰이 존재하면 setToken을 통해 상태를 저장하고 토큰이 없다면 로그인 요청메세지나오게하기)
+  const [token, setToken] = useState<string | null>(null); 
+  const [primaryKey, setPrimaryKey] = useState<string | null>(null); // Primary Key를 저장할 상태
 
-  // 컴포넌트가 마운트될 때 localStorage에서 토큰을 불러옴
+  // 컴포넌트가 마운트될 때 localStorage에서 토큰과 Primary Key를 불러옴
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    console.log("Loaded token from localStorage:", savedToken); // 저장된 토큰을 확인하기 위한 로그
+    const savedToken = localStorage.getItem("at");
+    console.log("Loaded token from localStorage:", savedToken);
     if (savedToken) {
       setToken(savedToken);
     } else {
       alert("로그인 후 기기 등록을 진행해주세요.");
     }
+
+    // Primary Key를 가져옴
+    const savedPrimaryKey = localStorage.getItem("primaryKey");
+    console.log("Loaded primaryKey from localStorage:", savedPrimaryKey);
+    if (savedPrimaryKey) {
+      setPrimaryKey(savedPrimaryKey);
+    } else {
+      alert("Primary Key를 찾을 수 없습니다. 올바른 접근인지 확인해주세요.");
+    }
   }, []);
 
-  // 입력 값 변경 시 호출되는 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
-  // 폼 제출 시 호출되는 핸들러
-  const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 페이지 새로고침 방지
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    // 토큰이 없는 경우, 처리 중단
-    if (!token) {
-      alert("유효한 토큰이 없습니다. 다시 로그인해주세요.");
+    if (!token || !primaryKey) {
+      alert("유효한 토큰 또는 Primary Key가 없습니다. 다시 로그인해주세요.");
       return;
     }
 
-    // PUT 요청을 통해 기기 ID 업데이트
-    axios
-      .put(
-        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device`, 
-        { uuId: inputValue },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 토큰을 Authorization 헤더에 포함
-          }
-        }
-      )
-      .then(response => {
-        console.log("Update successful:", response.data);
-        alert("기기 등록이 완료되었습니다!");
-      })
-      .catch(error => {
-        console.error("기기 업데이트 중 오류가 발생했습니다:", error);
-        alert("기기 등록 중 오류가 발생했습니다.");
-      })
-      .finally(() => {
-        console.log("Update request completed.");
-      });
+    try {
+      // Primary Key를 URL의 마지막에 추가하여 PUT 요청
+      const response = await axios.put(
+        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device/${primaryKey}`, 
+        { uuId: inputValue }, 
+        { headers: { AT: token } }
+      );
+      console.log("Update successful:", response.data);
+      alert("기기 등록이 완료되었습니다!");
+    } catch (error) {
+      console.error("기기 업데이트 중 오류가 발생했습니다:", error);
+      alert("기기 등록 중 오류가 발생했습니다.");
+    } finally {
+      console.log("Update request completed.");
+    }
   };
-
   return (
     <div>
       <BigBox>
@@ -76,9 +75,9 @@ function TestPage() {
                   type="text" 
                   value={inputValue} 
                   onChange={handleInputChange} 
-                  placeholder="기기 ID 입력" 
+                  placeholder="Device UUID 입력" 
                 />
-                  <button type="submit">Update</button>
+                <button type="submit" className="submit-button">등록</button>
                 </Box1IdLineTag>
               </Box1IdLineText>
             </form>
@@ -183,4 +182,19 @@ const Box1IdLineTag = styled.div`
     color: #375cde;
     font-weight: bold;
   }
+
+  .submit-button {
+  background-color: #007bff; /* 버튼 배경색 */
+  color: white; /* 텍스트 색상 */
+  border: none; /* 테두리 없음 */
+  padding: 5px; /* 여백 */
+  font-size: 16px; /* 폰트 크기 */
+  cursor: pointer; /* 커서 모양 */
+  border-radius: 5px; /* 모서리 둥글기 */
+  background-color: #007bff;
+}
+
+.submit-button:hover {
+  background-color: #0056b3; /* 호버 시 배경색 */
+}
 `;
