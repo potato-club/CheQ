@@ -1,29 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styled from "styled-components";
 
 function TestPage() {
   const [inputValue, setInputValue] = useState("");
-  const [token, setToken] = useState<string | null>(null); 
-  const [primaryKey, setPrimaryKey] = useState<string | null>(null); // Primary Key를 저장할 상태
+  const [token, setToken] = useState<string | null>(null);
+  const [primaryKey, setPrimaryKey] = useState<string | null>(null);
 
   // 컴포넌트가 마운트될 때 localStorage에서 토큰과 Primary Key를 불러옴
   useEffect(() => {
     const savedToken = localStorage.getItem("at");
-    console.log("Loaded token from localStorage:", savedToken);
     if (savedToken) {
       setToken(savedToken);
-    } else {
-      alert("로그인 후 기기 등록을 진행해주세요.");
+      console.log("Loaded token from localStorage:", savedToken);
     }
 
-    // Primary Key를 가져옴
     const savedPrimaryKey = localStorage.getItem("primaryKey");
-    console.log("Loaded primaryKey from localStorage:", savedPrimaryKey);
     if (savedPrimaryKey) {
       setPrimaryKey(savedPrimaryKey);
-    } else {
-      alert("Primary Key를 찾을 수 없습니다. 올바른 접근인지 확인해주세요.");
+      console.log("Loaded primaryKey from localStorage:", savedPrimaryKey);
     }
   }, []);
 
@@ -34,16 +29,22 @@ function TestPage() {
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!token || !primaryKey) {
-      alert("유효한 토큰 또는 Primary Key가 없습니다. 다시 로그인해주세요.");
+    // 토큰 또는 Primary Key가 없을 경우 경고 메시지 표시
+    if (!token) {
+      alert("유효한 토큰이 없습니다. 다시 로그인해주세요.");
+      return;
+    }
+
+    if (!primaryKey) {
+      alert("Primary Key를 찾을 수 없습니다. 다시 시도해주세요.");
       return;
     }
 
     try {
       // Primary Key를 URL의 마지막에 추가하여 PUT 요청
       const response = await axios.put(
-        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device/${primaryKey}`, 
-        { uuId: inputValue }, 
+        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device/${primaryKey}`,
+        { uuid: inputValue },
         { headers: { AT: token } }
       );
       console.log("Update successful:", response.data);
@@ -51,8 +52,6 @@ function TestPage() {
     } catch (error) {
       console.error("기기 업데이트 중 오류가 발생했습니다:", error);
       alert("기기 등록 중 오류가 발생했습니다.");
-    } finally {
-      console.log("Update request completed.");
     }
   };
   return (
@@ -71,13 +70,15 @@ function TestPage() {
               </Box1IdBoxText>
               <Box1IdLineText>
                 <Box1IdLineTag>
-                <input 
-                  type="text" 
-                  value={inputValue} 
-                  onChange={handleInputChange} 
-                  placeholder="Device UUID 입력" 
-                />
-                <button type="submit" className="submit-button">등록</button>
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder="Device UUID 입력"
+                  />
+                  <button type="submit" className="submit-button">
+                    등록
+                  </button>
                 </Box1IdLineTag>
               </Box1IdLineText>
             </form>
@@ -184,17 +185,17 @@ const Box1IdLineTag = styled.div`
   }
 
   .submit-button {
-  background-color: #007bff; /* 버튼 배경색 */
-  color: white; /* 텍스트 색상 */
-  border: none; /* 테두리 없음 */
-  padding: 5px; /* 여백 */
-  font-size: 16px; /* 폰트 크기 */
-  cursor: pointer; /* 커서 모양 */
-  border-radius: 5px; /* 모서리 둥글기 */
-  background-color: #007bff;
-}
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 텍스트 색상 */
+    border: none; /* 테두리 없음 */
+    padding: 5px; /* 여백 */
+    font-size: 16px; /* 폰트 크기 */
+    cursor: pointer; /* 커서 모양 */
+    border-radius: 5px; /* 모서리 둥글기 */
+    background-color: #007bff;
+  }
 
-.submit-button:hover {
-  background-color: #0056b3; /* 호버 시 배경색 */
-}
+  .submit-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 */
+  }
 `;

@@ -18,6 +18,8 @@ const AttendancePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("at");
+      console.log("Token:", token);
+
       if (!token) {
         alert("로그인이 필요합니다.");
         return;
@@ -27,12 +29,12 @@ const AttendancePage = () => {
         const response = await axios.get(
           "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/all",
           {
-            data: {
+            headers: {
               AT: `${token}`,
             },
           }
         );
-
+        console.log("Response Data:", response.data);
         const Data = response.data;
 
         setAttendanceData(Data);
