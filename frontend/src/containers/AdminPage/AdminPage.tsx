@@ -7,10 +7,10 @@ import axios from "axios";
 interface AdminData {
   checkbox: boolean;
   email: string;
-  studentid: number;
-  studentclass: string;
-  chapel: number;
-  chapelseat: string;
+  studentId: number;
+  major: string;
+  chapelKind: string;
+  seat: string;
 }
 
 const AdminPage = () => {
@@ -21,72 +21,42 @@ const AdminPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [primaryKey, setPrimaryKey] = useState<string | undefined>(undefined);
+  const [studentIdsToDelete, setStudentIdsToDelete] = useState<number[]>([]); // 상태 추가
   const navigate = useNavigate();
 
   const atToken = localStorage.getItem("at");
 
-  // const axiosInstance = axios.create({
-  //   baseURL: "https://dual-kayla-gamza-9d3cdf9c.koyeb.app",
-  //   headers: {
-  //     Authorization: `${atToken}`,
-  //   },
-  // });
-
-  const TestData: AdminData[] = [
-    {
-      checkbox: false,
-      email: "정지호",
-      studentid: 202110647,
-      studentclass: "컴퓨터공학",
-      chapel: 3,
-      chapelseat: "A36",
-    },
-    {
-      checkbox: false,
-      email: "김철수",
-      studentid: 202110648,
-      studentclass: "전자공학",
-      chapel: 3,
-      chapelseat: "B24",
-    },
-    {
-      checkbox: false,
-      email: "박영희",
-      studentid: 202110649,
-      studentclass: "섬유패션디자인학",
-      chapel: 3,
-      chapelseat: "C12",
-    },
-    {
-      checkbox: false,
-      email: "강민",
-      studentid: 202110650,
-      studentclass: "시각정보디자인학",
-      chapel: 7,
-      chapelseat: "D34",
-    },
-    {
-      checkbox: false,
-      email: "남궁지수",
-      studentid: 201910052,
-      studentclass: "미디어영상광고학",
-      chapel: 7,
-      chapelseat: "E56",
-    },
-    {
-      checkbox: false,
-      email: "송태진",
-      studentid: 202110034,
-      studentclass: "컴퓨터공학",
-      chapel: 3,
-      chapelseat: "A01",
-    },
-  ];
-
   useEffect(() => {
-    setAdminData(TestData);
-    setFilteredData(TestData);
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/admin/view",
+          {
+            headers: {
+              AT: `${atToken}`,
+            },
+          }
+        );
+
+        const fetchedData = response.data.map((item: any) => ({
+          checkbox: false,
+          email: item.email,
+          studentId: parseInt(item.studentId),
+          major: item.major,
+          chapelKind: item.chapelKind,
+          seat: item.seat,
+        }));
+
+        setAdminData(fetchedData);
+        setFilteredData(fetchedData);
+      } catch (error) {
+        console.error("Error fetching student data:", error);
+      }
+    };
+
+    fetchData();
+  }, [atToken]);
 
   const handleLogout = () => {
     setShowLogoutModal(true);
@@ -105,22 +75,23 @@ const AdminPage = () => {
   };
 
   const handleConfirmDelete = async () => {
-    const studentsToDelete = adminData.filter((item) => item.checkbox);
-
     try {
-      for (const student of studentsToDelete) {
+      for (const studentId of studentIdsToDelete) {
         await axios.delete(
-          `https://dual-kayla-gamza-9d3cdf9c.koyeb.app/admin/delete/${student.studentid}`,
+          `https://dual-kayla-gamza-9d3cdf9c.koyeb.app/admin/delete/${studentId}`,
           {
-            data: {
+            headers: {
               AT: `${atToken}`,
             },
           }
         );
       }
-      const newData = adminData.filter((item) => !item.checkbox);
+      const newData = adminData.filter(
+        (item) => !studentIdsToDelete.includes(item.studentId)
+      );
       setAdminData(newData);
       setFilteredData(newData);
+      setStudentIdsToDelete([]); // 선택된 ID 리스트 초기화
       setShowDeleteModal(false);
     } catch (error) {
       console.error("Error deleting student data:", error);
@@ -136,14 +107,13 @@ const AdminPage = () => {
   const onSubmit = (data: any) => {
     const searchQuery = data.search.toLowerCase();
     const filtered = adminData.filter((student) => {
-      const chapelWithSuffix = `${student.chapel}교시`;
+      const chapelWithSuffix = student.chapelKind;
       return (
         student.email.toLowerCase().includes(searchQuery) ||
-        student.studentid.toString().includes(searchQuery) ||
-        student.studentclass.toLowerCase().includes(searchQuery) ||
-        student.chapel.toString().includes(searchQuery) ||
-        chapelWithSuffix.includes(searchQuery) ||
-        student.chapelseat.toLowerCase().includes(searchQuery)
+        student.studentId.toString().includes(searchQuery) ||
+        student.major.toLowerCase().includes(searchQuery) ||
+        chapelWithSuffix.toLowerCase().includes(searchQuery) ||
+        student.seat.toLowerCase().includes(searchQuery)
       );
     });
     setFilteredData(filtered);
@@ -153,7 +123,7 @@ const AdminPage = () => {
     const existingStudent = adminData.some(
       (student) =>
         student.email === data.name ||
-        student.studentid === parseInt(data.studentid)
+        student.studentId === parseInt(data.studentId)
     );
 
     if (existingStudent) {
@@ -162,31 +132,27 @@ const AdminPage = () => {
       const newStudent = {
         checkbox: false,
         email: data.name,
-        studentid: parseInt(data.studentid),
-        studentclass: data.studentclass,
-        chapel: parseInt(data.chapel),
-        chapelseat: data.chapelseat,
+        studentId: parseInt(data.studentId),
+        major: data.major,
+        chapelKind: `CHAPEL${data.chapel}`,
+        seat: data.seat,
       };
 
       const studentData = {
         email: data.name,
-        studentId: data.studentid.toString(),
-        seat: data.chapelseat,
-        uuid: data.studentclass,
+        studentId: data.studentId.toString(),
+        seat: data.seat,
+        major: data.major,
         chapelKind: `CHAPEL${data.chapel}`,
       };
 
       try {
-        // 학생 등록 요청
         const response = await axios.post(
           "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/join",
           studentData
         );
 
-        // 백엔드에서 응답으로 받은 primary key를 로컬 스토리지에 저장
-        const primaryKey = response.data.PrimaryKey; // 이 부분이 백엔드 응답에 따라 다릅니다.
-        localStorage.setItem("primaryKey", primaryKey);
-
+        setPrimaryKey(response.data);
         const newAdminData = [...adminData, newStudent];
         setAdminData(newAdminData);
         setFilteredData(newAdminData);
@@ -201,10 +167,10 @@ const AdminPage = () => {
     const editedData: AdminData = {
       checkbox: false,
       email: data.name,
-      studentid: parseInt(data.studentid),
-      studentclass: data.studentclass,
-      chapel: parseInt(data.chapel),
-      chapelseat: data.chapelseat,
+      studentId: parseInt(data.studentId),
+      major: data.major,
+      chapelKind: `CHAPEL${data.chapel}`,
+      seat: data.seat,
     };
 
     const updatedData = [...adminData];
@@ -212,7 +178,7 @@ const AdminPage = () => {
 
     try {
       await axios.put(
-        `https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/${editedData.studentid}`,
+        `https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/${primaryKey}`,
         editedData
       );
       setAdminData(updatedData);
@@ -225,7 +191,17 @@ const AdminPage = () => {
 
   const handleCheckboxChange = (index: number) => {
     const newData = [...adminData];
+    const studentId = newData[index].studentId;
     newData[index].checkbox = !newData[index].checkbox;
+
+    if (newData[index].checkbox) {
+      setStudentIdsToDelete([...studentIdsToDelete, studentId]);
+    } else {
+      setStudentIdsToDelete(
+        studentIdsToDelete.filter((id) => id !== studentId)
+      );
+    }
+
     setAdminData(newData);
   };
 
@@ -280,10 +256,10 @@ const AdminPage = () => {
                 onChange={() => handleCheckboxChange(index)}
               />
               <StudentName>{data.email}</StudentName>
-              <StudentId>{data.studentid}</StudentId>
-              <StudentClass>{data.studentclass}</StudentClass>
-              <Chapel>{data.chapel}교시</Chapel>
-              <ChapelSeat>{data.chapelseat}</ChapelSeat>
+              <StudentId>{data.studentId}</StudentId>
+              <StudentClass>{data.major}</StudentClass>
+              <Chapel>{data.chapelKind}</Chapel> {/* 변경된 부분 */}
+              <ChapelSeat>{data.seat}</ChapelSeat>
               <EditButton onClick={() => handleEditClick(index)}>
                 수정
               </EditButton>
@@ -307,14 +283,14 @@ const AdminPage = () => {
                 <ModalLabel>학번</ModalLabel>
                 <ModalInput
                   type="number"
-                  {...register("studentid", { required: true })}
+                  {...register("studentId", { required: true })}
                 />
               </ModalInputBox>
               <ModalInputBox>
                 <ModalLabel>학과</ModalLabel>
                 <ModalInput
                   type="text"
-                  {...register("studentclass", { required: true })}
+                  {...register("major", { required: true })}
                 />
               </ModalInputBox>
               <ModalInputBox>
@@ -328,19 +304,26 @@ const AdminPage = () => {
                 <ModalLabel>좌석</ModalLabel>
                 <ModalInput
                   type="text"
-                  {...register("chapelseat", { required: true })}
+                  {...register("seat", { required: true })}
                 />
               </ModalInputBox>
               <ModalButton type="submit">등록</ModalButton>
-              <ModalButton
-                type="button"
-                onClick={() => setShowRegistrationModal(false)}
-              >
+              <ModalButton onClick={() => setShowRegistrationModal(false)}>
                 취소
               </ModalButton>
             </form>
           </ModalContent>
         </RegistrationModal>
+      )}
+      {showDeleteModal && (
+        <Modal>
+          <ModalContent>
+            <ModalTitle>삭제 확인</ModalTitle>
+            <p>선택한 학생 데이터를 삭제하시겠습니까?</p>
+            <ModalButton onClick={handleConfirmDelete}>확인</ModalButton>
+            <ModalButton onClick={handleCancelDelete}>취소</ModalButton>
+          </ModalContent>
+        </Modal>
       )}
       {showEditModal && editIndex !== null && (
         <EditModal>
@@ -351,7 +334,7 @@ const AdminPage = () => {
                 <ModalLabel>이름</ModalLabel>
                 <ModalInput
                   type="text"
-                  defaultValue={adminData[editIndex].email}
+                  defaultValue={filteredData[editIndex].email}
                   {...register("name", { required: true })}
                 />
               </ModalInputBox>
@@ -359,23 +342,25 @@ const AdminPage = () => {
                 <ModalLabel>학번</ModalLabel>
                 <ModalInput
                   type="number"
-                  defaultValue={adminData[editIndex].studentid}
-                  {...register("studentid", { required: true })}
+                  defaultValue={filteredData[editIndex].studentId}
+                  {...register("studentId", { required: true })}
                 />
               </ModalInputBox>
               <ModalInputBox>
                 <ModalLabel>학과</ModalLabel>
                 <ModalInput
                   type="text"
-                  defaultValue={adminData[editIndex].studentclass}
-                  {...register("studentclass", { required: true })}
+                  defaultValue={filteredData[editIndex].major}
+                  {...register("major", { required: true })}
                 />
               </ModalInputBox>
               <ModalInputBox>
                 <ModalLabel>채플</ModalLabel>
                 <ModalInput
                   type="number"
-                  defaultValue={adminData[editIndex].chapel}
+                  defaultValue={parseInt(
+                    filteredData[editIndex].chapelKind.replace("CHAPEL", "")
+                  )} // 변경된 부분
                   {...register("chapel", { required: true })}
                 />
               </ModalInputBox>
@@ -383,15 +368,12 @@ const AdminPage = () => {
                 <ModalLabel>좌석</ModalLabel>
                 <ModalInput
                   type="text"
-                  defaultValue={adminData[editIndex].chapelseat}
-                  {...register("chapelseat", { required: true })}
+                  defaultValue={filteredData[editIndex].seat}
+                  {...register("seat", { required: true })}
                 />
               </ModalInputBox>
-              <ModalButton type="submit">수정</ModalButton>
-              <ModalButton
-                type="button"
-                onClick={() => setShowEditModal(false)}
-              >
+              <ModalButton type="submit">저장</ModalButton>
+              <ModalButton onClick={() => setShowEditModal(false)}>
                 취소
               </ModalButton>
             </form>
@@ -399,24 +381,14 @@ const AdminPage = () => {
         </EditModal>
       )}
       {showLogoutModal && (
-        <LogoutModal>
+        <Modal>
           <ModalContent>
             <ModalTitle>로그아웃</ModalTitle>
-            <ModalMessage>정말 로그아웃 하시겠습니까?</ModalMessage>
-            <ModalButton onClick={handleConfirmLogout}>예</ModalButton>
-            <ModalButton onClick={handleCancelLogout}>아니오</ModalButton>
+            <p>정말 로그아웃하시겠습니까?</p>
+            <ModalButton onClick={handleConfirmLogout}>확인</ModalButton>
+            <ModalButton onClick={handleCancelLogout}>취소</ModalButton>
           </ModalContent>
-        </LogoutModal>
-      )}
-      {showDeleteModal && (
-        <DeleteModal>
-          <ModalContent>
-            <ModalTitle>삭제 확인</ModalTitle>
-            <ModalMessage>선택한 학생들을 삭제하시겠습니까?</ModalMessage>
-            <ModalButton onClick={handleConfirmDelete}>예</ModalButton>
-            <ModalButton onClick={handleCancelDelete}>아니오</ModalButton>
-          </ModalContent>
-        </DeleteModal>
+        </Modal>
       )}
     </StyleAdminPage>
   );
