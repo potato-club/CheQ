@@ -12,5 +12,6 @@ public class UserMyPageDto {
     private String email;
     private String studentId;
     private String seat;
+    private String major;
 
 }

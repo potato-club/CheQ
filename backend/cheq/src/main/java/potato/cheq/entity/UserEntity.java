@@ -39,6 +39,9 @@ public class UserEntity {
     @Column()
     private String stUuid;
 
+    @Column()
+    private String major;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole userRole;
@@ -61,13 +64,14 @@ public class UserEntity {
         this.seat = requestDto.getSeat();
         this.chapelKind = requestDto.getChapelKind();
         this.lastUpdated = LocalDateTime.now();
+        this.major = requestDto.getMajor();
     }
 
     public void Adminupdate(RequestUpdateStudentDto requestDto) {
         this.studentId = requestDto.getStudentId();
         this.seat = requestDto.getSeat();
         this.chapelKind = ChapelKind.valueOf(requestDto.getChapelKind());
-
+        this.major = requestDto.getMajor();
     }
 
 

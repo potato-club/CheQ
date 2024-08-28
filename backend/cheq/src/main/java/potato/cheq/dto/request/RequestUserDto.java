@@ -15,6 +15,7 @@ public class RequestUserDto {
     private String seat;
     private String uuid;
     private ChapelKind chapelKind;
+    private String major;
 
     @Builder
     public UserEntity toEntity() {
@@ -25,6 +26,7 @@ public class RequestUserDto {
                 .stUuid(uuid)
                 .userRole(UserRole.USER)
                 .chapelKind(chapelKind)
+                .major(major)
                 .build();
     }
 
