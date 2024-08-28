@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
-import QRImage from "../../image/qr -1004.png";
+import QRImage from "../../Image/qr -1004.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -23,64 +23,38 @@ function MyPage() {
     "https://d2v80xjmx68n4w.cloudfront.net/gigs/3wIDg1680183641.jpg",
   ];
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const accesstoken = localStorage.getItem("token");
-  //       if (!accesstoken) {
-  //         console.error("No token found in localStorage");
-  //         return;
-  //       }
-
-  //       const response = await axios.get('http://isaacnas.duckdns.org:8083/user/viewinfo', {
-  //         headers: {
-  //           Authorization: `Bearer ${accesstoken}`,
-  //         },
-  //       });
-
-  //       setUserData(response.data);
-  //     } catch (error) {
-  //       if (axios.isAxiosError(error)) {
-  //         console.error("Failed to fetch user information", error.message);
-  //         if (error.response) {
-  //           console.error("Response data:", error.response.data);
-  //           console.error("Response status:", error.response.status);
-  //           console.error("Response headers:", error.response.headers);
-  //         }
-  //       } else {
-  //         console.error("An unexpected error occurred:", error);
-  //       }
-  //       alert("정보 불러오기 실패했습니다."); // Adjust message as needed
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, []); // Empty dependency array to run only once
-
-  useEffect(() => {
+ useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token =
-          "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxYzZlMzA3ZDc0MTFjOTFhZmI0MzU0NTE3MDM2YjJlMDg3Y2RmOGM3OWY1NmIyZTk1ZGY5ZWNkNmE5ZGU0NDkzOTllMTNmM2E4ODM2MDRjYzgxMDdhMzY1ZDkyNDc4NWEiLCJpYXQiOjE3MjMwMDQ2NzYsImV4cCI6MTcyMzYwOTQ3Nn0.3lAHe4nrCx-BGyGWtmPB7j39066yBGD30oJvEMc-qSdQJbOKToNLZTq6AhSQWa_enfuEyQglxhfjk3RGMEU2dw";
+        // localStorage에서 토큰을 가져옴
+        const storedToken = localStorage.getItem("at");
 
-        // Authorization 헤더에 토큰 추가
-        const response = await axios.get(
-          "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/viewinfo",
-          {
-            //get형식은 바디로 불러올수없음
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+       
 
-        // 응답 데이터에서 필요한 정보 추출
-        const { email, studentId, seat } = response.data;
+          // Authorization 헤더에 AT: token 형식으로 추가
+          if (storedToken) {
+            console.log("Loaded token from localStorage:", storedToken);
+  
+            // Authorization 헤더에 Bearer <token> 형식으로 추가
+            const response = await axios.get(
+              "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/viewinfo",
+              {
+                headers: {
+                 AT: `${storedToken}`, // Bearer 형식으로 변경
+                },
+              }
+            );
 
-        // 상태에 데이터 설정
-        setEmail(email);
-        setStudentId(studentId);
-        setSeat(seat);
+          // 응답 데이터에서 필요한 정보 추출
+          const { email, studentId, seat } = response.data;
+
+          // 상태에 데이터 설정
+          setEmail(email);
+          setStudentId(studentId);
+          setSeat(seat);
+        } else {
+          console.warn("No token found in localStorage");
+        }
       } catch (error) {
         alert("문제 발생");
         console.error("Error fetching user info:", error);

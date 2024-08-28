@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Nav from "../../components/NavBar";
-import NFCImage from "../../image/NFC.png";
-import BeaconImage from "../../image/Beacon.png";
+import NFCImage from "../../Image/NFC.png";
+import BeaconImage from "../../Image/Beacon.png";
 import axios from "axios";
 
 const images = [
@@ -12,13 +12,17 @@ const images = [
   "https://cdn.bosa.co.kr/news/photo/202206/2174709_206247_5859.png",
 ];
 
-const Mainpage = () => {
+const Mainpage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [NFC, setNFC] = useState(null); //nfc기능 상태 추적하고 해당상태에 따라 함수 동작을 조건부로 제한하기위해서 사용
   const [responseData, setResponseData] = useState(null);
-  const [token, setToken] = useState(null); // 토큰 상태 관리
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
+    // Load the token from localStorage when the component mounts
+    const storedToken = localStorage.getItem("at");
+    setToken(storedToken); // Store the token in state
+
+    // Set an interval to rotate images
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) =>
         prevIndex === images.length - 1 ? 0 : prevIndex + 1
@@ -28,52 +32,45 @@ const Mainpage = () => {
     return () => clearInterval(interval); // Cleanup function
   }, []);
 
-  const onSubmit = async (address: string, position: string) => {
-    //string값이 달라서 발생하는 오류
+  // Handle the NFC submission using uuid and nfc_position from the button data
+  const onSubmit = async (uuid: string, nfc_position: string) => {
     try {
-      // 주어진 토큰 값을 직접 설정합니다.
-      const storedToken =
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxYzZlMzA3ZDc0MTFjOTFhZmI0MzU0NTE3MDM2YjJlMDBmNTY2OGEzNjQyYWNlZTNkMzdkOWQ4ZjdhMjBmMzM2ZjMxNGJkMjQwZTNlNGIyNmEyOWI5ZTdjN2ZmMWNmMjQiLCJpYXQiOjE3MjI5Njk1OTYsImV4cCI6MTcyMjk3MzE5Nn0.tUju_dhTd9rRDXne9ONHDrJa7RKgKmFlqAjHO9cA4uov8vD0MWAegRYIVSXLtsOwFB9SVtSh9MVr2dgXD_JISw";
+      // Use the token from localStorage
+      const storedToken = token;
 
-      // 요청 바디를 정의합니다.
-      const requestBody = {
-        uuid: address,
-        nfc_position: position,
-        attendanceTime: new Date().toISOString(),
-        token: storedToken, // 주어진 토큰 값을 포함합니다.
-      };
+      if (!storedToken) {
+        alert("No token found. Please log in.");
+        return;
+      }
 
-      // requestBody의 값을 확인합니다.
-      console.log("Request Body:", requestBody);
-
-      // POST 요청을 보내고 응답을 처리합니다.
+      // POST request with uuid, nfc_position, and attendanceTime
       const response = await axios.post(
         "https://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/nfc",
-        requestBody,
+        {
+          uuid: uuid,
+          nfc_position: nfc_position,
+          attendanceTime: new Date().toISOString(), // Set current time as ISO string
+        },
         {
           headers: {
-            "Content-Type": "application/json", // 바디를 JSON으로 전송
+            AT: storedToken, // Send token in headers
+            "Content-Type": "application/json",
           },
         }
       );
 
-      // 응답 데이터를 상태에 저장합니다.
+      // Store the response data in state
       setResponseData(response.data);
     } catch (error) {
-      // 오류가 발생하면 사용자에게 알립니다.
-      console.error("Error:", error); // 에러를 콘솔에 출력
-      alert("오류가 발생했습니다");
+      // Handle any errors
+      console.error("Error:", error);
+      alert("An error occurred during NFC submission.");
     }
   };
 
-  const attendanceStatuses = [
-    "present",
-    "absent",
-    "late",
-    "present",
-    "present",
-  ];
+  const attendanceStatuses = ["present", "absent", "late", "present", "present"];
 
+  // Get the color based on the attendance status
   const getColor = (status: string): string => {
     switch (status) {
       case "present":
@@ -88,12 +85,11 @@ const Mainpage = () => {
   };
 
   const buttonsData = [
-    { image: NFCImage },
-    { image: BeaconImage },
-    { label: "Menu 3" },
-    { label: "Menu 4" },
+    { image: NFCImage,  }, // Added label for NFC buttons
+    { image: BeaconImage, }, // Added label for NFC buttons
+    { label: "Menu 3" }, // This button will not trigger NFC submission
+    { label: "Menu 4" }, // This button will not trigger NFC submission
   ];
-
   return (
     <div>
       <BigBox>
@@ -127,14 +123,16 @@ const Mainpage = () => {
             {buttonsData.map((button, index) => (
               <Box4MainAButton
                 key={index}
-                //onClick={index === 0 ? handleNFCScan : undefined
-                onClick={
-                  index === 0 ? () => onSubmit("string", "string") : undefined
-                }
+                onClick={() => {
+                  if (button.image) {
+                    onSubmit("uuid-value", "nfc_position-value"); // Trigger NFC submission
+                  }
+                }}
               >
-                {button.image && (
-                  <ButtonImage src={button.image} alt={button.label} />
-                )}
+                {/* Display the image for NFC-related buttons */}
+                {button.image && <ButtonImage src={button.image} alt={button.label || "Button"} />}
+                {/* Display the label if present */}
+                {button.label && <span>{button.label}</span>}
               </Box4MainAButton>
             ))}
           </Box4MainA>

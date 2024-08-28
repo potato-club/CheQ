@@ -5,25 +5,21 @@ import styled from "styled-components";
 function TestPage() {
   const [inputValue, setInputValue] = useState("");
   const [token, setToken] = useState<string | null>(null); 
-  const [primaryKey, setPrimaryKey] = useState<string | null>(null); // Primary Key를 저장할 상태
+  const [primaryKey, setPrimaryKey] = useState<string | null>(null); 
 
   // 컴포넌트가 마운트될 때 localStorage에서 토큰과 Primary Key를 불러옴
   useEffect(() => {
     const savedToken = localStorage.getItem("at");
-    console.log("Loaded token from localStorage:", savedToken);
+    const savedPrimaryKey = localStorage.getItem("primaryKey");
+
     if (savedToken) {
       setToken(savedToken);
-    } else {
-      alert("로그인 후 기기 등록을 진행해주세요.");
+      console.log("Loaded token from localStorage:", savedToken);
     }
 
-    // Primary Key를 가져옴
-    const savedPrimaryKey = localStorage.getItem("primaryKey");
-    console.log("Loaded primaryKey from localStorage:", savedPrimaryKey);
     if (savedPrimaryKey) {
       setPrimaryKey(savedPrimaryKey);
-    } else {
-      alert("Primary Key를 찾을 수 없습니다. 올바른 접근인지 확인해주세요.");
+      console.log("Loaded primaryKey from localStorage:", savedPrimaryKey);
     }
   }, []);
 
@@ -34,27 +30,33 @@ function TestPage() {
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!token || !primaryKey) {
-      alert("유효한 토큰 또는 Primary Key가 없습니다. 다시 로그인해주세요.");
+    // 토큰 또는 Primary Key가 없을 경우 경고 메시지 표시
+    if (!token) {
+      alert("유효한 토큰이 없습니다. 다시 로그인해주세요.");
       return;
     }
+
+    // if (!primaryKey) {
+    //   alert("Primary Key를 찾을 수 없습니다. 다시 시도해주세요.");
+    //   return;
+    // }
 
     try {
       // Primary Key를 URL의 마지막에 추가하여 PUT 요청
       const response = await axios.put(
-        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device/${primaryKey}`, 
-        { uuId: inputValue }, 
+        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device/}`, 
+        { uuid: inputValue }, 
         { headers: { AT: token } }
       );
+
       console.log("Update successful:", response.data);
       alert("기기 등록이 완료되었습니다!");
     } catch (error) {
       console.error("기기 업데이트 중 오류가 발생했습니다:", error);
       alert("기기 등록 중 오류가 발생했습니다.");
-    } finally {
-      console.log("Update request completed.");
     }
   };
+  
   return (
     <div>
       <BigBox>
