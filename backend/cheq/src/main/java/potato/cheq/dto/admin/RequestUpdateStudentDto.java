@@ -8,5 +8,6 @@ public class RequestUpdateStudentDto {
     private String studentId;
     private String seat;
     private String chapelKind;
+    private String major;
 
 }

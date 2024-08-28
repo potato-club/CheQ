@@ -134,6 +134,7 @@ public class UserService {
                     .email(userEntity.getEmail())
                     .studentId(userEntity.getStudentId())
                     .seat(userEntity.getSeat())
+                    .major(userEntity.getMajor())
                     .build();
         } else {
             throw new UnAuthorizedException("404", NOT_FOUND_EXCEPTION);

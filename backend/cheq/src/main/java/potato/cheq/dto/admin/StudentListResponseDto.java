@@ -14,12 +14,14 @@ public class StudentListResponseDto {
     private String studentId;
     private String chapelKind;
     private String seat;
+    private String major;
 
     @QueryProjection
-    public StudentListResponseDto(String studentId, String chapelKind, String seat) {
+    public StudentListResponseDto(String studentId, String chapelKind, String seat, String major) {
         this.studentId = studentId;
         this.chapelKind = chapelKind;
         this.seat = seat;
+        this.major = major;
     }
 
 

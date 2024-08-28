@@ -11,5 +11,7 @@ public class UserUpdateRequestDto {
     private String email;
     private String seat;
     private ChapelKind chapelKind;
+    private String major;
+
 
 }
