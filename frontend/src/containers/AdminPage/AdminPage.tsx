@@ -154,10 +154,10 @@ const AdminPage = () => {
 
         const primaryKey = response.data;
 
-        // Save the primary key in localStorage
-        localStorage.setItem("primaryKey", JSON.stringify(primaryKey));
+        localStorage.setItem("primaryKey", primaryKey);
 
         setPrimaryKey(primaryKey);
+
         const newAdminData = [...adminData, newStudent];
         setAdminData(newAdminData);
         setFilteredData(newAdminData);
