@@ -118,7 +118,6 @@ const AdminPage = () => {
     });
     setFilteredData(filtered);
   };
-
   const handleRegistration = async (data: any) => {
     const existingStudent = adminData.some(
       (student) =>
@@ -154,7 +153,12 @@ const AdminPage = () => {
 
         const primaryKey = response.data;
 
-        localStorage.setItem("primaryKey", primaryKey);
+        // 각 사용자 이메일을 키로 하여 primaryKey를 저장합니다.
+        const storedKeys = JSON.parse(
+          localStorage.getItem("primaryKeys") || "{}"
+        );
+        storedKeys[data.name] = primaryKey;
+        localStorage.setItem("primaryKeys", JSON.stringify(storedKeys));
 
         setPrimaryKey(primaryKey);
 
@@ -169,6 +173,15 @@ const AdminPage = () => {
   };
 
   const handleEdit = async (data: any) => {
+    // 사용자 이메일에 해당하는 primaryKey를 로컬스토리지에서 가져옵니다.
+    const storedKeys = JSON.parse(localStorage.getItem("primaryKeys") || "{}");
+    const primaryKey = storedKeys[data.name];
+
+    if (!primaryKey) {
+      console.error("No primary key found for this user.");
+      return;
+    }
+
     const editedData: AdminData = {
       checkbox: false,
       email: data.name,
