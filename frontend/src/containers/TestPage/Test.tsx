@@ -3,56 +3,55 @@ import axios from 'axios';
 import styled from "styled-components";
 
 function TestPage() {
-  const [inputValue, setInputValue] = useState("");
-  const [token, setToken] = useState<string | null>(null); 
-  const [primaryKey, setPrimaryKey] = useState<string | null>(null); 
+  const [inputUserId, setInputUserId] = useState("");  // 사용자 ID 입력값 저장
+  const [token, setToken] = useState<string | null>(null);
+  const [primaryKey, setPrimaryKey] = useState<string | null>(null);
 
-  // 컴포넌트가 마운트될 때 localStorage에서 토큰과 Primary Key를 불러옴
+  // 로컬 스토리지에서 token과 primaryKey 불러오기
   useEffect(() => {
     const savedToken = localStorage.getItem("at");
     const savedPrimaryKey = localStorage.getItem("primaryKey");
 
-    if (savedToken) {
-      setToken(savedToken);
-      console.log("Loaded token from localStorage:", savedToken);
-    }
-
-    if (savedPrimaryKey) {
-      setPrimaryKey(savedPrimaryKey);
-      console.log("Loaded primaryKey from localStorage:", savedPrimaryKey);
-    }
+    if (savedToken) setToken(savedToken);
+    if (savedPrimaryKey) setPrimaryKey(savedPrimaryKey);
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    setInputUserId(e.target.value);  // 사용자가 입력한 ID를 저장
   };
 
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 토큰 또는 Primary Key가 없을 경우 경고 메시지 표시
+    // 토큰과 primaryKey가 없으면 경고 메시지 표시
     if (!token) {
       alert("유효한 토큰이 없습니다. 다시 로그인해주세요.");
       return;
     }
 
-    // if (!primaryKey) {
-    //   alert("Primary Key를 찾을 수 없습니다. 다시 시도해주세요.");
-    //   return;
-    // }
+    if (!primaryKey) {
+      alert("Primary Key를 찾을 수 없습니다. 다시 시도해주세요.");
+      return;
+    }
+
+    // 사용자가 ID를 입력하지 않았을 경우 경고 메시지
+    if (!inputUserId) {
+      alert("사용자 ID를 입력해주세요.");
+      return;
+    }
 
     try {
-      // Primary Key를 URL의 마지막에 추가하여 PUT 요청
+      // 사용자 ID를 URL에 포함하여 PUT 요청
       const response = await axios.put(
-        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device/}`, 
-        { uuid: inputValue }, 
-        { headers: { AT: token } }
+        `http://dual-kayla-gamza-9d3cdf9c.koyeb.app/user/device/${inputUserId}`,  // 사용자가 입력한 ID를 URL에 추가
+        { uuid: inputUserId },  // 입력된 사용자 ID를 uuid로 사용
+        { headers: { AT: token } }  // 로그인 토큰을 헤더에 추가
       );
 
-      console.log("Update successful:", response.data);
+      console.log("기기 등록 성공:", response.data);
       alert("기기 등록이 완료되었습니다!");
     } catch (error) {
-      console.error("기기 업데이트 중 오류가 발생했습니다:", error);
+      console.error("기기 등록 중 오류가 발생했습니다:", error);
       alert("기기 등록 중 오류가 발생했습니다.");
     }
   };
@@ -73,11 +72,11 @@ function TestPage() {
               </Box1IdBoxText>
               <Box1IdLineText>
                 <Box1IdLineTag>
-                <input 
-                  type="text" 
-                  value={inputValue} 
-                  onChange={handleInputChange} 
-                  placeholder="Device UUID 입력" 
+                <input
+                  type="text"
+                  placeholder="사용자 ID 입력"
+                  value={inputUserId}
+                  onChange={handleInputChange}  // 사용자가 입력한 ID를 저장
                 />
                 <button type="submit" className="submit-button">등록</button>
                 </Box1IdLineTag>
