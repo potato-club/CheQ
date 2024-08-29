@@ -7,7 +7,7 @@ import axios from "axios";
 const LoginPage = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-
+  const storedPrimaryKey = localStorage.getItem("primaryKey");
   const onSubmit = async (data: any) => {
     const loginData = {
       studentId: data.studentId,
@@ -25,6 +25,8 @@ const LoginPage = () => {
       const response = await axios.post(userUrl, loginData);
 
       if (response.status === 200) {
+        console.log(storedPrimaryKey); // 제대로 출력되는지 확인
+
         console.log("User response data:", response.data); // 응답 데이터 확인
         const { at, rt } = response.data;
         localStorage.setItem("at", at);
