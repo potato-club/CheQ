@@ -1,29 +1,40 @@
 package dev.oth.cheq.services
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
-import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import com.google.gson.Gson
-import dev.oth.cheq.BuildConfig
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import dev.oth.cheq.R
 import dev.oth.cheq.utils.DLog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.sql.Time
+import java.util.Calendar
+import java.util.Date
+import java.util.Timer
+import java.util.TimerTask
+
 
 class NotiService : Service() {
 
@@ -32,10 +43,15 @@ class NotiService : Service() {
 
     private val CHANNEL_ID = 940714
 
+
+    val queue: RequestQueue = Volley.newRequestQueue(this)
+    val url = "http://dual-kayla-gamza-9d3cdf9c.koyeb.app/attendance/beacon"
+
     inner class LocalBinder : Binder() {
         val service: NotiService
             get() = this@NotiService
     }
+
 
     override fun onBind(intent: Intent?): IBinder {
         DLog.w()
@@ -51,7 +67,7 @@ class NotiService : Service() {
             val notificationChannel = NotificationChannel(
                 CHANNEL_ID.toString(),
                 mChannelName,
-                NotificationManager.IMPORTANCE_MAX
+                NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager.createNotificationChannel(notificationChannel)
             NotificationCompat.Builder(this, notificationChannel.id)
@@ -95,8 +111,58 @@ class NotiService : Service() {
             startForeground(940714, notification!!,
                 FOREGROUND_SERVICE_TYPE_LOCATION)
         }
+        startLooper()
     }
 
+    private lateinit var timer : Timer
+
+    private fun startLooper() {
+        val task = object : TimerTask() {
+            override fun run() {
+                request()
+            }
+        }
+        // 0ms 후에 시작해서 1분(60000ms)마다 task를 반복합니다.
+        timer.schedule(task, 0L, 60000L)
+    }
+
+    private fun request() {
+        if (isOneMinutePassed()) {
+            return
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val jsonBody = JSONObject().apply {
+                put("uuid", "string")
+                put("beacon_position", "string")
+                put("attendanceTime", "2024-09-03T03:34:01.304Z")
+            }
+
+            // JsonObjectRequest 생성
+            val jsonObjectRequest = JsonObjectRequest(
+                Request.Method.POST, url, jsonBody, { response ->
+                    // 성공적으로 응답을 받았을 때 처리할 코드
+                    DLog.i("Response: $response")
+                }, { error ->
+                    // 오류가 발생했을 때 처리할 코드
+                    DLog.w(error.localizedMessage)
+                    error.printStackTrace()
+                }
+            )
+
+            // 요청을 큐에 추가하여 실행합니다.
+            queue.add(jsonObjectRequest)
+        }
+    }
+
+    private fun isOneMinutePassed(): Boolean {
+        val differenceInMillis = Date().time - lastScanTime.time
+        val differenceInMinutes = differenceInMillis / (60 * 1000)
+
+        return differenceInMinutes >= 1
+    }
+
+    @SuppressLint("MissingPermission")
     fun startScan(btAdapter: BluetoothAdapter) {
 
 //        var btManager: BluetoothManager? = null
@@ -114,6 +180,14 @@ class NotiService : Service() {
         //특정 device 만 scan
 //        scanner.startScan(mutableListOf(null) , setting, scanCallback)
         scanner.startScan(scanCallback)
+    }
+
+    var lastScanTime = getLastScanMinorOneDay()
+
+    private fun getLastScanMinorOneDay() : Date {
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -1)
+        return calendar.time
     }
 
     private val scanCallback = object : ScanCallback() {
@@ -137,6 +211,9 @@ class NotiService : Service() {
             super.onScanFailed(errorCode)
         }
 
+
+
+        @SuppressLint("MissingPermission")
         fun onLeScan(device: BluetoothDevice, rssi: Int, scanRecord: ByteArray) {
             var startByte = 2
             var patternFound = false
@@ -149,14 +226,15 @@ class NotiService : Service() {
                 startByte++
             }
 
+
             if (patternFound) {
                 // Convert to hex String
-                val uuidBytes = ByteArray(16)
-                System.arraycopy(scanRecord, startByte + 4, uuidBytes, 0, 16)
-                val hexString = bytesToHex(uuidBytes)
+//                val uuidBytes = ByteArray(16)
+//                System.arraycopy(scanRecord, startByte + 4, uuidBytes, 0, 16)
+//                val hexString = bytesToHex(uuidBytes)
 
                 // Here is your UUID
-                val uuid = "${hexString.substring(0, 8)}-${hexString.substring(8, 12)}-${hexString.substring(12, 16)}-${hexString.substring(16, 20)}-${hexString.substring(20, 32)}"
+//                val uuid = "${hexString.substring(0, 8)}-${hexString.substring(8, 12)}-${hexString.substring(12, 16)}-${hexString.substring(16, 20)}-${hexString.substring(20, 32)}"
 
                 // Here is your Major value
                 val major = (scanRecord[startByte + 20].toInt() and 0xff) * 0x100 + (scanRecord[startByte + 21].toInt() and 0xff)
@@ -164,11 +242,18 @@ class NotiService : Service() {
                 // Here is your Minor value
                 val minor = (scanRecord[startByte + 22].toInt() and 0xff) * 0x100 + (scanRecord[startByte + 23].toInt() and 0xff)
 
-                DLog.w("parsing device : [$uuid][$major][$minor][$rssi]")
+//                DLog.w("parsing device : [$uuid][$major][$minor][$rssi]")
+
+                if (major == 25374 && minor == 65339) {
+                    //is vision 303
+                    lastScanTime = Date()
+                }
             }
             else {
                 DLog.d("wrong pattern : ${device.name}")
             }
+
+
         }
 
         /**
@@ -189,6 +274,7 @@ class NotiService : Service() {
 
     }
 
+    @SuppressLint("MissingPermission")
     public fun stopScan() {
         scanner.stopScan(scanCallback)
     }
