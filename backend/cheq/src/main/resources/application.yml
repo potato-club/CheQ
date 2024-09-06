@@ -1,0 +1,27 @@
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+
+server:
+  port: 8083
+spring:
+  datasource:
+    url: ENC(KaeuHZTcgDyqcNnhKPyRAqZ8cJGm1tS+k3ClA08Oxc+/sVKd0rRutWoL96uVY7xB42IiYgoUxEICpoNIH/Me4SOLOQvHRyzKmNiJXqq4srbgISS+eKlYTg==)
+    username: ENC(ZlbLRskNYJqZsAKon58r2A==)
+    password: ENC(KJ/JA/Um8aQq/RAfl6CAG5p0eFCDxfP4)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        show_sql: false
+        format_sql: true
+    open-in-view: false
+
+jwt:
+  secretKey: ENC(tPEWKhtCjc1Nh87m8lNHDXkWNd8j+ZWGLuzY4+wxP6Y5Dljp7EHiikR88LGmx/5kOr8lSASksuVBxC4Qplpjr+/J/bWycoStp0ZiHk9afA9KCBZv6j8TZ93x5cYWdH9XEcR23AJ20K21GaGroHfrW6OKVSJj9sKs)
+  accessExpiration: 3600000 # 30000  #
+  refreshExpiration: 604800000 # 60000 #
+  aesKey: ENC(86xSIGNKOLxyIhrLnICWvfeqX26CsaCs4FbMCVWtydE=)
