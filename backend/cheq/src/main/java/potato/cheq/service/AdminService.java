@@ -59,8 +59,8 @@ public class AdminService {
         String rt = setBodyRtToken(requestDto.getEmail(), response);
 
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("at", "Bearer " + at);
-        tokens.put("rt", "Bearer " + rt);
+        tokens.put("at", at);
+        tokens.put("rt", rt);
 
         return tokens;
     }

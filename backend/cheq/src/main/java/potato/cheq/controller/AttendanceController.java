@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import potato.cheq.dto.request.BeaconRequestDto;
@@ -22,6 +23,7 @@ import java.util.List;
 @RequestMapping("/attendance")
 @Tag(name = "AttendanceController", description = "Attendance's API")
 @CrossOrigin(originPatterns = "http://localhost:3000, localhost:3000")
+@Slf4j
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
@@ -64,6 +66,14 @@ public class AttendanceController {
     public ResponseEntity<List<AttendanceDto>> getAttendanceByDate(HttpServletRequest request) throws Exception {
         List<AttendanceDto> attendanceByDate = attendanceService.getAttendanceByDate(request);
         return ResponseEntity.ok(attendanceByDate);
+    }
+
+    @GetMapping("/token")
+    public void getUserRole(HttpServletRequest request) throws Exception {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+        String userRole = jwtTokenProvider.extractRole(token);
+
+        log.info(userRole);
     }
 
 }
