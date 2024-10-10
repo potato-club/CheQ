@@ -46,6 +46,9 @@
 ![image](https://github.com/potato-club/CheQ/assets/97444407/b827aec2-24eb-41d8-aa9f-deecf4bf25c6)
 
 
+## 피그마 - 기획 및 디자인
+https://www.figma.com/design/eX5Yh177JxjmDa60ccVvSX/CheQ?t=SHrgv5zponFzKHig-0
+
 ## 기술 스택
 - Spring 
 - Kotlin - Android
